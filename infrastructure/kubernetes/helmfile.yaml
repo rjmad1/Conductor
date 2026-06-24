@@ -1,0 +1,125 @@
+environments:
+  local:
+  dev:
+  qa:
+  stage:
+  prod:
+
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+  - name: temporal
+    url: https://temporalio.github.io/helm-charts
+  - name: nats
+    url: https://nats-io.github.io/k8s/helm/charts/
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+  - name: qdrant
+    url: https://qdrant.github.io/helm-charts
+  - name: kong
+    url: https://charts.konghq.com
+  - name: redpanda
+    url: https://charts.redpanda.com
+  - name: dex
+    url: https://charts.dexidp.io
+
+releases:
+  # --- Identity Stack ---
+  - name: dex
+    namespace: platform-identity
+    chart: dex/dex
+    version: 0.19.1
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-dex.yaml
+
+  - name: keycloak
+    namespace: platform-identity
+    chart: bitnami/keycloak
+    version: 22.1.3
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-keycloak.yaml
+
+  # --- Workflow Stack ---
+  - name: temporal
+    namespace: platform-workflows
+    chart: temporal/temporal
+    version: 0.33.0
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-temporal.yaml
+
+  # --- Messaging Stack ---
+  - name: nats
+    namespace: platform-core
+    chart: nats/nats
+    version: 1.1.9
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-nats.yaml
+
+  - name: redpanda
+    namespace: platform-core
+    chart: redpanda/redpanda
+    version: 5.7.0
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-redpanda.yaml
+
+  # --- Database & Analytics Stack ---
+  - name: postgresql
+    namespace: platform-core
+    chart: bitnami/postgresql
+    version: 15.5.4
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-postgres.yaml
+
+  - name: redis
+    namespace: platform-core
+    chart: bitnami/redis
+    version: 19.0.1
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-redis.yaml
+
+  # --- API Gateway ---
+  - name: kong
+    namespace: platform-gateway
+    chart: kong/kong
+    version: 2.38.0
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-kong.yaml
+
+  # --- AI Stack ---
+  - name: qdrant
+    namespace: platform-ai
+    chart: qdrant/qdrant
+    version: 0.8.0
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-qdrant.yaml
+
+  # --- Observability Stack ---
+  - name: prometheus
+    namespace: platform-monitoring
+    chart: prometheus-community/prometheus
+    version: 25.19.1
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-prometheus.yaml
+
+  - name: grafana
+    namespace: platform-monitoring
+    chart: grafana/grafana
+    version: 7.3.0
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-grafana.yaml
+
+  - name: loki
+    namespace: platform-monitoring
+    chart: grafana/loki
+    version: 5.47.2
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-loki.yaml
+
+  - name: tempo
+    namespace: platform-monitoring
+    chart: grafana/tempo
+    version: 1.10.1
+    values:
+      - ../../environments/{{ .Environment.Name }}/values-tempo.yaml

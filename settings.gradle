@@ -1,0 +1,8 @@
+rootProject.name = 'conductor'
+
+include 'shared:auth'
+include 'shared:security'
+include 'shared:middleware:tenant-middleware'
+project(':shared:middleware:tenant-middleware').projectDir = file('shared/middleware/tenant')
+include 'platform:tenant'
+include 'platform:identity'

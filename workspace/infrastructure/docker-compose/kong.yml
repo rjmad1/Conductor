@@ -1,0 +1,28 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: keycloak-service
+    url: http://keycloak:8080
+    routes:
+      - name: keycloak-route
+        paths:
+          - /auth
+  - name: temporal-service
+    url: http://temporal:8233
+    routes:
+      - name: temporal-route
+        paths:
+          - /temporal
+  - name: dify-service
+    url: http://dify:5001
+    routes:
+      - name: dify-route
+        paths:
+          - /dify
+  - name: activepieces-service
+    url: http://activepieces:9000
+    routes:
+      - name: activepieces-route
+        paths:
+          - /integrations

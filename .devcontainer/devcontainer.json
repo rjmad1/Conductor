@@ -1,0 +1,45 @@
+{
+  "name": "Conductor Platform Dev Environment",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "moby": true,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest",
+      "helmVersion": "latest"
+    },
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "latest"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-yaml",
+        "vscjava.vscode-java-pack",
+        "golang.go",
+        "ms-python.python"
+      ]
+    }
+  },
+  "postCreateCommand": "bash ./scripts/devcontainer-setup.sh",
+  "portsAttributes": {
+    "8000": { "label": "Kong Proxy", "onAutoForward": "notify" },
+    "8080": { "label": "Keycloak Auth", "onAutoForward": "silent" },
+    "8233": { "label": "Temporal Web Console", "onAutoForward": "notify" },
+    "3000": { "label": "Metabase UI", "onAutoForward": "notify" },
+    "3001": { "label": "Grafana Dashboard", "onAutoForward": "notify" }
+  }
+}

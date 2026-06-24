@@ -42,7 +42,8 @@ buildNumber.properties
 
 # Gradle
 .gradle
-/build/
+build/
+bin/
 
 # Node.js / React
 node_modules/

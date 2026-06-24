@@ -1,0 +1,33 @@
+{
+  "id": "conductor-realm",
+  "realm": "conductor-realm",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Administrator Role"
+      },
+      {
+        "name": "user",
+        "description": "Standard User Role"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "conductor-frontend",
+      "enabled": true,
+      "publicClient": true,
+      "redirectUris": [
+        "http://localhost:3000/*"
+      ]
+    },
+    {
+      "clientId": "conductor-backend",
+      "enabled": true,
+      "secret": "backend_secret_placeholder",
+      "serviceAccountsEnabled": true
+    }
+  ]
+}

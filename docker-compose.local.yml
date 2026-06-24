@@ -1,0 +1,292 @@
+version: '3.8'
+
+services:
+  # --- Tier 1: Relational & Cache Core ---
+  postgres:
+    image: postgres:15-alpine
+    container_name: conductor-postgres
+    networks:
+      - conductor-net
+    environment:
+      POSTGRES_USER: conductor
+      POSTGRES_PASSWORD: conductor_password
+      POSTGRES_DB: conductor_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U conductor -d conductor_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: conductor-redis
+    networks:
+      - conductor-net
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8-alpine
+    container_name: conductor-clickhouse
+    networks:
+      - conductor-net
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  qdrant:
+    image: qdrant/qdrant:v1.10.0
+    container_name: conductor-qdrant
+    networks:
+      - conductor-net
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # --- Tier 2: Middleware & Auth ---
+  nats:
+    image: nats:2.10-alpine
+    container_name: conductor-nats
+    networks:
+      - conductor-net
+    command: "-js -p 4222 -m 8222"
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "4222"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.0
+    container_name: conductor-keycloak
+    networks:
+      - conductor-net
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin_password
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/conductor_db
+      KC_DB_USERNAME: conductor
+      KC_DB_PASSWORD: conductor_password
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./platform/identity/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080 && echo -e \"GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3 && cat <&3 | grep -q \"200 OK\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  temporal:
+    image: temporalio/auto-setup:1.24.0
+    container_name: conductor-temporal
+    networks:
+      - conductor-net
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=conductor
+      - POSTGRES_PWD=conductor_password
+      - POSTGRES_SEEDS=postgres
+    ports:
+      - "7233:7233"
+      - "8233:8233"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "7233"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- Tier 3: Gateway & Connected Platforms ---
+  kong:
+    image: kong:3.7-alpine
+    container_name: conductor-kong
+    networks:
+      - conductor-net
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
+      KONG_PROXY_LISTEN: "0.0.0.0:8000, 0.0.0.0:8443 ssl http2"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8443:8443"
+    volumes:
+      - ./platform/identity/kong.yml:/usr/local/kong/declarative/kong.yml:ro
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  metabase:
+    image: metabase/metabase:v0.49.0
+    container_name: conductor-metabase
+    networks:
+      - conductor-net
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: conductor_db
+      MB_DB_PORT: 5432
+      MB_DB_USER: conductor
+      MB_DB_PASS: conductor_password
+      MB_DB_HOST: postgres
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- Tier 4: Monitoring ---
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    container_name: conductor-prometheus
+    networks:
+      - conductor-net
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana:10.4.0
+    container_name: conductor-grafana
+    networks:
+      - conductor-net
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  loki:
+    image: grafana/loki:3.3.0
+    container_name: conductor-loki
+    networks:
+      - conductor-net
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./observability/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: "-config.file=/etc/loki/local-config.yaml"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  tempo:
+    image: grafana/tempo:2.7.0
+    container_name: conductor-tempo
+    networks:
+      - conductor-net
+    ports:
+      - "3200:3200"
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+    volumes:
+      - ./observability/tempo/tempo-config.yaml:/etc/tempo/tempo-local.yaml:ro
+      - tempo_data:/var/tempo
+    command: "-config.file=/etc/tempo/tempo-local.yaml"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3200/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.118.0
+    container_name: conductor-otel-collector
+    networks:
+      - conductor-net
+    ports:
+      - "1888:1888" # pprof extension
+      - "8888:8888" # Prometheus metrics exposed by collector
+      - "8889:8889" # Prometheus exporter metrics
+      - "13133:13133" # health_check extension
+      - "4317" # OTLP receiver gRPC (exposed to net)
+      - "4318" # OTLP receiver HTTP (exposed to net)
+    volumes:
+      - ./observability/otel-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:13133/"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+networks:
+  conductor-net:
+    name: conductor-net
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  clickhouse_data:
+  qdrant_data:
+  grafana_data:
+  loki_data:
+  tempo_data:
