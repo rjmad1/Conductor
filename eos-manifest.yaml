@@ -1,0 +1,169 @@
+# AI-EOS Root Configuration & System Manifest
+# Generated for: Conductor
+# Level: 4 — Regulated Enterprise
+
+metadata:
+  org_name: "Conductor"
+  eos_version: "1.0.0"
+  profile: "AI Platform / Product Development"
+  maturity_level: "Level 4 — Regulated Enterprise"
+  industry: "SaaS / Regulated Enterprise"
+  regulatory_scope:
+    - "DPDP India 2023"
+    - "GDPR"
+    - "HIPAA"
+    - "SOC2"
+    - "ISO 27001"
+    - "NIST AI RMF"
+    - "EU AI Act"
+  security_classification: "Restricted / Highly Confidential"
+  repository_platform: "GitHub"
+  delivery_model: "Agent-assisted, specification-driven, human-in-the-loop delivery"
+
+governance:
+  ownership_mappings:
+    - component: "core_workflow_engine"
+      primary_owner: "Platform Engineering Lead"
+      escalation_path: "EDRB"
+    - component: "messaging_core"
+      primary_owner: "Integration Tech Lead"
+      escalation_path: "Platform Engineering Lead"
+    - component: "ai_workflows"
+      primary_owner: "AI Platform Architect"
+      escalation_path: "EDRB"
+    - component: "data_pipelines"
+      primary_owner: "Data Platform Lead"
+      escalation_path: "Governance Board"
+    - component: "cicd_pipelines"
+      primary_owner: "DevSecOps Lead"
+      escalation_path: "Chief Architect"
+
+  approval_matrix:
+    - risk_tier: 0
+      required_human_approvers: 0
+      approver_role: "None"
+      merge_strategy: "Auto-merge"
+    - risk_tier: 1
+      required_human_approvers: 1
+      approver_role: "Peer Developer"
+      merge_strategy: "Pull Request Approval"
+    - risk_tier: 2
+      required_human_approvers: 1
+      approver_role: "Technical Lead"
+      merge_strategy: "Pull Request Approval"
+    - risk_tier: 3
+      required_human_approvers: 2
+      approver_role: "Senior Lead & Owner"
+      merge_strategy: "EDRB Gate Approval"
+    - risk_tier: 4
+      required_human_approvers: 5 # Full EDRB Board
+      approver_role: "EDRB & Compliance Lead"
+      merge_strategy: "Manual Release Window Approval"
+
+source_of_truth_hierarchy:
+  level_1_constitutional: "Documentation Galore/12-AI-EOS/01-constitution.md"
+  level_2_governance: "Documentation Galore/12-AI-EOS/02-governance-architecture.md"
+  level_3_execution: "Documentation Galore/12-AI-EOS/14-sdlc-governance.md"
+  level_4_operational: "eos-manifest.yaml"
+
+risk_model:
+  tiers:
+    - tier: 0
+      label: "Informational"
+      agent_autonomy: "Autonomous"
+      allowed_paths:
+        - "Documentation Galore/**/*.md"
+        - "tests/**/*.md"
+    - tier: 1
+      label: "Low"
+      agent_autonomy: "Operator"
+      allowed_paths:
+        - "tests/unit/**/*.java"
+        - "src/common/**/*.js"
+    - tier: 2
+      label: "Moderate"
+      agent_autonomy: "Contributor"
+      allowed_paths:
+        - "src/services/billing/**/*.java"
+        - "src/services/conversation/**/*.js"
+    - tier: 3
+      label: "High"
+      agent_autonomy: "Contributor"
+      allowed_paths:
+        - "src/infra/terraform/**/*.tf"
+        - "src/services/auth/**/*.java"
+    - tier: 4
+      label: "Critical"
+      agent_autonomy: "Observer"
+      allowed_paths:
+        - "Documentation Galore/12-AI-EOS/01-constitution.md"
+        - "eos-manifest.yaml"
+
+compliance_mappings:
+  controls:
+    - id: "CTRL-PRIV-01"
+      standard: "DPDP-India-Sec-6"
+      description: "Consent capture and explicit verification"
+      evidence_target: "Consent Log Database Table"
+    - id: "CTRL-PRIV-02"
+      standard: "GDPR-Art-17"
+      description: "Right to erasure customer anonymization workflow"
+      evidence_target: "System Deletion Event Traces"
+    - id: "CTRL-PRIV-03"
+      standard: "DPDP-India-Localization"
+      description: "Data Residency ap-south-1 Mumbai storage validation"
+      evidence_target: "Terraform State & AWS Subnet Identifiers"
+    - id: "CTRL-SEC-01"
+      standard: "SOC2-CC8.1"
+      description: "Signed commits and branch protection rules active"
+      evidence_target: "GitHub Branch API Output Logs"
+    - id: "CTRL-AI-01"
+      standard: "EU-AI-Act-Art-14"
+      description: "Human-in-the-loop audit verification records for agent actions"
+      evidence_target: "Agent Trajectory Audit Database logs"
+
+lifecycle_definitions:
+  states:
+    - "Draft"
+    - "Proposed"
+    - "Approved"
+    - "Deprecated"
+    - "Archived"
+  deprecation_threshold_days: 30
+  archive_dormancy_days: 90
+
+agent_registry:
+  agents:
+    - agent_id: "code-generation-bot"
+      trust_level: "Contributor"
+      description: "Assists developers in generating code segments matching specifications"
+      allowed_tools:
+        - "read_file"
+        - "replace_file_content"
+        - "run_local_tests"
+    - agent_id: "sre-operations-bot"
+      trust_level: "Operator"
+      description: "Executes pre-approved deployment actions and monitors staging metrics"
+      allowed_tools:
+        - "trigger_deployment"
+        - "read_observability_metrics"
+    - agent_id: "compliance-bot"
+      trust_level: "Autonomous"
+      description: "Autonomously audits database tables and repository files for leaks"
+      allowed_tools:
+        - "read_db_metadata"
+        - "alert_sre_channel"
+
+traceability_rules:
+  chain:
+    - "Business Objective"
+    - "Requirement"
+    - "Specification"
+    - "ADR"
+    - "Contract"
+    - "Implementation"
+    - "Test"
+    - "Deployment"
+    - "Monitoring"
+    - "Learning Artifact"
+  enforce_strict_linking: true
