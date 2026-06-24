@@ -1,0 +1,17 @@
+prompts:
+  - name: session-start
+    version: v1
+    path: prompts/v1/session-start.md
+    status: active
+  - name: course-correction
+    version: v1
+    path: prompts/v1/course-correction.md
+    status: active
+  - name: session-closeout
+    version: v1
+    path: prompts/v1/session-closeout.md
+    status: active
+  - name: quick-rules
+    version: v1
+    path: prompts/v1/quick-rules.md
+    status: active

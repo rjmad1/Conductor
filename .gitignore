@@ -102,3 +102,7 @@ Desktop.ini
 temp/
 tmp/
 .agents/scratch/
+
+# Loop Engineering memory tiers
+/memory/working/
+/memory/experiments/
