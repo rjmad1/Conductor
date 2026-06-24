@@ -26,3 +26,5 @@ include 'platform:customer'
 
 include 'platform:integrations'
 
+include 'platform:analytics'
+

@@ -1,0 +1,39 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: conductor-analytics-test
+  datasource:
+    url: jdbc:h2:mem:analyticstest;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/conductor
+
+analytics:
+  clickhouse:
+    url: jdbc:h2:mem:clickhousetest
+    user: sa
+    password:
+    batch-size: 10
+    flush-interval-ms: 60000
+  metabase:
+    url: http://localhost:3000
+    embedding-secret: test-secret-key-for-metabase-jwt-signing-minimum-256-bits
+  kpi:
+    evaluation-interval-ms: 99999999
+  report:
+    scheduler-interval-ms: 99999999
