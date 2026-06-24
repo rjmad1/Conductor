@@ -1,0 +1,64 @@
+{
+  "templateId": "customer-support-escalation",
+  "name": "Customer Support Escalation",
+  "description": "Escalates unresolved support tickets through tiers with automated notifications.",
+  "category": "support",
+  "version": "1.0.0",
+  "triggerType": "EVENT",
+  "triggerConfig": {
+    "eventType": "conductor.support.ticket.unresolved",
+    "description": "Triggered when a support ticket exceeds SLA threshold"
+  },
+  "steps": [
+    {
+      "name": "notify-agent",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "ticket_escalation",
+        "recipient": "{{ticket.agentPhone}}",
+        "parameters": {
+          "ticketId": "{{ticket.id}}",
+          "subject": "{{ticket.subject}}",
+          "priority": "{{ticket.priority}}"
+        }
+      }
+    },
+    {
+      "name": "assign-senior-agent",
+      "type": "ASSIGN_USER",
+      "config": {
+        "role": "senior_support",
+        "ticketId": "{{ticket.id}}"
+      }
+    },
+    {
+      "name": "wait-for-resolution",
+      "type": "DELAY",
+      "config": {
+        "duration": "PT4H"
+      }
+    },
+    {
+      "name": "escalate-to-manager",
+      "type": "ASSIGN_USER",
+      "config": {
+        "role": "support_manager",
+        "ticketId": "{{ticket.id}}",
+        "message": "Ticket unresolved after 4 hours"
+      },
+      "condition": {
+        "field": "ticket.resolved",
+        "operator": "NOT_EQUALS",
+        "value": "true"
+      }
+    }
+  ],
+  "variables": {
+    "ticket.id": "",
+    "ticket.subject": "",
+    "ticket.priority": "normal",
+    "ticket.agentPhone": "",
+    "ticket.resolved": "false"
+  }
+}

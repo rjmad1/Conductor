@@ -1,0 +1,67 @@
+{
+  "templateId": "payment-reminder",
+  "name": "Payment Reminder",
+  "description": "Sends payment reminders with escalation for overdue invoices.",
+  "category": "billing",
+  "version": "1.0.0",
+  "triggerType": "EVENT",
+  "triggerConfig": {
+    "eventType": "conductor.billing.invoice.overdue",
+    "description": "Triggered when an invoice becomes overdue"
+  },
+  "steps": [
+    {
+      "name": "send-first-reminder",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "payment_reminder",
+        "recipient": "{{invoice.customerPhone}}",
+        "parameters": {
+          "amount": "{{invoice.amount}}",
+          "dueDate": "{{invoice.dueDate}}"
+        }
+      }
+    },
+    {
+      "name": "wait-3-days",
+      "type": "DELAY",
+      "config": {
+        "duration": "P3D"
+      }
+    },
+    {
+      "name": "send-final-reminder",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "payment_final_reminder",
+        "recipient": "{{invoice.customerPhone}}"
+      },
+      "condition": {
+        "field": "invoice.paid",
+        "operator": "NOT_EQUALS",
+        "value": "true"
+      }
+    },
+    {
+      "name": "escalate-to-support",
+      "type": "ASSIGN_USER",
+      "config": {
+        "role": "billing_support",
+        "message": "Overdue invoice requires manual follow-up"
+      },
+      "condition": {
+        "field": "invoice.paid",
+        "operator": "NOT_EQUALS",
+        "value": "true"
+      }
+    }
+  ],
+  "variables": {
+    "invoice.customerPhone": "",
+    "invoice.amount": "",
+    "invoice.dueDate": "",
+    "invoice.paid": "false"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WorkflowExecutionStartedPayload",
+  "type": "object",
+  "properties": {
+    "executionId": { "type": "string", "format": "uuid" },
+    "definitionId": { "type": "string", "format": "uuid" },
+    "status": { "type": "string", "enum": ["RUNNING"] }
+  },
+  "required": ["executionId", "definitionId", "status"],
+  "additionalProperties": false
+}

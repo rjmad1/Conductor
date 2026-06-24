@@ -6,3 +6,21 @@ include 'shared:middleware:tenant-middleware'
 project(':shared:middleware:tenant-middleware').projectDir = file('shared/middleware/tenant')
 include 'platform:tenant'
 include 'platform:identity'
+
+include 'shared:events-model'
+project(':shared:events-model').projectDir = file('shared/events')
+include 'shared:contracts'
+include 'shared:messaging'
+include 'platform:events'
+include 'platform:messaging-core'
+
+include 'shared:workflow'
+project(':shared:workflow').name = 'shared-workflow'
+include 'shared:execution'
+include 'shared:rules'
+include 'shared:templates'
+include 'platform:workflow'
+
+include 'shared:customer'
+project(':shared:customer').name = 'shared-customer'
+include 'platform:customer'

@@ -1,0 +1,9 @@
+dependencies {
+    implementation project(':shared:events-model')
+    implementation project(':shared:contracts')
+    implementation project(':shared:messaging')
+    implementation project(':shared:middleware:tenant-middleware')
+    implementation 'io.nats:jnats:2.17.2'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+}

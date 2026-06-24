@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WorkflowDefinitionPublishedPayload",
+  "type": "object",
+  "properties": {
+    "definitionId": { "type": "string", "format": "uuid" },
+    "name": { "type": "string" },
+    "version": { "type": "integer" },
+    "versionStatus": { "type": "string", "enum": ["PUBLISHED"] }
+  },
+  "required": ["definitionId", "name", "version", "versionStatus"],
+  "additionalProperties": false
+}

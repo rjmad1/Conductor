@@ -6,6 +6,8 @@ dependencies {
     implementation project(':shared:auth')
     implementation project(':shared:security')
     implementation project(':shared:middleware:tenant-middleware')
+    implementation project(':shared:messaging')
+
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'

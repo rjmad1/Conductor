@@ -1,0 +1,53 @@
+{
+  "templateId": "lead-capture",
+  "name": "Lead Capture",
+  "description": "Captures a new lead from a webhook trigger, creates a contact record, and sends a welcome notification.",
+  "category": "marketing",
+  "version": "1.0.0",
+  "triggerType": "WEBHOOK",
+  "triggerConfig": {
+    "description": "Triggered when a lead form is submitted"
+  },
+  "steps": [
+    {
+      "name": "create-contact",
+      "type": "CREATE_RECORD",
+      "config": {
+        "entity": "contact",
+        "fields": {
+          "name": "{{trigger.name}}",
+          "email": "{{trigger.email}}",
+          "phone": "{{trigger.phone}}",
+          "source": "lead-capture-form"
+        }
+      }
+    },
+    {
+      "name": "send-welcome",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "welcome_lead",
+        "recipient": "{{trigger.phone}}"
+      }
+    },
+    {
+      "name": "notify-sales",
+      "type": "SEND_EVENT",
+      "config": {
+        "domain": "workflow",
+        "entity": "lead",
+        "action": "captured",
+        "payload": {
+          "contactName": "{{trigger.name}}",
+          "source": "lead-capture-form"
+        }
+      }
+    }
+  ],
+  "variables": {
+    "trigger.name": "",
+    "trigger.email": "",
+    "trigger.phone": ""
+  }
+}

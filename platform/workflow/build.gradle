@@ -1,0 +1,31 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation project(':shared:auth')
+    implementation project(':shared:security')
+    implementation project(':shared:middleware:tenant-middleware')
+    implementation project(':shared:messaging')
+    implementation project(':shared:events-model')
+    implementation project(':shared:shared-workflow')
+    implementation project(':shared:execution')
+    implementation project(':shared:rules')
+    implementation project(':shared:templates')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.postgresql:postgresql'
+    implementation 'org.flywaydb:flyway-core'
+
+    implementation 'io.temporal:temporal-sdk:1.22.3'
+    implementation 'io.temporal:temporal-spring-boot-starter-alpha:1.22.3'
+
+    implementation 'io.micrometer:micrometer-core'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    testImplementation 'io.temporal:temporal-testing:1.22.3'
+    testImplementation 'com.h2database:h2'
+}

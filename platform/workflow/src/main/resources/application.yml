@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: workflow-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/conductor_db
+    username: conductor
+    password: conductor_password
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+temporal:
+  service-address: localhost:7233
+  namespace: conductor
+  task-queue-prefix: workflow
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  metrics:
+    tags:
+      application: workflow-service
+
+server:
+  port: 8090

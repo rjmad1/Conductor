@@ -1,0 +1,65 @@
+{
+  "templateId": "order-status-update",
+  "name": "Order Status Update",
+  "description": "Sends order status notifications through the fulfillment lifecycle and requests a review after delivery.",
+  "category": "ecommerce",
+  "version": "1.0.0",
+  "triggerType": "EVENT",
+  "triggerConfig": {
+    "eventType": "conductor.integration.order.status_changed",
+    "description": "Triggered when an order status changes in Shopify"
+  },
+  "steps": [
+    {
+      "name": "send-status-update",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "order_status_update",
+        "recipient": "{{order.customerPhone}}",
+        "parameters": {
+          "orderId": "{{order.id}}",
+          "status": "{{order.status}}",
+          "trackingUrl": "{{order.trackingUrl}}"
+        }
+      }
+    },
+    {
+      "name": "check-if-delivered",
+      "type": "DELAY",
+      "config": {
+        "duration": "P2D"
+      },
+      "condition": {
+        "field": "order.status",
+        "operator": "EQUALS",
+        "value": "delivered"
+      }
+    },
+    {
+      "name": "request-review",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "review_request",
+        "recipient": "{{order.customerPhone}}",
+        "parameters": {
+          "orderId": "{{order.id}}",
+          "productName": "{{order.productName}}"
+        }
+      },
+      "condition": {
+        "field": "order.status",
+        "operator": "EQUALS",
+        "value": "delivered"
+      }
+    }
+  ],
+  "variables": {
+    "order.id": "",
+    "order.status": "",
+    "order.customerPhone": "",
+    "order.trackingUrl": "",
+    "order.productName": ""
+  }
+}

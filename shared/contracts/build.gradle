@@ -1,0 +1,4 @@
+dependencies {
+    implementation 'com.networknt:json-schema-validator:1.4.0'
+    implementation 'org.springframework.boot:spring-boot-starter-json'
+}

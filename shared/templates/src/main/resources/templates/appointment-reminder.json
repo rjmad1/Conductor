@@ -1,0 +1,56 @@
+{
+  "templateId": "appointment-reminder",
+  "name": "Appointment Reminder",
+  "description": "Sends a reminder notification before a scheduled appointment, with a follow-up if unacknowledged.",
+  "category": "engagement",
+  "version": "1.0.0",
+  "triggerType": "SCHEDULE",
+  "triggerConfig": {
+    "cronExpression": "0 9 * * *",
+    "description": "Runs daily at 9 AM to check upcoming appointments"
+  },
+  "steps": [
+    {
+      "name": "send-reminder",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "appointment_reminder",
+        "recipient": "{{appointment.phone}}",
+        "parameters": {
+          "date": "{{appointment.date}}",
+          "time": "{{appointment.time}}",
+          "location": "{{appointment.location}}"
+        }
+      }
+    },
+    {
+      "name": "wait-for-confirmation",
+      "type": "DELAY",
+      "config": {
+        "duration": "PT2H"
+      }
+    },
+    {
+      "name": "send-followup",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "appointment_followup",
+        "recipient": "{{appointment.phone}}"
+      },
+      "condition": {
+        "field": "appointment.confirmed",
+        "operator": "NOT_EQUALS",
+        "value": "true"
+      }
+    }
+  ],
+  "variables": {
+    "appointment.phone": "",
+    "appointment.date": "",
+    "appointment.time": "",
+    "appointment.location": "",
+    "appointment.confirmed": "false"
+  }
+}
