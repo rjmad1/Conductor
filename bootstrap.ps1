@@ -1,6 +1,12 @@
 # Conductor Platform Local Environment Bootstrap PowerShell Script
 # Enforces system requirements, starts local docker compose stack, and validates health on Windows.
 
+Write-Warning "========================================================================="
+Write-Warning "DEPRECATION WARNING: Native Windows local bootstrap is deprecated."
+Write-Warning "Please open this repository in a VS Code Dev Container instead."
+Write-Warning "The Dev Container provides a unified Linux environment and avoids parity issues."
+Write-Warning "========================================================================="
+
 Write-Host "=== Conductor Platform Local Bootstrap (Windows) ===" -ForegroundColor Green
 
 # 1. Dependency Validation

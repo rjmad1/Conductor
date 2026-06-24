@@ -8,7 +8,6 @@ include 'platform:tenant'
 include 'platform:identity'
 
 include 'shared:events-model'
-project(':shared:events-model').projectDir = file('shared/events')
 include 'shared:contracts'
 include 'shared:messaging'
 include 'platform:events'
@@ -24,3 +23,6 @@ include 'platform:workflow'
 include 'shared:customer'
 project(':shared:customer').name = 'shared-customer'
 include 'platform:customer'
+
+include 'platform:integrations'
+

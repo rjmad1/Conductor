@@ -34,7 +34,7 @@
       ]
     }
   },
-  "postCreateCommand": "bash ./scripts/devcontainer-setup.sh",
+  "postCreateCommand": "bash ./scripts/devcontainer-setup.sh && bash ./bootstrap.sh",
   "portsAttributes": {
     "8000": { "label": "Kong Proxy", "onAutoForward": "notify" },
     "8080": { "label": "Keycloak Auth", "onAutoForward": "silent" },

@@ -20,3 +20,8 @@ dependencies {
     implementation 'org.keycloak:keycloak-admin-client:24.0.0'
     implementation 'io.nats:jnats:2.17.2'
 }
+
+jar {
+    enabled = true
+}
+

@@ -29,3 +29,8 @@ dependencies {
     testImplementation 'io.temporal:temporal-testing:1.22.3'
     testImplementation 'com.h2database:h2'
 }
+
+jar {
+    enabled = true
+}
+

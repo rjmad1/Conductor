@@ -43,7 +43,7 @@ This document provides a comprehensive review of the current event, queue, and m
   4. Trace correlation/causation metadata.
 
 ### 2.5 Build
-* **`shared/events`**: Bounded context event models, canonical metadata envelope (`ConductorEvent`), and core event definitions.
+* **`shared/events-model`**: Bounded context event models, canonical metadata envelope (`ConductorEvent`), and core event definitions.
 * **`shared/contracts`**: JSON schema compilation, validation logic, and CI schema testing tasks.
 * **`shared/messaging`**: At-least-once consumer loop, backoff retry policy, DLQ route publisher, and thread-safe JetStream operations.
 * **`platform/events`**: The core events administration service implementing Schema Registry APIs, Replay execution controllers, DLQ management dashboard, and event archival retrieval.

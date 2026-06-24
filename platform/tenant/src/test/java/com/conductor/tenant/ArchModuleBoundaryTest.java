@@ -6,6 +6,7 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
+import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
 @AnalyzeClasses(packages = "com.conductor", importOptions = ImportOption.DoNotIncludeTests.class)
 public class ArchModuleBoundaryTest {
@@ -22,4 +23,10 @@ public class ArchModuleBoundaryTest {
             // Boundary rules
             .whereLayer("IdentityService").mayOnlyBeAccessedByLayers("IdentityService")
             .whereLayer("TenantService").mayOnlyBeAccessedByLayers("TenantService", "IdentityService");
+
+    @ArchTest
+    public static final ArchRule noCyclicDependencies = slices()
+            .matching("com.conductor.(*)..")
+            .should().beFreeOfCycles();
 }
+

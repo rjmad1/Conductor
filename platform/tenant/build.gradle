@@ -22,3 +22,8 @@ dependencies {
     // NATS JetStream event publishing
     implementation 'io.nats:jnats:2.17.2'
 }
+
+jar {
+    enabled = true
+}
+
