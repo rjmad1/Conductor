@@ -254,9 +254,15 @@ Use the **OSS Assembly Strategy** — integrate proven open-source components ra
 
 ## ADR Review Process
 
-- New ADRs: Created by Engineering Lead or Architect, reviewed by CTO
-- Status updates: Any team member can propose status change with justification
-- Frequency: Review all ADRs quarterly for continued validity
+- New ADRs: Created by Engineering Lead or Architect, reviewed by EDRB (Engineering Decision Review Board) per the [Engineering Governance System](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/07-Governance/Engineering-Governance-System.md).
+- Status updates: Subject to triggered review gates and EDRB sign-off.
+- Frequency: Reviewed quarterly or when triggered by architectural changes.
+
+---
+
+## EDRB Evaluations
+
+- **[EDRB-2026-06-Conductor-MVP.md](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/07-Governance/EDRB-2026-06-Conductor-MVP.md)**: Go/No-Go evaluation of the core MVP stack decisions (Temporal, NATS JetStream, WhatsApp Cloud API, and self-hosted Keycloak).
 
 ---
 
@@ -264,3 +270,4 @@ Use the **OSS Assembly Strategy** — integrate proven open-source components ra
 - `01-Vision/Strategic-Thesis.md` — Strategic rationale for OSS assembly
 - `04-Architecture/Solution-Architecture.md` — Technology decisions implemented
 - `07-Governance/Risk-Register.md` — Risks from architecture decisions
+- `07-Governance/Engineering-Governance-System.md` — Enterprise Engineering Governance System rules and review gates
