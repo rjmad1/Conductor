@@ -1,0 +1,33 @@
+# CODEOWNERS for Conductor Platform
+# This file is used to define who owns specific files and folders in the repository.
+# Ownership mappings align with the primary owner roles specified in the system manifest (eos-manifest.yaml).
+
+# Catch-all: default platform ownership
+*                            @Platform-Engineering-Lead
+
+# Architecture & EOS governance documentation
+/docs/architecture/          @Platform-Engineering-Lead @EDRB
+/docs/standards/Engineering-Wisdom-OS.md @Platform-Engineering-Lead @EDRB
+
+# Core system manifest
+/eos-manifest.yaml           @Platform-Engineering-Lead @EDRB
+
+# AI models, agents, and RAG systems
+/docs/ai/                    @AI-Platform-Architect
+/docs/ai/Agent-Architecture.md @AI-Platform-Architect @Platform-Engineering-Lead
+
+# Engineering, API and integration contracts
+/docs/api/                   @Integration-Tech-Lead @Platform-Engineering-Lead
+/docs/standards/             @Platform-Engineering-Lead
+
+# Infrastructure, Terraform, CI/CD and operational runbooks
+/infra/                      @DevSecOps-Lead
+/.github/                    @DevSecOps-Lead
+/docs/runbooks/              @DevSecOps-Lead
+
+# Data platform schemas & pipeline specs
+/docs/standards/Schema-Definitions.md @Data-Platform-Lead @Platform-Engineering-Lead
+
+# Program planning & Roadmap
+/docs/program/               @TPM @Product-Strategist
+/docs/gaps/                  @TPM

@@ -4,20 +4,21 @@ Conductor is a platform designed to manage and run complex workflows and integra
 
 ## Documentation Structure
 
-All primary documentation is located inside the [Documentation Galore](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore) directory, organized as follows:
+All primary documentation is located inside the [docs](file:///c:/Users/rajaj/Projects/Conductor/docs) directory, organized as follows:
 
-*   **[00-Executive-Summary.md](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/00-Executive-Summary.md)**: High-level overview of the entire Conductor program and objectives.
-*   **[01-Vision/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/01-Vision)**: Long-term vision, strategic thesis, and product concepts.
-*   **[02-Business/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/02-Business)**: Pricing strategy, business models, user personas, and customer segments/journeys.
-*   **[03-Product/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/03-Product)**: Capabilities, product requirements, user stories, and development roadmap.
-*   **[04-Architecture/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/04-Architecture)**: Comprehensive system architectures including Data, AI, Integration, Security, and Agent models.
-*   **[05-Engineering/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/05-Engineering)**: Technical coding standards, API/Event contracts, and database schema definitions.
-*   **[06-Operations/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/06-Operations)**: SRE guidelines, runbooks, monitoring, and incident management procedures.
-*   **[07-Governance/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/07-Governance)**: Architectural decision records (ADRs), risk register, and compliance requirements.
-*   **[08-AI/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/08-AI)**: RAG system architecture, LLM agent frameworks, prompt libraries, and evaluation models.
-*   **[09-Program/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/09-Program)**: Delivery timelines, resource planning, and release milestones.
-*   **[10-Gap-Analysis/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/10-Gap-Analysis)**: Detailed gap matrices across product, business, technology, and compliance.
-*   **[11-IDE-Knowledge-Pack/](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/11-IDE-Knowledge-Pack)**: Glossary, onboarding guides, domain model references, and system context.
+*   **[00-Executive-Summary.md](file:///c:/Users/rajaj/Projects/Conductor/docs/00-Executive-Summary.md)**: High-level overview of the entire Conductor program and objectives.
+*   **[vision/](file:///c:/Users/rajaj/Projects/Conductor/docs/vision)**: Long-term vision, strategic thesis, and product concepts.
+*   **[business/](file:///c:/Users/rajaj/Projects/Conductor/docs/business)**: Pricing strategy, business models, user personas, and customer segments/journeys.
+*   **[product/](file:///c:/Users/rajaj/Projects/Conductor/docs/product)**: Capabilities, product requirements, user stories, and development roadmap.
+*   **[architecture/](file:///c:/Users/rajaj/Projects/Conductor/docs/architecture)**: Comprehensive system architectures including Data, AI, Integration, Security, and Agent models.
+*   **[api/](file:///c:/Users/rajaj/Projects/Conductor/docs/api)**: API and Event contracts.
+*   **[standards/](file:///c:/Users/rajaj/Projects/Conductor/docs/standards)**: Technical coding standards, repository setup, compliance, and governance frameworks.
+*   **[adr/](file:///c:/Users/rajaj/Projects/Conductor/docs/adr)**: Architectural decision records (ADRs) tracking structural and business choices.
+*   **[runbooks/](file:///c:/Users/rajaj/Projects/Conductor/docs/runbooks)**: SRE guidelines, runbooks, monitoring, and incident management procedures.
+*   **[ai/](file:///c:/Users/rajaj/Projects/Conductor/docs/ai)**: RAG system architecture, LLM agent frameworks, prompt libraries, and evaluation models.
+*   **[program/](file:///c:/Users/rajaj/Projects/Conductor/docs/program)**: Delivery timelines, resource planning, and release milestones.
+*   **[gaps/](file:///c:/Users/rajaj/Projects/Conductor/docs/gaps)**: Detailed gap matrices across product, business, technology, and compliance.
+*   **[onboarding/](file:///c:/Users/rajaj/Projects/Conductor/docs/onboarding)**: Glossary, onboarding guides, domain model references, and system context.
 
 ---
 

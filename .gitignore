@@ -1,0 +1,104 @@
+# .gitignore for Conductor Platform
+
+# Compiled class file
+*.class
+
+# Log files
+*.log
+*.log.*
+/logs/
+
+# Blueprints
+*.pdf
+*.png
+*.jpg
+*.jpeg
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual environment and runtime databases
+/db/data/
+*.db
+*.sqlite
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+pom.xml.note
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle
+/build/
+
+# Node.js / React
+node_modules/
+/dist/
+/out/
+.npm
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# Python / AI / Dify / Playwright
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.tox/
+.coverage
+.htmlcov
+.playwright/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+.terraform.lock.hcl
+
+# IDEs and Editors
+.idea/
+*.iml
+*.ipr
+*.iws
+.settings/
+.classpath
+.project
+.metadata/
+.recommenders/
+.vscode/
+*.code-workspace
+.history/
+.project
+.factorypath
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Temporary scratch and memory files
+/scratch/
+temp/
+tmp/
+.agents/scratch/

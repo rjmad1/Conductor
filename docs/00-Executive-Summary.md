@@ -110,23 +110,23 @@ This report produces the following authoritative knowledge repository:
 ```
 conductor-docs/
 ├── 00-Executive-Summary.md                    ← This file
-├── 01-Vision/
+├── vision/
 │   ├── Product-Vision.md
 │   ├── Business-Vision.md
 │   └── Strategic-Thesis.md
-├── 02-Business/
+├── business/
 │   ├── Business-Model.md
 │   ├── Customer-Segments.md
 │   ├── Personas.md
 │   ├── Customer-Journeys.md
 │   ├── Pricing-Strategy.md
 │   └── Go-To-Market.md
-├── 03-Product/
+├── product/
 │   ├── Product-Requirements.md
 │   ├── Capabilities.md
 │   ├── User-Stories.md
 │   └── Roadmap.md
-├── 04-Architecture/
+├── architecture/
 │   ├── System-Context.md
 │   ├── Solution-Architecture.md
 │   ├── Application-Architecture.md
@@ -136,39 +136,45 @@ conductor-docs/
 │   ├── Infrastructure-Architecture.md
 │   ├── AI-Architecture.md
 │   └── Agent-Architecture.md
-├── 05-Engineering/
+├── api/
+│   ├── API-Contracts.md
+│   └── Event-Contracts.md
+├── standards/
 │   ├── Repositories.md
 │   ├── Coding-Standards.md
-│   ├── API-Contracts.md
-│   ├── Event-Contracts.md
+│   ├── Engineering-Governance-System.md
+│   ├── Engineering-Wisdom-OS.md        ← Condensed operating manual
+│   ├── Compliance.md
+│   ├── Risk-Register.md
+│   ├── EDRB-2026-06-Conductor-MVP.md
 │   └── Schema-Definitions.md
-├── 06-Operations/
+├── runbooks/
 │   ├── Runbooks.md
 │   ├── Monitoring.md
 │   ├── SRE.md
 │   └── Incident-Management.md
-├── 07-Governance/
-│   ├── Compliance.md
-│   ├── Risk-Register.md
-│   └── Decision-Records.md
-├── 08-AI/
+├── adr/
+│   ├── Decision-Records.md
+│   ├── ADR-GOV-001-Repository-Structure-Standard.md
+│   └── ...
+├── ai/
 │   ├── Knowledge-Model.md
 │   ├── RAG-Architecture.md
 │   ├── Prompt-Library.md
 │   ├── Agent-Framework.md
 │   └── Evaluation-Framework.md
-├── 09-Program/
+├── program/
 │   ├── Implementation-Plan.md
 │   ├── Release-Plan.md
 │   └── Resource-Plan.md
-├── 10-Gap-Analysis/
+├── gaps/
 │   ├── Business-Gaps.md
 │   ├── Product-Gaps.md
 │   ├── Technical-Gaps.md
 │   ├── Infrastructure-Gaps.md
 │   ├── AI-Gaps.md
 │   └── Compliance-Gaps.md
-└── 11-IDE-Knowledge-Pack/
+└── onboarding/
     ├── System-Overview.md
     ├── Domain-Model.md
     ├── Glossary.md
@@ -182,13 +188,13 @@ conductor-docs/
 
 | Audience               | Start Here                                    | Then Read                                          |
 | ---------------------- | --------------------------------------------- | -------------------------------------------------- |
-| **New Engineer**       | 11-IDE-Knowledge-Pack/Developer-Onboarding.md | 04-Architecture/, 05-Engineering/                  |
-| **AI Coding Agent**    | 11-IDE-Knowledge-Pack/Context-Pack.md         | 04-Architecture/*, 05-Engineering/API-Contracts.md |
-| **Architect**          | 04-Architecture/Solution-Architecture.md      | 04-Architecture/*, 10-Gap-Analysis/                |
-| **Product Manager**    | 01-Vision/Product-Vision.md                   | 03-Product/*, 02-Business/*                        |
-| **Investor**           | 01-Vision/Business-Vision.md                  | 02-Business/Business-Model.md, 09-Program/         |
-| **Operator**           | 06-Operations/Runbooks.md                     | 06-Operations/*, 07-Governance/*                   |
-| **Compliance Officer** | 07-Governance/Compliance.md                   | 04-Architecture/Security-Architecture.md           |
+| **New Engineer**       | onboarding/Developer-Onboarding.md            | architecture/, standards/, api/                    |
+| **AI Coding Agent**    | onboarding/Context-Pack.md                    | architecture/*, api/API-Contracts.md, standards/Engineering-Wisdom-OS.md |
+| **Architect**          | architecture/Solution-Architecture.md         | architecture/*, gaps/                              |
+| **Product Manager**    | vision/Product-Vision.md                      | product/*, business/*                              |
+| **Investor**           | vision/Business-Vision.md                     | business/Business-Model.md, program/               |
+| **Operator**           | runbooks/Runbooks.md                          | runbooks/*, standards/*                            |
+| **Compliance Officer** | standards/Compliance.md                       | architecture/Security-Architecture.md, standards/Engineering-Wisdom-OS.md |
 
 ---
 

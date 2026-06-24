@@ -14,7 +14,7 @@ This report evaluates three critical architectural choices for the Conductor MVP
 2. **WhatsApp Channel Integration Layer**: Official WhatsApp Cloud API versus OpenWA (unofficial web-scraping client).
 3. **Identity & Access Management (IAM)**: Self-hosted Keycloak versus Auth0 (Managed SaaS).
 
-Using the strict governance framework defined in the [Engineering Governance System](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/07-Governance/Engineering-Governance-System.md), the board has delivered **GO / GO WITH CONDITIONS** determinations for all three components. By deploying Temporal, NATS, the WhatsApp Cloud API, and Keycloak, the platform optimizes for cash-flow preservation, operational simplicity, compliance safety, and legal viability.
+Using the strict governance framework defined in the [Engineering Governance System](file:///c:/Users/rajaj/Projects/Conductor/docs/standards/Engineering-Governance-System.md), the board has delivered **GO / GO WITH CONDITIONS** determinations for all three components. By deploying Temporal, NATS, the WhatsApp Cloud API, and Keycloak, the platform optimizes for cash-flow preservation, operational simplicity, compliance safety, and legal viability.
 
 ---
 
@@ -51,9 +51,9 @@ Using the strict governance framework defined in the [Engineering Governance Sys
 | **Channel: WhatsApp Cloud API** | Business Value | Essential. Eliminates account suspension risk, preserving product value. | Meta Platform Policy. |
 | | Engineering Cost | Moderate. Requires integrating with Meta Graph API. | Meta Developer docs. |
 | | Maintenance Cost | Low. Official API changes are versioned with 2-year lifespans. | Meta API changelogs. |
-| | Governance Cost | Medium. Requires template compliance and opt-in validation. | [07-Governance/Compliance.md](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/07-Governance/Compliance.md#L80-L121) |
+| | Governance Cost | Medium. Requires template compliance and opt-in validation. | [docs/standards/Compliance.md](file:///c:/Users/rajaj/Projects/Conductor/docs/standards/Compliance.md#L80-L121) |
 | | TCO | Meta conversation fees + hosting. | Meta rate charts. |
-| | ROI | Indefinite. An unofficial solution has a -100% ROI if suspended. | [07-Governance/Risk-Register.md:R-001](file:///c:/Users/rajaj/Projects/Conductor/Documentation%20Galore/07-Governance/Risk-Register.md#L26-L40) |
+| | ROI | Indefinite. An unofficial solution has a -100% ROI if suspended. | [docs/standards/Risk-Register.md:R-001](file:///c:/Users/rajaj/Projects/Conductor/docs/standards/Risk-Register.md#L26-L40) |
 | **IAM: Keycloak Self-Hosted** | Business Value | Zero licensing fees allows competitive MVP SaaS pricing. | Open-source Apache 2.0 license. |
 | | Engineering Cost | Moderate. Keycloak configuration has a steep learning curve. | OIDC integration specifications. |
 | | Maintenance Cost | Moderate. Requires database migration and security patching. | Keycloak CVE logs. |
