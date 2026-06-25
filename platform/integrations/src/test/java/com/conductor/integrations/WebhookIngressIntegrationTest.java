@@ -47,6 +47,9 @@ class WebhookIngressIntegrationTest {
     @MockBean
     private com.conductor.shared.middleware.tenant.TenantFilterAspect tenantFilterAspect;
 
+    @MockBean
+    private com.conductor.integrations.framework.CredentialEncryptor credentialEncryptor;
+
     private UUID tenantId;
 
     @BeforeEach
@@ -67,13 +70,14 @@ class WebhookIngressIntegrationTest {
         String secret = "secret-key";
 
         WebhookSubscription sub = new WebhookSubscription();
-        sub.setSecret(secret);
+        sub.setSecret("encrypted-" + secret);
         sub.setEventName("orders/create");
         sub.setStatus("ACTIVE");
 
         when(subscriptionRepository.findByIntegrationConnectorTypeAndEventNameAndTenantId("shopify", "orders/create", tenantId))
                 .thenReturn(Optional.of(sub));
 
+        when(credentialEncryptor.decrypt("encrypted-" + secret)).thenReturn(secret);
         when(signatureValidator.validateShopify(any(), any(), any())).thenReturn(true);
         when(replayProtector.isDuplicate(any())).thenReturn(false);
         when(eventPublisher.publish(anyString(), anyString(), anyString(), anyString(), any())).thenReturn(true);

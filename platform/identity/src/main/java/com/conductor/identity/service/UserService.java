@@ -9,7 +9,7 @@ import com.conductor.identity.repository.UserRepository;
 import com.conductor.shared.middleware.tenant.AuditLogger;
 import com.conductor.shared.middleware.tenant.NatsEventPublisher;
 import com.conductor.shared.middleware.tenant.TenantContext;
-import com.conductor.tenant.service.KeycloakAdminService;
+import com.conductor.shared.auth.KeycloakUserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,7 +32,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final MembershipRepository membershipRepository;
     private final APIKeyRepository apiKeyRepository;
-    private final KeycloakAdminService keycloakAdminService;
+    private final KeycloakUserManager keycloakAdminService;
     private final NatsEventPublisher eventPublisher;
     private final AuditLogger auditLogger;
 
@@ -40,7 +40,7 @@ public class UserService {
             UserRepository userRepository,
             MembershipRepository membershipRepository,
             APIKeyRepository apiKeyRepository,
-            KeycloakAdminService keycloakAdminService,
+            KeycloakUserManager keycloakAdminService,
             NatsEventPublisher eventPublisher,
             AuditLogger auditLogger) {
         this.userRepository = userRepository;

@@ -64,6 +64,15 @@ class TenantIsolationTest {
     @MockBean
     private com.conductor.shared.middleware.tenant.TenantFilterAspect tenantFilterAspect;
 
+    @MockBean
+    private com.conductor.integrations.framework.OAuthStateStore oauthStateStore;
+
+    @MockBean
+    private com.conductor.integrations.framework.CredentialEncryptor credentialEncryptor;
+
+    @MockBean
+    private com.conductor.integrations.service.OAuthTokenExchangeService oauthTokenExchangeService;
+
     private UUID tenantId;
 
     @BeforeEach

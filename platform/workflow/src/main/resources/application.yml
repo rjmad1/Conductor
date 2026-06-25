@@ -1,33 +1,39 @@
+server:
+  port: 8090
+
 spring:
   application:
     name: workflow-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/conductor_db
-    username: conductor
-    password: conductor_password
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/conductor_db}
+    username: ${SPRING_DATASOURCE_USERNAME:conductor}
+    password: ${SPRING_DATASOURCE_PASSWORD:conductor_password}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: validate
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
   flyway:
     enabled: true
     locations: classpath:db/migration
 
 temporal:
-  service-address: localhost:7233
-  namespace: conductor
-  task-queue-prefix: workflow
+  service-address: ${TEMPORAL_SERVICE_ADDRESS:localhost:7233}
+  namespace: ${TEMPORAL_NAMESPACE:conductor}
+  task-queue-prefix: ${TEMPORAL_TASK_QUEUE_PREFIX:workflow}
+
+nats:
+  server-url: ${NATS_SERVER_URL:nats://localhost:4222}
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,metrics,prometheus
+        include: health,info,metrics,prometheus
   metrics:
     tags:
-      application: workflow-service
-
-server:
-  port: 8090
+      service: workflow-service

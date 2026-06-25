@@ -3,6 +3,7 @@ package com.conductor.integrations.webhooks;
 import com.conductor.integrations.domain.WebhookSubscription;
 import com.conductor.integrations.repository.WebhookSubscriptionRepository;
 import com.conductor.shared.messaging.EventPublisher;
+import com.conductor.integrations.framework.CredentialEncryptor;
 import com.conductor.shared.middleware.tenant.TenantContext;
 import com.conductor.shared.middleware.tenant.AuditLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +27,7 @@ public class WebhookIngressController {
     private final WebhookReplayProtector replayProtector;
     private final EventPublisher eventPublisher;
     private final AuditLogger auditLogger;
+    private final CredentialEncryptor credentialEncryptor;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public WebhookIngressController(
@@ -33,12 +35,14 @@ public class WebhookIngressController {
             WebhookSignatureValidator signatureValidator,
             WebhookReplayProtector replayProtector,
             EventPublisher eventPublisher,
-            AuditLogger auditLogger) {
+            AuditLogger auditLogger,
+            CredentialEncryptor credentialEncryptor) {
         this.subscriptionRepository = subscriptionRepository;
         this.signatureValidator = signatureValidator;
         this.replayProtector = replayProtector;
         this.eventPublisher = eventPublisher;
         this.auditLogger = auditLogger;
+        this.credentialEncryptor = credentialEncryptor;
     }
 
     @PostMapping("/ingress/{connectorType}/{tenantId}")
@@ -75,7 +79,8 @@ public class WebhookIngressController {
             }
 
             WebhookSubscription subscription = subOpt.get();
-            String secret = subscription.getSecret();
+            // Decrypt the stored secret; secrets are encrypted at rest with AES-256-GCM.
+            String secret = credentialEncryptor.decrypt(subscription.getSecret());
 
             boolean isValid = false;
             if ("shopify".equalsIgnoreCase(connectorType)) {

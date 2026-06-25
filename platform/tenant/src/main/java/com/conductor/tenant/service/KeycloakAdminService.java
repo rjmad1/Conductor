@@ -12,12 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.conductor.shared.auth.KeycloakUserManager;
 import java.util.Collections;
 import java.util.List;
 import jakarta.ws.rs.core.Response;
 
 @Service
-public class KeycloakAdminService {
+public class KeycloakAdminService implements KeycloakUserManager {
 
     private static final Logger log = LoggerFactory.getLogger(KeycloakAdminService.class);
 
