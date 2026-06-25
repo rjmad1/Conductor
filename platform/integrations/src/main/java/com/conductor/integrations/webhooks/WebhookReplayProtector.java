@@ -81,7 +81,7 @@ public class WebhookReplayProtector {
     }
 
     /** Visible for testing. */
-    int cacheSize() {
+    public int cacheSize() {
         return processedWebhooks.size();
     }
 }
