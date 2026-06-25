@@ -185,7 +185,7 @@ fi
 
 # Escape application args
 save () {
-    for i do printf '%s\n' "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\\$s/\$/'/" ; done
+    for i do printf '%s\n' "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/'/" ; done
     echo " "
 }
 APP_ARGS=$(save "$@")
@@ -194,7 +194,7 @@ APP_ARGS=$(save "$@")
 # the quotes around variables have to be removed.
 eval "set -- $(
         printf '%s\n' "$CLASSPATH" |
-        sed -e 's/[^:]*\\/gradle\\/wrapper\\/gradle-wrapper\\.jar//' |
+        sed -e 's/[^:]*\/gradle\/wrapper\/gradle-wrapper\.jar//' |
         sed -e 's/:/ /g'
     ) $APP_ARGS"
 
