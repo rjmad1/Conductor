@@ -21,7 +21,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build and Compile
-        run: ./gradlew compileJava compileTestJava --no-daemon
+        run: |
+          chmod +x gradlew
+          ./gradlew compileJava compileTestJava --no-daemon
 
       - name: Run Tests
         run: ./gradlew test --no-daemon
