@@ -24,6 +24,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 }
 
+bootJar {
+    enabled = false
+}
+
 jar {
     enabled = true
 }

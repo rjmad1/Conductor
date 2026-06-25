@@ -14,33 +14,43 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
-    private final ConductorAuthenticationEntryPoint authenticationEntryPoint;
-    private final ConductorAccessDeniedHandler accessDeniedHandler;
+  private final ConductorAuthenticationEntryPoint authenticationEntryPoint;
+  private final ConductorAccessDeniedHandler accessDeniedHandler;
 
-    public WebSecurityConfig(ConductorAuthenticationEntryPoint authenticationEntryPoint,
-            ConductorAccessDeniedHandler accessDeniedHandler) {
-        this.authenticationEntryPoint = authenticationEntryPoint;
-        this.accessDeniedHandler = accessDeniedHandler;
-    }
+  public WebSecurityConfig(
+      ConductorAuthenticationEntryPoint authenticationEntryPoint,
+      ConductorAccessDeniedHandler accessDeniedHandler) {
+    this.authenticationEntryPoint = authenticationEntryPoint;
+    this.accessDeniedHandler = accessDeniedHandler;
+  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/healthz", "/metrics", "/actuator/health", "/api/v1/auth/login", "/webhooks/whatsapp").permitAll()
-                .requestMatchers("/api/v1/**").authenticated()
-                .anyRequest().denyAll()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter()))
-            )
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler)
-            );
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(
+                        "/healthz",
+                        "/metrics",
+                        "/actuator/health",
+                        "/api/v1/auth/login",
+                        "/webhooks/whatsapp")
+                    .permitAll()
+                    .requestMatchers("/api/v1/**")
+                    .authenticated()
+                    .anyRequest()
+                    .denyAll())
+        .oauth2ResourceServer(
+            oauth2 ->
+                oauth2.jwt(
+                    jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter())))
+        .exceptionHandling(
+            ex ->
+                ex.authenticationEntryPoint(authenticationEntryPoint)
+                    .accessDeniedHandler(accessDeniedHandler));
 
-        return http.build();
-    }
+    return http.build();
+  }
 }

@@ -29,6 +29,7 @@ dependencies {
     testImplementation 'io.temporal:temporal-testing:1.22.3'
     testImplementation 'com.h2database:h2'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.testcontainers:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 }
 

@@ -18,35 +18,45 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class IntegrationsSecurityConfig {
 
-    private final ConductorAuthenticationEntryPoint authenticationEntryPoint;
-    private final ConductorAccessDeniedHandler accessDeniedHandler;
+  private final ConductorAuthenticationEntryPoint authenticationEntryPoint;
+  private final ConductorAccessDeniedHandler accessDeniedHandler;
 
-    public IntegrationsSecurityConfig(ConductorAuthenticationEntryPoint authenticationEntryPoint,
-            ConductorAccessDeniedHandler accessDeniedHandler) {
-        this.authenticationEntryPoint = authenticationEntryPoint;
-        this.accessDeniedHandler = accessDeniedHandler;
-    }
+  public IntegrationsSecurityConfig(
+      ConductorAuthenticationEntryPoint authenticationEntryPoint,
+      ConductorAccessDeniedHandler accessDeniedHandler) {
+    this.authenticationEntryPoint = authenticationEntryPoint;
+    this.accessDeniedHandler = accessDeniedHandler;
+  }
 
-    @Bean
-    @Primary
-    public SecurityFilterChain integrationsSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/integrations/webhooks/ingress/**").permitAll()
-                .requestMatchers("/healthz", "/metrics", "/actuator/health", "/api/v1/integrations/oauth/callback").permitAll()
-                .requestMatchers("/api/v1/**").authenticated()
-                .anyRequest().denyAll()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter()))
-            )
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler)
-            );
+  @Bean
+  @Primary
+  public SecurityFilterChain integrationsSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/api/v1/integrations/webhooks/ingress/**")
+                    .permitAll()
+                    .requestMatchers(
+                        "/healthz",
+                        "/metrics",
+                        "/actuator/health",
+                        "/api/v1/integrations/oauth/callback")
+                    .permitAll()
+                    .requestMatchers("/api/v1/**")
+                    .authenticated()
+                    .anyRequest()
+                    .denyAll())
+        .oauth2ResourceServer(
+            oauth2 ->
+                oauth2.jwt(
+                    jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter())))
+        .exceptionHandling(
+            ex ->
+                ex.authenticationEntryPoint(authenticationEntryPoint)
+                    .accessDeniedHandler(accessDeniedHandler));
 
-        return http.build();
-    }
+    return http.build();
+  }
 }

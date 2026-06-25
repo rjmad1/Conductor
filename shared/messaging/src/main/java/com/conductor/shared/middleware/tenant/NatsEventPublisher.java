@@ -8,18 +8,18 @@ import org.springframework.stereotype.Component;
 @Primary
 public class NatsEventPublisher implements AutoCloseable {
 
-    private final EventPublisher delegate;
+  private final EventPublisher delegate;
 
-    public NatsEventPublisher(EventPublisher delegate) {
-        this.delegate = delegate;
-    }
+  public NatsEventPublisher(EventPublisher delegate) {
+    this.delegate = delegate;
+  }
 
-    public void publishEvent(String domain, String entity, String action, String payloadJson) {
-        delegate.publish(domain, entity, action, "v1", payloadJson);
-    }
+  public void publishEvent(String domain, String entity, String action, String payloadJson) {
+    delegate.publish(domain, entity, action, "v1", payloadJson);
+  }
 
-    @Override
-    public void close() {
-        // No-op, lifecycle managed by container
-    }
+  @Override
+  public void close() {
+    // No-op, lifecycle managed by container
+  }
 }

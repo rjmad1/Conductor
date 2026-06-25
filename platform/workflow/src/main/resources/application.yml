@@ -20,6 +20,11 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/conductor/protocol/openid-connect/certs
 
 temporal:
   service-address: ${TEMPORAL_SERVICE_ADDRESS:localhost:7233}

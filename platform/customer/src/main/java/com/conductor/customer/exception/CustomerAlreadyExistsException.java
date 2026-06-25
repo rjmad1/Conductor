@@ -2,7 +2,7 @@ package com.conductor.customer.exception;
 
 public class CustomerAlreadyExistsException extends RuntimeException {
 
-    public CustomerAlreadyExistsException(String message) {
-        super(message);
-    }
+  public CustomerAlreadyExistsException(String message) {
+    super(message);
+  }
 }

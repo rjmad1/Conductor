@@ -2,14 +2,12 @@ package com.conductor.analytics.domain;
 
 import com.conductor.shared.middleware.tenant.TenantAwareEntity;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.Instant;
 import java.util.UUID;
+import lombok.*;
 
 /**
- * KPI definition with threshold configuration for alerting.
- * Tenant-scoped via TenantAwareEntity.
+ * KPI definition with threshold configuration for alerting. Tenant-scoped via TenantAwareEntity.
  */
 @Entity
 @Table(name = "analytics_kpi_definitions")
@@ -20,46 +18,46 @@ import java.util.UUID;
 @AllArgsConstructor
 public class KpiDefinition extends TenantAwareEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    private String description;
+  private String description;
 
-    @Column(nullable = false)
-    private String metricName;
+  @Column(nullable = false)
+  private String metricName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MetricAggregation aggregation;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private MetricAggregation aggregation;
 
-    private Double thresholdWarning;
+  private Double thresholdWarning;
 
-    private Double thresholdCritical;
+  private Double thresholdCritical;
 
-    private String owner;
+  private String owner;
 
-    @Column(nullable = false)
-    private String status; // ACTIVE, DISABLED
+  @Column(nullable = false)
+  private String status; // ACTIVE, DISABLED
 
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
+  @Column(nullable = false, updatable = false)
+  private Instant createdAt;
 
-    private Instant updatedAt;
+  private Instant updatedAt;
 
-    @PrePersist
-    void onPrePersist() {
-        this.createdAt = Instant.now();
-        if (this.status == null) {
-            this.status = "ACTIVE";
-        }
+  @PrePersist
+  void onPrePersist() {
+    this.createdAt = Instant.now();
+    if (this.status == null) {
+      this.status = "ACTIVE";
     }
+  }
 
-    @PreUpdate
-    void onPreUpdate() {
-        this.updatedAt = Instant.now();
-    }
+  @PreUpdate
+  void onPreUpdate() {
+    this.updatedAt = Instant.now();
+  }
 }

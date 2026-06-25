@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EntityScan(basePackages = "com.conductor.analytics.domain")
-@EnableJpaRepositories(basePackages = {
-        "com.conductor.analytics.dashboard",
-        "com.conductor.analytics.reporting",
-        "com.conductor.analytics.kpi"
-})
-public class JpaConfig {
-}
+@EnableJpaRepositories(
+    basePackages = {
+      "com.conductor.analytics.dashboard",
+      "com.conductor.analytics.reporting",
+      "com.conductor.analytics.kpi"
+    })
+public class JpaConfig {}

@@ -9,26 +9,29 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Security configuration for the analytics module.
- * Deny-by-default with OIDC JWT validation. Mirrors IntegrationsSecurityConfig pattern.
- * Actuator health and metrics endpoints remain open for monitoring.
+ * Security configuration for the analytics module. Deny-by-default with OIDC JWT validation.
+ * Mirrors IntegrationsSecurityConfig pattern. Actuator health and metrics endpoints remain open for
+ * monitoring.
  */
 @Configuration
 @EnableWebSecurity
 public class AnalyticsSecurityConfig {
 
-    @Bean
-    public SecurityFilterChain analyticsSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/actuator/health", "/actuator/info", "/actuator/prometheus").permitAll()
-                        .requestMatchers("/api/v1/analytics/**").authenticated()
-                        .anyRequest().denyAll()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+  @Bean
+  public SecurityFilterChain analyticsSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(csrf -> csrf.disable())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/actuator/health", "/actuator/info", "/actuator/prometheus")
+                    .permitAll()
+                    .requestMatchers("/api/v1/analytics/**")
+                    .authenticated()
+                    .anyRequest()
+                    .denyAll())
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
-        return http.build();
-    }
+    return http.build();
+  }
 }

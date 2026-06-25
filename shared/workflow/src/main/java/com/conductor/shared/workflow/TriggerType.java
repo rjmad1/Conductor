@@ -1,13 +1,11 @@
 package com.conductor.shared.workflow;
 
-/**
- * Supported workflow trigger mechanisms.
- */
+/** Supported workflow trigger mechanisms. */
 public enum TriggerType {
-    EVENT,
-    API,
-    WEBHOOK,
-    SCHEDULE,
-    TIMER,
-    MANUAL
+  EVENT,
+  API,
+  WEBHOOK,
+  SCHEDULE,
+  TIMER,
+  MANUAL
 }

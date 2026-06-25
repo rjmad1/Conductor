@@ -2,12 +2,11 @@ package com.conductor.analytics.domain;
 
 import com.conductor.shared.middleware.tenant.TenantAwareEntity;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.*;
 
 /**
  * Dashboard metadata entity. Stores layout configuration for embedded analytics views.
@@ -22,40 +21,40 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Dashboard extends TenantAwareEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    private String description;
+  private String description;
 
-    @Column(columnDefinition = "TEXT")
-    private String layoutJson;
+  @Column(columnDefinition = "TEXT")
+  private String layoutJson;
 
-    @Column(nullable = false)
-    private String status;
+  @Column(nullable = false)
+  private String status;
 
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
+  @Column(nullable = false, updatable = false)
+  private Instant createdAt;
 
-    private Instant updatedAt;
+  private Instant updatedAt;
 
-    @OneToMany(mappedBy = "dashboard", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<DashboardWidget> widgets = new ArrayList<>();
+  @OneToMany(mappedBy = "dashboard", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  private List<DashboardWidget> widgets = new ArrayList<>();
 
-    @PrePersist
-    void onPrePersist() {
-        this.createdAt = Instant.now();
-        if (this.status == null) {
-            this.status = "ACTIVE";
-        }
+  @PrePersist
+  void onPrePersist() {
+    this.createdAt = Instant.now();
+    if (this.status == null) {
+      this.status = "ACTIVE";
     }
+  }
 
-    @PreUpdate
-    void onPreUpdate() {
-        this.updatedAt = Instant.now();
-    }
+  @PreUpdate
+  void onPreUpdate() {
+    this.updatedAt = Instant.now();
+  }
 }

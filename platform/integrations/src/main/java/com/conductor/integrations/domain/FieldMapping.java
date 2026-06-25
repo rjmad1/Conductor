@@ -11,20 +11,20 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FieldMapping extends TenantAwareEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "integration_id", nullable = false)
-    private Integration integration;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "integration_id", nullable = false)
+  private Integration integration;
 
-    @Column(name = "source_field", nullable = false)
-    private String sourceField;
+  @Column(name = "source_field", nullable = false)
+  private String sourceField;
 
-    @Column(name = "target_field", nullable = false)
-    private String targetField;
+  @Column(name = "target_field", nullable = false)
+  private String targetField;
 
-    @Column(name = "default_value")
-    private String defaultValue;
+  @Column(name = "default_value")
+  private String defaultValue;
 }
