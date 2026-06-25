@@ -16,10 +16,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build and Compile
         run: ./gradlew compileJava compileTestJava --no-daemon
@@ -31,4 +30,3 @@ jobs:
         run: |
           chmod +x ./scripts/docs-check.sh
           ./scripts/docs-check.sh
-
