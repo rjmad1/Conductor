@@ -34,3 +34,34 @@ integration:
     enabled: ${INTEGRATION_PROXY_ENABLED:false}
     host: ${INTEGRATION_PROXY_HOST:localhost}
     port: ${INTEGRATION_PROXY_PORT:3128}
+
+connector:
+  health:
+    connect-timeout-ms: ${CONNECTOR_HEALTH_CONNECT_TIMEOUT_MS:3000}
+    read-timeout-ms: ${CONNECTOR_HEALTH_READ_TIMEOUT_MS:3000}
+  shopify:
+    health-url: ${SHOPIFY_HEALTH_URL:https://status.shopify.com/api/v2/status.json}
+  razorpay:
+    health-url: ${RAZORPAY_HEALTH_URL:https://api.razorpay.com/}
+  zoho:
+    health-url: ${ZOHO_HEALTH_URL:https://accounts.zoho.com/}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  endpoint:
+    health:
+      show-details: when_authorized
+      group:
+        readiness:
+          include: readinessState,connector
+  metrics:
+    tags:
+      service: connector-service

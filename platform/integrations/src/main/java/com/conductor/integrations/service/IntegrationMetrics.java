@@ -5,6 +5,7 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import org.springframework.stereotype.Component;
+
 import java.time.Duration;
 import java.util.UUID;
 
@@ -18,12 +19,18 @@ public class IntegrationMetrics {
     }
 
     public void recordConnectorHealth(String connectorType, boolean success) {
-        Counter.builder("connector.health")
-                .tag("tenant", tenantTag())
+        Counter.builder("connector.health.checks")
                 .tag("connector", connectorType)
-                .tag("status", success ? "success" : "failure")
+                .tag("result", success ? "healthy" : "unhealthy")
                 .register(registry)
                 .increment();
+    }
+
+    public void recordConnectorHealthLatency(String connectorType, long latencyMs) {
+        Timer.builder("connector.health.latency")
+                .tag("connector", connectorType)
+                .register(registry)
+                .record(Duration.ofMillis(latencyMs));
     }
 
     public void recordOAuthHealth(String connectorType, boolean success) {

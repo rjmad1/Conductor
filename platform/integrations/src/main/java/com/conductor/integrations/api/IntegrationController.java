@@ -2,6 +2,7 @@ package com.conductor.integrations.api;
 
 import com.conductor.integrations.domain.*;
 import com.conductor.integrations.framework.ConnectorAdapter;
+import com.conductor.integrations.framework.ConnectorHealthResult;
 import com.conductor.integrations.framework.ConnectorRegistry;
 import com.conductor.integrations.framework.CredentialEncryptor;
 import com.conductor.integrations.framework.OAuthStateStore;
@@ -206,7 +207,11 @@ public class IntegrationController {
                 .orElseThrow(() -> new IllegalArgumentException("Integration not found"));
         ConnectorAdapter adapter = connectorRegistry.getAdapter(integration.getConnector().getType())
                 .orElseThrow(() -> new IllegalArgumentException("Connector adapter not found"));
-        boolean isHealthy = adapter.healthCheck(tenantId);
-        return ResponseEntity.ok(Map.of("status", isHealthy ? "UP" : "DOWN", "timestamp", Instant.now()));
+        ConnectorHealthResult result = adapter.healthCheck(tenantId);
+        return ResponseEntity.ok(Map.of(
+                "status", result.status().name(),
+                "message", result.message(),
+                "latencyMs", result.latencyMs(),
+                "timestamp", Instant.now()));
     }
 }

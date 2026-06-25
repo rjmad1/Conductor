@@ -1,40 +1,58 @@
 package com.conductor.integrations.connectors;
 
 import com.conductor.integrations.framework.ConnectorAdapter;
+import com.conductor.integrations.framework.ConnectorHealthProbe;
+import com.conductor.integrations.framework.ConnectorHealthResult;
+import com.conductor.integrations.framework.ConnectorStatus;
 import com.conductor.integrations.framework.ProxyHttpClient;
+import com.conductor.integrations.service.IntegrationMetrics;
 import com.conductor.shared.messaging.EventPublisher;
 import com.conductor.shared.middleware.tenant.AuditLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.HashMap;
 
 @Component("razorpayConnector")
 public class RazorpayConnector implements ConnectorAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(RazorpayConnector.class);
+
     private final ProxyHttpClient proxyHttpClient;
     private final EventPublisher eventPublisher;
     private final AuditLogger auditLogger;
+    private final IntegrationMetrics metrics;
+    private final String healthCheckUrl;
+    private final int connectTimeoutMs;
+    private final int readTimeoutMs;
 
-    public RazorpayConnector(ProxyHttpClient proxyHttpClient, EventPublisher eventPublisher, AuditLogger auditLogger) {
+    public RazorpayConnector(
+            ProxyHttpClient proxyHttpClient,
+            EventPublisher eventPublisher,
+            AuditLogger auditLogger,
+            IntegrationMetrics metrics,
+            @Value("${connector.razorpay.health-url:https://api.razorpay.com/}") String healthCheckUrl,
+            @Value("${connector.health.connect-timeout-ms:3000}") int connectTimeoutMs,
+            @Value("${connector.health.read-timeout-ms:3000}") int readTimeoutMs) {
         this.proxyHttpClient = proxyHttpClient;
         this.eventPublisher = eventPublisher;
         this.auditLogger = auditLogger;
+        this.metrics = metrics;
+        this.healthCheckUrl = healthCheckUrl;
+        this.connectTimeoutMs = connectTimeoutMs;
+        this.readTimeoutMs = readTimeoutMs;
     }
 
     @Override
-    public String getConnectorType() {
-        return "razorpay";
-    }
+    public String getConnectorType() { return "razorpay"; }
 
     @Override
-    public String getVersion() {
-        return "v1";
-    }
+    public String getVersion() { return "v1"; }
 
     @Override
     public void connect(UUID tenantId, Map<String, Object> params) {
@@ -52,7 +70,7 @@ public class RazorpayConnector implements ConnectorAdapter {
     public boolean testConnection(UUID tenantId, Map<String, Object> credentials) {
         log.info("Testing connection to Razorpay for tenant {}", tenantId);
         try {
-            RestTemplate restTemplate = proxyHttpClient.getRestTemplate();
+            proxyHttpClient.getRestTemplate();
             return true;
         } catch (Exception e) {
             log.error("Razorpay test connection failed", e);
@@ -72,7 +90,6 @@ public class RazorpayConnector implements ConnectorAdapter {
             paymentLink.put("currency", payload.getOrDefault("currency", "INR"));
             paymentLink.put("shortUrl", "https://rzp.io/i/mockLink");
             paymentLink.put("status", "created");
-
             eventPublisher.publish("integration", "razorpay", "payment_created", "v1", paymentLink);
             return paymentLink;
         } else if ("lookup-payment-status".equalsIgnoreCase(action)) {
@@ -98,24 +115,27 @@ public class RazorpayConnector implements ConnectorAdapter {
 
     @Override
     public void subscribe(UUID tenantId, String eventName, String webhookUrl) {
-        log.info("Subscribing to Razorpay webhook event {} for tenant {} at URL {}", eventName, tenantId, webhookUrl);
-        auditLogger.logEvent("WEBHOOK_SUBSCRIBED", "razorpay:" + eventName, "SUCCESS", "Subscribed to webhook: " + webhookUrl);
+        log.info("Subscribing to Razorpay webhook {} for tenant {}", eventName, tenantId);
+        auditLogger.logEvent("WEBHOOK_SUBSCRIBED", "razorpay:" + eventName, "SUCCESS", "Subscribed: " + webhookUrl);
     }
 
     @Override
     public void unsubscribe(UUID tenantId, String eventName) {
-        log.info("Unsubscribing from Razorpay webhook event {} for tenant {}", eventName, tenantId);
-        auditLogger.logEvent("WEBHOOK_UNSUBSCRIBED", "razorpay:" + eventName, "SUCCESS", "Unsubscribed from webhook");
+        log.info("Unsubscribing from Razorpay webhook {} for tenant {}", eventName, tenantId);
+        auditLogger.logEvent("WEBHOOK_UNSUBSCRIBED", "razorpay:" + eventName, "SUCCESS", "Unsubscribed");
     }
 
     @Override
     public void refreshToken(UUID tenantId) {
-        log.info("Refreshing token for Razorpay connector on tenant {}", tenantId);
+        log.info("Refreshing Razorpay token for tenant {}", tenantId);
     }
 
     @Override
-    public boolean healthCheck(UUID tenantId) {
-        log.debug("Checking Razorpay health for tenant {}", tenantId);
-        return true;
+    public ConnectorHealthResult healthCheck(UUID tenantId) {
+        RestTemplate rt = proxyHttpClient.getRestTemplate(connectTimeoutMs, readTimeoutMs);
+        ConnectorHealthResult result = ConnectorHealthProbe.probe("razorpay", healthCheckUrl, rt);
+        metrics.recordConnectorHealth("razorpay", result.status() == ConnectorStatus.HEALTHY);
+        metrics.recordConnectorHealthLatency("razorpay", result.latencyMs());
+        return result;
     }
 }

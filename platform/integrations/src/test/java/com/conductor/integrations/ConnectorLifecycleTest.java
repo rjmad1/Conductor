@@ -5,11 +5,18 @@ import com.conductor.integrations.connectors.ZohoConnector;
 import com.conductor.integrations.connectors.RazorpayConnector;
 import com.conductor.integrations.framework.ConnectorRegistry;
 import com.conductor.integrations.framework.ProxyHttpClient;
+import com.conductor.integrations.service.IntegrationMetrics;
 import com.conductor.shared.messaging.EventPublisher;
 import com.conductor.shared.middleware.tenant.AuditLogger;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -27,10 +34,14 @@ public class ConnectorLifecycleTest {
         ProxyHttpClient client = mock(ProxyHttpClient.class);
         eventPublisher = mock(EventPublisher.class);
         auditLogger = mock(AuditLogger.class);
+        IntegrationMetrics metrics = new IntegrationMetrics(new SimpleMeterRegistry());
 
-        shopifyConnector = new ShopifyConnector(client, eventPublisher, auditLogger);
-        zohoConnector = new ZohoConnector(client, eventPublisher, auditLogger);
-        razorpayConnector = new RazorpayConnector(client, eventPublisher, auditLogger);
+        shopifyConnector = new ShopifyConnector(client, eventPublisher, auditLogger, metrics,
+                "http://localhost/shopify", 500, 500);
+        zohoConnector = new ZohoConnector(client, eventPublisher, auditLogger, metrics,
+                "http://localhost/zoho", 500, 500);
+        razorpayConnector = new RazorpayConnector(client, eventPublisher, auditLogger, metrics,
+                "http://localhost/razorpay", 500, 500);
 
         registry = new ConnectorRegistry(Arrays.asList(shopifyConnector, zohoConnector, razorpayConnector));
     }

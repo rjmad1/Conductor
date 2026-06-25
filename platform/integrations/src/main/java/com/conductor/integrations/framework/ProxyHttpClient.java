@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -27,16 +28,31 @@ public class ProxyHttpClient {
         this.proxyPort = proxyPort;
     }
 
+    /** Returns a RestTemplate for general use (no explicit timeout). */
     public RestTemplate getRestTemplate() {
-        if (proxyEnabled) {
-            log.info("Creating HTTP client routing through Squid proxy {}:{}", proxyHost, proxyPort);
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
-            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-            factory.setProxy(proxy);
-            return new RestTemplate(factory);
-        } else {
-            log.debug("Proxy egress is disabled, returning direct-route RestTemplate");
-            return new RestTemplate();
+        return buildRestTemplate(-1, -1);
+    }
+
+    /**
+     * Returns a RestTemplate configured with explicit connect and read timeouts.
+     * Use for health checks and any bounded-latency operations.
+     */
+    public RestTemplate getRestTemplate(int connectTimeoutMs, int readTimeoutMs) {
+        return buildRestTemplate(connectTimeoutMs, readTimeoutMs);
+    }
+
+    private RestTemplate buildRestTemplate(int connectTimeoutMs, int readTimeoutMs) {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        if (connectTimeoutMs > 0) {
+            factory.setConnectTimeout(connectTimeoutMs);
         }
+        if (readTimeoutMs > 0) {
+            factory.setReadTimeout(readTimeoutMs);
+        }
+        if (proxyEnabled) {
+            log.debug("Building HTTP client via proxy {}:{}", proxyHost, proxyPort);
+            factory.setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)));
+        }
+        return new RestTemplate(factory);
     }
 }

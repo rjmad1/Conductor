@@ -1,40 +1,58 @@
 package com.conductor.integrations.connectors;
 
 import com.conductor.integrations.framework.ConnectorAdapter;
+import com.conductor.integrations.framework.ConnectorHealthProbe;
+import com.conductor.integrations.framework.ConnectorHealthResult;
+import com.conductor.integrations.framework.ConnectorStatus;
 import com.conductor.integrations.framework.ProxyHttpClient;
+import com.conductor.integrations.service.IntegrationMetrics;
 import com.conductor.shared.messaging.EventPublisher;
 import com.conductor.shared.middleware.tenant.AuditLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.HashMap;
 
 @Component("zohoConnector")
 public class ZohoConnector implements ConnectorAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(ZohoConnector.class);
+
     private final ProxyHttpClient proxyHttpClient;
     private final EventPublisher eventPublisher;
     private final AuditLogger auditLogger;
+    private final IntegrationMetrics metrics;
+    private final String healthCheckUrl;
+    private final int connectTimeoutMs;
+    private final int readTimeoutMs;
 
-    public ZohoConnector(ProxyHttpClient proxyHttpClient, EventPublisher eventPublisher, AuditLogger auditLogger) {
+    public ZohoConnector(
+            ProxyHttpClient proxyHttpClient,
+            EventPublisher eventPublisher,
+            AuditLogger auditLogger,
+            IntegrationMetrics metrics,
+            @Value("${connector.zoho.health-url:https://accounts.zoho.com/}") String healthCheckUrl,
+            @Value("${connector.health.connect-timeout-ms:3000}") int connectTimeoutMs,
+            @Value("${connector.health.read-timeout-ms:3000}") int readTimeoutMs) {
         this.proxyHttpClient = proxyHttpClient;
         this.eventPublisher = eventPublisher;
         this.auditLogger = auditLogger;
+        this.metrics = metrics;
+        this.healthCheckUrl = healthCheckUrl;
+        this.connectTimeoutMs = connectTimeoutMs;
+        this.readTimeoutMs = readTimeoutMs;
     }
 
     @Override
-    public String getConnectorType() {
-        return "zoho";
-    }
+    public String getConnectorType() { return "zoho"; }
 
     @Override
-    public String getVersion() {
-        return "v1";
-    }
+    public String getVersion() { return "v1"; }
 
     @Override
     public void connect(UUID tenantId, Map<String, Object> params) {
@@ -52,7 +70,7 @@ public class ZohoConnector implements ConnectorAdapter {
     public boolean testConnection(UUID tenantId, Map<String, Object> credentials) {
         log.info("Testing connection to Zoho for tenant {}", tenantId);
         try {
-            RestTemplate restTemplate = proxyHttpClient.getRestTemplate();
+            proxyHttpClient.getRestTemplate();
             return true;
         } catch (Exception e) {
             log.error("Zoho test connection failed", e);
@@ -69,14 +87,12 @@ public class ZohoConnector implements ConnectorAdapter {
             Map<String, Object> leadData = new HashMap<>(payload);
             leadData.put("zohoLeadId", "zoho-lead-555");
             leadData.put("status", "Created");
-            
             eventPublisher.publish("integration", "zoho", "lead_created", "v1", leadData);
             return leadData;
         } else if ("update-lead".equalsIgnoreCase(action)) {
             Map<String, Object> leadData = new HashMap<>(payload);
             leadData.put("zohoLeadId", payload.getOrDefault("zohoLeadId", "zoho-lead-555"));
             leadData.put("status", "Updated");
-
             eventPublisher.publish("integration", "zoho", "lead_updated", "v1", leadData);
             return leadData;
         } else if ("sync-contacts".equalsIgnoreCase(action)) {
@@ -84,7 +100,6 @@ public class ZohoConnector implements ConnectorAdapter {
             contact.put("zohoContactId", "zoho-cont-777");
             contact.put("lastName", "Doe");
             contact.put("email", "john.doe@example.com");
-
             eventPublisher.publish("integration", "zoho", "contact_created", "v1", contact);
             return contact;
         } else if ("sync-opportunities".equalsIgnoreCase(action)) {
@@ -104,24 +119,27 @@ public class ZohoConnector implements ConnectorAdapter {
 
     @Override
     public void subscribe(UUID tenantId, String eventName, String webhookUrl) {
-        log.info("Subscribing to Zoho webhook event {} for tenant {} at URL {}", eventName, tenantId, webhookUrl);
-        auditLogger.logEvent("WEBHOOK_SUBSCRIBED", "zoho:" + eventName, "SUCCESS", "Subscribed to webhook: " + webhookUrl);
+        log.info("Subscribing to Zoho webhook {} for tenant {}", eventName, tenantId);
+        auditLogger.logEvent("WEBHOOK_SUBSCRIBED", "zoho:" + eventName, "SUCCESS", "Subscribed: " + webhookUrl);
     }
 
     @Override
     public void unsubscribe(UUID tenantId, String eventName) {
-        log.info("Unsubscribing from Zoho webhook event {} for tenant {}", eventName, tenantId);
-        auditLogger.logEvent("WEBHOOK_UNSUBSCRIBED", "zoho:" + eventName, "SUCCESS", "Unsubscribed from webhook");
+        log.info("Unsubscribing from Zoho webhook {} for tenant {}", eventName, tenantId);
+        auditLogger.logEvent("WEBHOOK_UNSUBSCRIBED", "zoho:" + eventName, "SUCCESS", "Unsubscribed");
     }
 
     @Override
     public void refreshToken(UUID tenantId) {
-        log.info("Refreshing token for Zoho connector on tenant {}", tenantId);
+        log.info("Refreshing Zoho token for tenant {}", tenantId);
     }
 
     @Override
-    public boolean healthCheck(UUID tenantId) {
-        log.debug("Checking Zoho health for tenant {}", tenantId);
-        return true;
+    public ConnectorHealthResult healthCheck(UUID tenantId) {
+        RestTemplate rt = proxyHttpClient.getRestTemplate(connectTimeoutMs, readTimeoutMs);
+        ConnectorHealthResult result = ConnectorHealthProbe.probe("zoho", healthCheckUrl, rt);
+        metrics.recordConnectorHealth("zoho", result.status() == ConnectorStatus.HEALTHY);
+        metrics.recordConnectorHealthLatency("zoho", result.latencyMs());
+        return result;
     }
 }

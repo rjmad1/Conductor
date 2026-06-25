@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface ConnectorAdapter {
-    String getConnectorType(); // e.g., "shopify", "zoho", "razorpay"
+    String getConnectorType();
     String getVersion();
 
     void connect(UUID tenantId, Map<String, Object> params);
@@ -14,5 +14,11 @@ public interface ConnectorAdapter {
     void subscribe(UUID tenantId, String eventName, String webhookUrl);
     void unsubscribe(UUID tenantId, String eventName);
     void refreshToken(UUID tenantId);
-    boolean healthCheck(UUID tenantId);
+
+    /**
+     * Performs a lightweight, non-destructive connectivity check against the provider.
+     * Returns HEALTHY on 2xx/4xx (provider reachable), DEGRADED on rate-limit (429),
+     * UNAVAILABLE on 5xx or network failure.
+     */
+    ConnectorHealthResult healthCheck(UUID tenantId);
 }
