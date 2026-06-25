@@ -20,6 +20,7 @@ jobs:
       - name: Generate Gradle wrapper jar
         run: |
           mkdir /tmp/gradle-wrapper-gen
+          touch /tmp/gradle-wrapper-gen/settings.gradle
           cd /tmp/gradle-wrapper-gen
           gradle wrapper --gradle-version 8.10 --no-daemon
           cp gradle/wrapper/gradle-wrapper.jar "$GITHUB_WORKSPACE/gradle/wrapper/"
