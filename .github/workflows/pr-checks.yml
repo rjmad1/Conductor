@@ -18,7 +18,11 @@ jobs:
           distribution: 'temurin'
 
       - name: Generate Gradle wrapper jar
-        run: gradle wrapper --gradle-version 8.10 --no-daemon
+        run: |
+          mkdir /tmp/gradle-wrapper-gen
+          cd /tmp/gradle-wrapper-gen
+          gradle wrapper --gradle-version 8.10 --no-daemon
+          cp gradle/wrapper/gradle-wrapper.jar "$GITHUB_WORKSPACE/gradle/wrapper/"
 
       - name: Build and Compile
         run: |
