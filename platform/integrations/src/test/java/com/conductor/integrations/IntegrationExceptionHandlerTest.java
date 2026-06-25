@@ -39,6 +39,8 @@ class IntegrationExceptionHandlerTest {
     @MockBean com.conductor.shared.middleware.tenant.AuditLogger auditLogger;
     @MockBean com.conductor.shared.messaging.EventPublisher eventPublisher;
     @MockBean OAuthStateStore oauthStateStore;
+    @MockBean com.conductor.shared.auth.ConductorAuthenticationEntryPoint conductorAuthenticationEntryPoint;
+    @MockBean com.conductor.shared.auth.ConductorAccessDeniedHandler conductorAccessDeniedHandler;
     @MockBean org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder;
     @MockBean com.conductor.shared.middleware.tenant.TenantFilterAspect tenantFilterAspect;
     @MockBean com.conductor.integrations.service.OAuthTokenExchangeService oauthTokenExchangeService;

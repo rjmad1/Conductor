@@ -1,4 +1,4 @@
-package com.conductor.customer.exception;
+package com.conductor.identity.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,40 +14,26 @@ import java.net.URI;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RestControllerAdvice(basePackages = "com.conductor.customer.api")
-public class CustomerGlobalExceptionHandler {
+@RestControllerAdvice(basePackages = "com.conductor.identity.api")
+public class IdentityExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomerGlobalExceptionHandler.class);
-
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public ProblemDetail handleNotFound(CustomerNotFoundException ex) {
-        log.debug("Customer not found: {}", ex.getMessage());
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problem.setType(URI.create("https://conductor.io/errors/customer-not-found"));
-        return problem;
-    }
-
-    @ExceptionHandler(CustomerAlreadyExistsException.class)
-    public ProblemDetail handleConflict(CustomerAlreadyExistsException ex) {
-        log.warn("Customer conflict: {}", ex.getMessage());
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
-        problem.setType(URI.create("https://conductor.io/errors/customer-already-exists"));
-        return problem;
-    }
-
-    @ExceptionHandler(ConsentException.class)
-    public ProblemDetail handleConsent(ConsentException ex) {
-        log.warn("Consent error: {}", ex.getMessage());
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
-        problem.setType(URI.create("https://conductor.io/errors/consent-error"));
-        return problem;
-    }
+    private static final Logger log = LoggerFactory.getLogger(IdentityExceptionHandler.class);
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ProblemDetail handleBadRequest(IllegalArgumentException ex) {
-        log.warn("Bad request: {}", ex.getMessage());
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        problem.setType(URI.create("https://conductor.io/errors/bad-request"));
+    public ProblemDetail handleNotFound(IllegalArgumentException ex, WebRequest request) {
+        log.debug("Identity resource not found: {}", ex.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setType(URI.create("https://conductor.io/errors/identity-not-found"));
+        problem.setProperty("instance", request.getDescription(false));
+        return problem;
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ProblemDetail handleConflict(IllegalStateException ex, WebRequest request) {
+        log.warn("Identity conflict: {}", ex.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setType(URI.create("https://conductor.io/errors/identity-conflict"));
+        problem.setProperty("instance", request.getDescription(false));
         return problem;
     }
 
@@ -69,7 +55,7 @@ public class CustomerGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleUnexpected(Exception ex, WebRequest request) {
-        log.error("Unexpected error in customer API", ex);
+        log.error("Unexpected error in identity API", ex);
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
                 "An unexpected error occurred");
         problem.setType(URI.create("https://conductor.io/errors/internal"));

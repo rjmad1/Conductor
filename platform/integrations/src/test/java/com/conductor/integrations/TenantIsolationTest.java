@@ -60,6 +60,10 @@ class TenantIsolationTest {
 
     @MockBean
     private org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder;
+    @MockBean
+    private com.conductor.shared.auth.ConductorAuthenticationEntryPoint conductorAuthenticationEntryPoint;
+    @MockBean
+    private com.conductor.shared.auth.ConductorAccessDeniedHandler conductorAccessDeniedHandler;
 
     @MockBean
     private com.conductor.shared.middleware.tenant.TenantFilterAspect tenantFilterAspect;

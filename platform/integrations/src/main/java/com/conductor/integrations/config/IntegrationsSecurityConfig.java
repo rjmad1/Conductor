@@ -1,5 +1,7 @@
 package com.conductor.integrations.config;
 
+import com.conductor.shared.auth.ConductorAccessDeniedHandler;
+import com.conductor.shared.auth.ConductorAuthenticationEntryPoint;
 import com.conductor.shared.auth.KeycloakJwtAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class IntegrationsSecurityConfig {
 
+    private final ConductorAuthenticationEntryPoint authenticationEntryPoint;
+    private final ConductorAccessDeniedHandler accessDeniedHandler;
+
+    public IntegrationsSecurityConfig(ConductorAuthenticationEntryPoint authenticationEntryPoint,
+            ConductorAccessDeniedHandler accessDeniedHandler) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
+    }
+
     @Bean
     @Primary
     public SecurityFilterChain integrationsSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -30,6 +41,10 @@ public class IntegrationsSecurityConfig {
             )
             .oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter()))
+            )
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
             );
 
         return http.build();
