@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.UUID;
 
 /**
@@ -125,28 +124,23 @@ public class TenantContextFilter implements Filter {
             TenantContext.clear();
         }
     }
-
     /**
-     * Parses the tenant UUID from the Keycloak issuer URI.
+     * Parses the tenant UUID from the Keycloak issuer string.
      * Expected format: {scheme}://{host}/realms/conductor-{tenantUUID}
      * Returns null if the issuer does not follow the expected pattern.
      */
     static UUID extractTenantFromJwt(JwtAuthenticationToken jwtAuth) {
         try {
-            URI issuer = jwtAuth.getToken().getIssuer();
-            if (issuer == null) {
+            String issuerStr = jwtAuth.getToken().getClaimAsString("iss");
+            if (issuerStr == null) {
                 return null;
             }
-            String path = issuer.getPath(); // e.g. "/realms/conductor-550e8400-..."
-            if (path == null) {
-                return null;
-            }
-            // Find last path segment
-            int lastSlash = path.lastIndexOf('/');
+            // Find last path segment: ".../realms/conductor-{uuid}"
+            int lastSlash = issuerStr.lastIndexOf('/');
             if (lastSlash < 0) {
                 return null;
             }
-            String realm = path.substring(lastSlash + 1); // e.g. "conductor-550e8400-..."
+            String realm = issuerStr.substring(lastSlash + 1);
             if (!realm.startsWith(REALM_PREFIX)) {
                 return null;
             }
