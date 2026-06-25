@@ -3,7 +3,9 @@ package com.conductor.shared.messaging;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,8 +13,17 @@ public class EventObservability {
 
   private final MeterRegistry meterRegistry;
 
+  public EventObservability() {
+    this.meterRegistry = new SimpleMeterRegistry();
+  }
+
   public EventObservability(MeterRegistry meterRegistry) {
     this.meterRegistry = meterRegistry;
+  }
+
+  @org.springframework.beans.factory.annotation.Autowired
+  public EventObservability(ObjectProvider<MeterRegistry> registryProvider) {
+    this.meterRegistry = registryProvider.getIfAvailable(SimpleMeterRegistry::new);
   }
 
   public void recordPublication(

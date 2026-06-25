@@ -88,6 +88,7 @@ class TenantIsolationTest {
     mockMvc
         .perform(
             get("/api/v1/customers/" + customerId)
+                .header("X-Tenant-ID", tenantId.toString())
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
@@ -104,6 +105,7 @@ class TenantIsolationTest {
     mockMvc
         .perform(
             get("/api/v1/customers/" + crossTenantCustomerId)
+                .header("X-Tenant-ID", tenantId.toString())
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound());

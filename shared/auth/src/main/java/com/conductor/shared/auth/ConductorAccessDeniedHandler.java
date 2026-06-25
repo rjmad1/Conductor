@@ -1,41 +1,42 @@
 package com.conductor.shared.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.conductor.shared.security.SecurityExceptionRenderer;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ProblemDetail;
+import java.io.IOException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.net.URI;
-
+/** Custom AccessDeniedHandler rendering RFC 7807 problem details for unauthorized requests. */
 @Component
 public class ConductorAccessDeniedHandler implements AccessDeniedHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ConductorAccessDeniedHandler.class);
-    private final ObjectMapper mapper;
+  private final SecurityMetrics securityMetrics;
 
-    public ConductorAccessDeniedHandler(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
+  public ConductorAccessDeniedHandler(SecurityMetrics securityMetrics) {
+    this.securityMetrics = securityMetrics;
+  }
 
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response,
-            AccessDeniedException accessDeniedException) throws IOException {
-        log.debug("Access denied for {}: {}", request.getRequestURI(), accessDeniedException.getMessage());
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN,
-                "You do not have permission to perform this action");
-        problem.setType(URI.create("https://conductor.io/errors/forbidden"));
-        problem.setTitle("Forbidden");
-        problem.setProperty("instance", request.getRequestURI());
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
-        mapper.writeValue(response.getWriter(), problem);
-    }
+  @Override
+  public void handle(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AccessDeniedException accessDeniedException)
+      throws IOException, ServletException {
+
+    securityMetrics.recordAuthorizationFailure();
+
+    SecurityExceptionRenderer.renderError(
+        request,
+        response,
+        HttpServletResponse.SC_FORBIDDEN,
+        "https://conductor.io/errors/forbidden",
+        "Forbidden",
+        accessDeniedException.getMessage() != null
+            ? accessDeniedException.getMessage()
+            : "Access is denied due to insufficient permissions",
+        null);
+  }
 }

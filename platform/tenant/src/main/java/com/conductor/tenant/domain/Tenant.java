@@ -55,6 +55,7 @@ public class Tenant {
   @Column(name = "subscription_tier", nullable = false)
   private String subscriptionTier = "STANDARD";
 
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
   @Column(name = "settings", columnDefinition = "jsonb")
   private String settings;
 

@@ -6,12 +6,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component("authz")
-public class AuthorizationEngine {
+public class AuthorizationEngine implements AuthorizationService {
 
   /**
    * Checks if the active authenticated context has the requested permission. Enforces
    * deny-by-default. Wildcards (e.g., "workflows:*") are supported.
    */
+  @Override
   public boolean hasPermission(String requiredPermission) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || !authentication.isAuthenticated()) {
@@ -59,6 +60,7 @@ public class AuthorizationEngine {
    * Checks if the authenticated tenant matches the target resource owner. Used for resource-level
    * ABAC checks.
    */
+  @Override
   public boolean isResourceOwner(String resourceTenantId, String activeTenantId) {
     if (resourceTenantId == null || activeTenantId == null) {
       return false;

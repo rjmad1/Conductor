@@ -42,7 +42,8 @@ public class IntegrationsSecurityConfig {
                         "/healthz",
                         "/metrics",
                         "/actuator/health",
-                        "/api/v1/integrations/oauth/callback")
+                        "/api/v1/integrations/oauth/callback",
+                        "/api/v1/integrations/webhooks/whatsapp/**")
                     .permitAll()
                     .requestMatchers("/api/v1/**")
                     .authenticated()

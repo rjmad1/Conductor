@@ -75,11 +75,21 @@ public class CustomerService {
     return saved;
   }
 
+  @Transactional(readOnly = true)
   public Optional<Customer> findById(UUID id) {
+    UUID tenantId = com.conductor.shared.middleware.tenant.TenantContext.getCurrentTenantId();
+    if (tenantId != null) {
+      return customerRepository.findByIdAndTenantId(id, tenantId);
+    }
     return customerRepository.findById(id);
   }
 
+  @Transactional(readOnly = true)
   public Page<Customer> findAll(Pageable pageable) {
+    UUID tenantId = com.conductor.shared.middleware.tenant.TenantContext.getCurrentTenantId();
+    if (tenantId != null) {
+      return customerRepository.findAllActiveForTenant(tenantId, pageable);
+    }
     return customerRepository.findAllActive(pageable);
   }
 

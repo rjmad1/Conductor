@@ -9,28 +9,22 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@Testcontainers
 public abstract class BaseIntegrationTest {
-
-  @Container
-  protected static final PostgreSQLContainer<?> postgres =
-      new PostgreSQLContainer<>("postgres:15-alpine")
-          .withDatabaseName("conductor_db")
-          .withUsername("conductor")
-          .withPassword("conductor_password");
 
   @DynamicPropertySource
   static void configureProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.url", postgres::getJdbcUrl);
-    registry.add("spring.datasource.username", postgres::getUsername);
-    registry.add("spring.datasource.password", postgres::getPassword);
-    registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
+    registry.add(
+        "spring.datasource.url",
+        () ->
+            "jdbc:h2:mem:workflowtest;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH");
+    registry.add("spring.datasource.username", () -> "sa");
+    registry.add("spring.datasource.password", () -> "");
+    registry.add("spring.datasource.driver-class-name", () -> "org.h2.Driver");
+    registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
+    registry.add("spring.flyway.enabled", () -> "false");
   }
 
   // Mock temporal beans to prevent connection attempts during context load

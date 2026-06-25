@@ -77,6 +77,7 @@ public class Customer extends TenantAwareEntity {
    * Flexible JSONB bag for custom attributes not covered by first-class columns. Searchable via
    * JSONB path queries.
    */
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
   @Column(name = "attributes", columnDefinition = "jsonb")
   private String attributes;
 

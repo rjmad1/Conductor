@@ -42,6 +42,7 @@ public class Segment extends TenantAwareEntity {
   @Column(name = "segment_type", nullable = false)
   private SegmentType type;
 
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
   @Column(name = "rules", columnDefinition = "jsonb")
   private String rules;
 

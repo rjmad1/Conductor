@@ -2,6 +2,8 @@ package com.conductor.tenant.service;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,8 +11,8 @@ public class TenantMetrics {
 
   private final MeterRegistry registry;
 
-  public TenantMetrics(MeterRegistry registry) {
-    this.registry = registry;
+  public TenantMetrics(ObjectProvider<MeterRegistry> registryProvider) {
+    this.registry = registryProvider.getIfAvailable(SimpleMeterRegistry::new);
   }
 
   public void recordTenantCreated() {

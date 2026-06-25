@@ -1,0 +1,96 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Infrastructure (docker-compose)",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "-f", "docker-compose.local.yml", "up", "-d"],
+      "port": 5432,
+      "description": "PostgreSQL, Redis, ClickHouse, Qdrant, NATS, Keycloak, Temporal, Kong"
+    },
+    {
+      "name": "tenant-service",
+      "runtimeExecutable": "gradlew",
+      "runtimeArgs": [":platform:tenant:bootRun"],
+      "port": 8081
+    },
+    {
+      "name": "identity-service",
+      "runtimeExecutable": "gradlew",
+      "runtimeArgs": [":platform:identity:bootRun"],
+      "port": 8082
+    },
+    {
+      "name": "reference-app",
+      "runtimeExecutable": "gradlew",
+      "runtimeArgs": [":platform:reference-app:bootRun"],
+      "port": 8083
+    },
+    {
+      "name": "customer-service",
+      "runtimeExecutable": "gradlew",
+      "runtimeArgs": [":platform:customer:bootRun"],
+      "port": 8084
+    },
+    {
+      "name": "analytics-service",
+      "runtimeExecutable": "gradlew",
+      "runtimeArgs": [":platform:analytics:bootRun"],
+      "port": 8085
+    },
+    {
+      "name": "integrations-service",
+      "runtimeExecutable": "gradlew",
+      "runtimeArgs": [":platform:integrations:bootRun"],
+      "port": 8087
+    },
+    {
+      "name": "workflow-service",
+      "runtimeExecutable": "gradlew",
+      "runtimeArgs": [":platform:workflow:bootRun"],
+      "port": 8090
+    },
+    {
+      "name": "Keycloak (auth)",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "-f", "docker-compose.local.yml", "up", "-d", "keycloak"],
+      "port": 8080
+    },
+    {
+      "name": "Kong (API gateway)",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "-f", "docker-compose.local.yml", "up", "-d", "kong"],
+      "port": 8000
+    },
+    {
+      "name": "Metabase (analytics UI)",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "-f", "docker-compose.local.yml", "up", "-d", "metabase"],
+      "port": 3000
+    },
+    {
+      "name": "Grafana (dashboards)",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "-f", "docker-compose.local.yml", "up", "-d", "grafana"],
+      "port": 3001
+    },
+    {
+      "name": "Prometheus (metrics)",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "-f", "docker-compose.local.yml", "up", "-d", "prometheus"],
+      "port": 9090
+    },
+    {
+      "name": "Loki (logs)",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "-f", "docker-compose.local.yml", "up", "-d", "loki"],
+      "port": 3100
+    },
+    {
+      "name": "Tempo (traces)",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "-f", "docker-compose.local.yml", "up", "-d", "tempo"],
+      "port": 3200
+    }
+  ]
+}

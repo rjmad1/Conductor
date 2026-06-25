@@ -3,7 +3,9 @@ package com.conductor.analytics.observability;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,8 +17,8 @@ public class AnalyticsMetrics {
 
   private final MeterRegistry registry;
 
-  public AnalyticsMetrics(MeterRegistry registry) {
-    this.registry = registry;
+  public AnalyticsMetrics(ObjectProvider<MeterRegistry> registryProvider) {
+    this.registry = registryProvider.getIfAvailable(SimpleMeterRegistry::new);
   }
 
   public void recordEventsIngested(int count) {

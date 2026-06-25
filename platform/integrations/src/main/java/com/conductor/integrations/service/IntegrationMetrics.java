@@ -4,8 +4,10 @@ import com.conductor.shared.middleware.tenant.TenantContext;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.time.Duration;
 import java.util.UUID;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,8 +15,8 @@ public class IntegrationMetrics {
 
   private final MeterRegistry registry;
 
-  public IntegrationMetrics(MeterRegistry registry) {
-    this.registry = registry;
+  public IntegrationMetrics(ObjectProvider<MeterRegistry> registryProvider) {
+    this.registry = registryProvider.getIfAvailable(SimpleMeterRegistry::new);
   }
 
   public void recordConnectorHealth(String connectorType, boolean success) {

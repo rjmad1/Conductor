@@ -5,8 +5,10 @@ import com.conductor.shared.workflow.WorkflowStatus;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.time.Duration;
 import java.util.UUID;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,8 +20,8 @@ public class WorkflowMetrics {
 
   private final MeterRegistry registry;
 
-  public WorkflowMetrics(MeterRegistry registry) {
-    this.registry = registry;
+  public WorkflowMetrics(ObjectProvider<MeterRegistry> registryProvider) {
+    this.registry = registryProvider.getIfAvailable(SimpleMeterRegistry::new);
   }
 
   public void recordDefinitionCreated() {

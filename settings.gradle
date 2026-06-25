@@ -31,4 +31,4 @@ include 'platform:customer'
 include 'platform:integrations'
 
 include 'platform:analytics'
-
+include 'platform:reference-app'

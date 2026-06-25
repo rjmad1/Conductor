@@ -38,6 +38,7 @@ public class CustomerAttribute extends TenantAwareEntity {
   @Column(name = "attribute_key", nullable = false)
   private String key;
 
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
   @Column(name = "attribute_value", columnDefinition = "jsonb")
   private String value;
 

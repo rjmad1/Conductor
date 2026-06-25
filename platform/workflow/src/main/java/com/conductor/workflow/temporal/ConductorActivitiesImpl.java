@@ -103,7 +103,7 @@ public class ConductorActivitiesImpl implements ConductorActivities {
 
     try {
       Map<String, Object> result =
-          actionExecutor.execute(ActionType.valueOf(actionType), config, tenantId);
+          actionExecutor.execute(ActionType.valueOf(actionType), config, tenantId, executionUuid);
 
       // Record step completion
       step.setStatus(WorkflowStatus.COMPLETED);
@@ -164,8 +164,15 @@ public class ConductorActivitiesImpl implements ConductorActivities {
   @SuppressWarnings("unchecked")
   private List<Map<String, Object>> parseSteps(WorkflowDefinition definition) {
     try {
-      return objectMapper.readValue(
-          definition.getSteps(), new TypeReference<List<Map<String, Object>>>() {});
+      String stepsStr = definition.getSteps();
+      if (stepsStr != null && stepsStr.trim().startsWith("\"") && stepsStr.trim().endsWith("\"")) {
+        try {
+          stepsStr = objectMapper.readValue(stepsStr, String.class);
+        } catch (Exception e) {
+          // ignore and fallback to direct parsing
+        }
+      }
+      return objectMapper.readValue(stepsStr, new TypeReference<List<Map<String, Object>>>() {});
     } catch (JsonProcessingException e) {
       log.error("Failed to parse steps for definition {}: {}", definition.getId(), e.getMessage());
       return Collections.emptyList();

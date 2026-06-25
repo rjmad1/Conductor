@@ -24,6 +24,8 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'com.h2database:h2'
 }
 
 bootJar {

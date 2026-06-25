@@ -38,6 +38,7 @@ public class CustomerRelationship extends TenantAwareEntity {
   @Column(name = "relationship_type", nullable = false)
   private String relationshipType;
 
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
   @Column(name = "metadata", columnDefinition = "jsonb")
   private String metadata;
 

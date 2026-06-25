@@ -1,0 +1,20 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: reference-app
+  main:
+    allow-bean-definition-overriding: true
+
+keycloak:
+  server-url: ${KEYCLOAK_SERVER_URL:http://localhost:8080}
+  admin:
+    username: ${KEYCLOAK_ADMIN_USERNAME:admin}
+    password: ${KEYCLOAK_ADMIN_PASSWORD:admin_password}
+
+# Disable security on reference app endpoints so it can serve the UI page and proxy requests
+logging:
+  level:
+    com.conductor.referenceapp: DEBUG
+    org.springframework.security: INFO

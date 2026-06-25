@@ -72,6 +72,7 @@ public class ConsentRecord extends TenantAwareEntity {
   private String userAgent;
 
   /** Additional context: campaign ID, workflow ID, form ID, etc. */
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
   @Column(name = "metadata", columnDefinition = "jsonb")
   private String metadata;
 

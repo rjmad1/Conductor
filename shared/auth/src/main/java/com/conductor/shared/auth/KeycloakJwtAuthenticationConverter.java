@@ -29,7 +29,10 @@ public class KeycloakJwtAuthenticationConverter
     if (realmAccess != null && realmAccess.get("roles") instanceof Collection<?> roles) {
       authorities.addAll(
           roles.stream()
-              .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
+              .map(
+                  role ->
+                      new SimpleGrantedAuthority(
+                          "ROLE_" + role.toString().toUpperCase().replace(" ", "_")))
               .collect(Collectors.toList()));
     }
 
@@ -47,9 +50,9 @@ public class KeycloakJwtAuthenticationConverter
                             role ->
                                 new SimpleGrantedAuthority(
                                     "ROLE_"
-                                        + client.toUpperCase()
+                                        + client.toUpperCase().replace(" ", "_")
                                         + "_"
-                                        + role.toString().toUpperCase()))
+                                        + role.toString().toUpperCase().replace(" ", "_")))
                         .collect(Collectors.toList()));
               }
             }

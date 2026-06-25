@@ -54,6 +54,7 @@ public class CustomerTimeline extends TenantAwareEntity {
   private String summary;
 
   /** Event-specific context: IDs, amounts, references, etc. */
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
   @Column(name = "metadata", columnDefinition = "jsonb")
   private String metadata;
 

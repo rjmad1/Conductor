@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.postgresql:postgresql'
     implementation 'org.flywaydb:flyway-core'
+    implementation 'io.nats:jnats:2.17.2'
 
     implementation 'io.temporal:temporal-sdk:1.22.3'
     implementation 'io.temporal:temporal-spring-boot-starter-alpha:1.22.3'

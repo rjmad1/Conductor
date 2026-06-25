@@ -38,6 +38,13 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
   List<Customer> searchByDisplayName(
       @Param("tenantId") String tenantId, @Param("query") String query);
 
+  /** Tenant-scoped lookup — returns empty if the record belongs to a different tenant. */
+  Optional<Customer> findByIdAndTenantId(UUID id, UUID tenantId);
+
   @Query("SELECT c FROM Customer c WHERE c.status != 'DELETED'")
   Page<Customer> findAllActive(Pageable pageable);
+
+  /** Tenant-scoped list — only returns records belonging to the given tenant. */
+  @Query("SELECT c FROM Customer c WHERE c.status != 'DELETED' AND c.tenantId = :tenantId")
+  Page<Customer> findAllActiveForTenant(@Param("tenantId") UUID tenantId, Pageable pageable);
 }
