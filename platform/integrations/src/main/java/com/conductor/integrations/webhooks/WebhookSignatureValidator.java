@@ -41,10 +41,14 @@ public class WebhookSignatureValidator {
         return HmacValidator.isValidSignature(body, signatureHex, secret);
     }
 
-    public boolean validateZoho(byte[] body, String signature, String secret) {
-        if (signature == null || secret == null) {
+    /**
+     * Validates Zoho webhook using HMAC-SHA256.
+     * Zoho sends the signature as a hex-encoded HMAC-SHA256 of the raw body keyed with the shared secret.
+     */
+    public boolean validateZoho(byte[] body, String signatureHex, String secret) {
+        if (body == null || signatureHex == null || secret == null) {
             return false;
         }
-        return MessageDigest.isEqual(signature.getBytes(StandardCharsets.UTF_8), secret.getBytes(StandardCharsets.UTF_8));
+        return HmacValidator.isValidSignature(body, signatureHex, secret);
     }
 }
