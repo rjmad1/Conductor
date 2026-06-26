@@ -11,10 +11,12 @@ import com.conductor.integrations.framework.ProxyHttpClient;
 import com.conductor.integrations.service.IntegrationMetrics;
 import com.conductor.shared.messaging.EventPublisher;
 import com.conductor.shared.middleware.tenant.AuditLogger;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 public class ConnectorLifecycleTest {
 
@@ -30,7 +32,10 @@ public class ConnectorLifecycleTest {
     ProxyHttpClient client = mock(ProxyHttpClient.class);
     eventPublisher = mock(EventPublisher.class);
     auditLogger = mock(AuditLogger.class);
-    IntegrationMetrics metrics = new IntegrationMetrics(new SimpleMeterRegistry());
+    SimpleMeterRegistry meterRegistry = new SimpleMeterRegistry();
+    ObjectProvider<MeterRegistry> registryProvider = mock(ObjectProvider.class);
+    when(registryProvider.getIfAvailable(any())).thenReturn(meterRegistry);
+    IntegrationMetrics metrics = new IntegrationMetrics(registryProvider);
 
     shopifyConnector =
         new ShopifyConnector(

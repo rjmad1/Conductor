@@ -32,6 +32,8 @@ class WhatsAppWebhookControllerTest {
   @MockBean private AuditLogger auditLogger;
   @MockBean private org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder;
   @MockBean private com.conductor.shared.middleware.tenant.TenantFilterAspect tenantFilterAspect;
+  @MockBean private com.conductor.shared.auth.ConductorAuthenticationEntryPoint authEntryPoint;
+  @MockBean private com.conductor.shared.auth.ConductorAccessDeniedHandler accessDeniedHandler;
 
   private UUID tenantId;
 

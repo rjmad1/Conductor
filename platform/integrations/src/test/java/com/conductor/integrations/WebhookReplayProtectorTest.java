@@ -59,9 +59,9 @@ public class WebhookReplayProtectorTest {
   }
 
   /**
-   * Regression: the old check-then-put pattern had a race condition where two concurrent
-   * threads processing the same event ID could both see "not duplicate" and proceed.
-   * With putIfAbsent exactly one thread should win; all others return duplicate=true.
+   * Regression: the old check-then-put pattern had a race condition where two concurrent threads
+   * processing the same event ID could both see "not duplicate" and proceed. With putIfAbsent
+   * exactly one thread should win; all others return duplicate=true.
    */
   @Test
   void concurrentDuplicateCheck_exactlyOneThreadWins() throws Exception {

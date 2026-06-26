@@ -23,9 +23,9 @@ public interface ConnectorAdapter {
   void refreshToken(UUID tenantId);
 
   /**
-   * Performs a lightweight, non-destructive connectivity check against the provider.
-   * Returns HEALTHY on 2xx/4xx (provider reachable), DEGRADED on rate-limit (429),
-   * UNAVAILABLE on 5xx or network failure.
+   * Performs a lightweight, non-destructive connectivity check against the provider. Returns
+   * HEALTHY on 2xx/4xx (provider reachable), DEGRADED on rate-limit (429), UNAVAILABLE on 5xx or
+   * network failure.
    */
   ConnectorHealthResult healthCheck(UUID tenantId);
 }

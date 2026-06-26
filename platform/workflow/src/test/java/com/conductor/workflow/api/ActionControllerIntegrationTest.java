@@ -38,7 +38,16 @@ class ActionControllerIntegrationTest extends BaseIntegrationTest {
   void testListActions() throws Exception {
     String json =
         mockMvc
-            .perform(get("/api/v1/actions").with(jwt()).header("X-Tenant-ID", tenantId.toString()))
+            .perform(
+                get("/api/v1/actions")
+                    .with(
+                        jwt()
+                            .jwt(
+                                j ->
+                                    j.subject("test-user")
+                                        .issuer(
+                                            "http://localhost:8080/realms/conductor-" + tenantId)))
+                    .header("X-Tenant-ID", tenantId.toString()))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
@@ -56,7 +65,13 @@ class ActionControllerIntegrationTest extends BaseIntegrationTest {
         mockMvc
             .perform(
                 get("/api/v1/actions/LOG/metadata")
-                    .with(jwt())
+                    .with(
+                        jwt()
+                            .jwt(
+                                j ->
+                                    j.subject("test-user")
+                                        .issuer(
+                                            "http://localhost:8080/realms/conductor-" + tenantId)))
                     .header("X-Tenant-ID", tenantId.toString()))
             .andExpect(status().isOk())
             .andReturn()
@@ -74,7 +89,12 @@ class ActionControllerIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(
             post("/api/v1/actions/LOG/validate")
-                .with(jwt())
+                .with(
+                    jwt()
+                        .jwt(
+                            j ->
+                                j.subject("test-user")
+                                    .issuer("http://localhost:8080/realms/conductor-" + tenantId)))
                 .header("X-Tenant-ID", tenantId.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("message", "valid log text"))))
@@ -89,7 +109,12 @@ class ActionControllerIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(
             post("/api/v1/actions/LOG/validate")
-                .with(jwt())
+                .with(
+                    jwt()
+                        .jwt(
+                            j ->
+                                j.subject("test-user")
+                                    .issuer("http://localhost:8080/realms/conductor-" + tenantId)))
                 .header("X-Tenant-ID", tenantId.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("level", "INFO"))))

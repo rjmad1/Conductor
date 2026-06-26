@@ -36,7 +36,7 @@ public class TenantController {
   }
 
   @PostMapping
-  @PreAuthorize("hasRole('ROLE_PLATFORM_ADMIN')")
+  @PreAuthorize("hasAuthority('ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<TenantResponse> createTenant(
       @Valid @RequestBody CreateTenantRequest request) {
     Tenant tenant =
@@ -52,7 +52,7 @@ public class TenantController {
   }
 
   @GetMapping
-  @PreAuthorize("hasRole('ROLE_PLATFORM_ADMIN')")
+  @PreAuthorize("hasAuthority('ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<PageResponse<TenantResponse>> listTenants(
       @RequestParam(name = "limit", defaultValue = "20") int limit,
       @RequestParam(name = "starting_after", required = false) String startingAfter) {
@@ -95,7 +95,7 @@ public class TenantController {
   }
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyRole('ROLE_PLATFORM_ADMIN', 'ROLE_TENANT_ADMIN')")
+  @PreAuthorize("hasAnyAuthority('ROLE_PLATFORM_ADMIN', 'ROLE_TENANT_ADMIN')")
   public ResponseEntity<TenantResponse> getTenant(@PathVariable UUID id) {
     UUID activeTenantId = TenantContext.getCurrentTenantId();
     if (activeTenantId != null && !activeTenantId.equals(id)) {
@@ -109,7 +109,7 @@ public class TenantController {
   }
 
   @PatchMapping("/{id}")
-  @PreAuthorize("hasAnyRole('ROLE_PLATFORM_ADMIN', 'ROLE_TENANT_ADMIN')")
+  @PreAuthorize("hasAnyAuthority('ROLE_PLATFORM_ADMIN', 'ROLE_TENANT_ADMIN')")
   public ResponseEntity<TenantResponse> updateTenant(
       @PathVariable UUID id, @Valid @RequestBody UpdateTenantRequest request) {
     UUID activeTenantId = TenantContext.getCurrentTenantId();
@@ -130,21 +130,21 @@ public class TenantController {
   }
 
   @PostMapping("/{id}/deactivate")
-  @PreAuthorize("hasRole('ROLE_PLATFORM_ADMIN')")
+  @PreAuthorize("hasAuthority('ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<Void> deactivateTenant(@PathVariable UUID id) {
     tenantService.deactivateTenant(id);
     return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/{id}/activate")
-  @PreAuthorize("hasRole('ROLE_PLATFORM_ADMIN')")
+  @PreAuthorize("hasAuthority('ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<Void> activateTenant(@PathVariable UUID id) {
     tenantService.activateTenant(id);
     return ResponseEntity.noContent().build();
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ROLE_PLATFORM_ADMIN')")
+  @PreAuthorize("hasAuthority('ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<Void> deleteTenant(@PathVariable UUID id) {
     tenantService.deleteTenant(id);
     return ResponseEntity.noContent().build();

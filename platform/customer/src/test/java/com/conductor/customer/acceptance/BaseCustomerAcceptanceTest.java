@@ -21,8 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * Base class for all customer module acceptance tests.
@@ -32,16 +30,19 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@Testcontainers
 @ActiveProfiles("acceptance")
 public abstract class BaseCustomerAcceptanceTest {
 
-  @Container
-  static final PostgreSQLContainer<?> POSTGRES =
-      new PostgreSQLContainer<>("postgres:15-alpine")
-          .withDatabaseName("conductor_customer_acceptance")
-          .withUsername("conductor")
-          .withPassword("conductor_test");
+  static final PostgreSQLContainer<?> POSTGRES;
+
+  static {
+    POSTGRES =
+        new PostgreSQLContainer<>("postgres:15-alpine")
+            .withDatabaseName("conductor_customer_acceptance")
+            .withUsername("conductor")
+            .withPassword("conductor_test");
+    POSTGRES.start();
+  }
 
   @DynamicPropertySource
   static void configurePostgres(DynamicPropertyRegistry registry) {
@@ -65,18 +66,34 @@ public abstract class BaseCustomerAcceptanceTest {
   @Autowired protected MockMvc mockMvc;
   @Autowired protected ObjectMapper objectMapper;
 
-  protected SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor platformAdminJwt() {
+  protected SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor platformAdminJwt(
+      UUID tenantId) {
     return jwt()
-        .jwt(j -> j.subject("platform-admin"))
+        .jwt(
+            j ->
+                j.subject("platform-admin")
+                    .issuer("http://localhost:8080/realms/conductor-" + tenantId))
         .authorities(
             new SimpleGrantedAuthority("ROLE_PLATFORM_ADMIN"),
             new SimpleGrantedAuthority("ROLE_TENANT_ADMIN"));
   }
 
-  protected SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor tenantAdminJwt() {
+  protected SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor platformAdminJwt() {
+    return platformAdminJwt(UUID.randomUUID());
+  }
+
+  protected SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor tenantAdminJwt(
+      UUID tenantId) {
     return jwt()
-        .jwt(j -> j.subject("tenant-admin"))
+        .jwt(
+            j ->
+                j.subject("tenant-admin")
+                    .issuer("http://localhost:8080/realms/conductor-" + tenantId))
         .authorities(new SimpleGrantedAuthority("ROLE_TENANT_ADMIN"));
+  }
+
+  protected SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor tenantAdminJwt() {
+    return tenantAdminJwt(UUID.randomUUID());
   }
 
   protected MockHttpServletRequestBuilder withTenantContext(
@@ -89,7 +106,17 @@ public abstract class BaseCustomerAcceptanceTest {
       SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor jwtPostProcessor,
       UUID tenantId)
       throws Exception {
-    return mockMvc.perform(withTenantContext(builder.with(jwtPostProcessor), tenantId));
+    // Rebuild the JWT with the tenant-scoped issuer so TenantContextFilter can resolve the tenant.
+    var tenantJwt =
+        jwt()
+            .jwt(
+                j ->
+                    j.subject("test-user")
+                        .issuer("http://localhost:8080/realms/conductor-" + tenantId))
+            .authorities(
+                new SimpleGrantedAuthority("ROLE_PLATFORM_ADMIN"),
+                new SimpleGrantedAuthority("ROLE_TENANT_ADMIN"));
+    return mockMvc.perform(withTenantContext(builder.with(tenantJwt), tenantId));
   }
 
   protected String json(Object value) throws Exception {

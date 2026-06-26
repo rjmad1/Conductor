@@ -94,7 +94,7 @@ class TenantControllerTest extends BaseTenantIntegrationTest {
         .andExpect(jsonPath("$.status", is(400)))
         .andExpect(
             jsonPath(
-                "$.extensions.tenantKey",
+                "$.errors.tenantKey",
                 containsString("tenantKey must contain only alphanumeric characters")));
   }
 
@@ -123,12 +123,19 @@ class TenantControllerTest extends BaseTenantIntegrationTest {
     Tenant saved = tenantRepository.save(t);
 
     UUID anotherTenantId = UUID.randomUUID();
-    TenantContext.setCurrentTenantId(anotherTenantId);
 
     mockMvc
         .perform(
             get("/api/v1/tenants/" + saved.getId())
-                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_TENANT_ADMIN")))
+                .with(
+                    jwt()
+                        .jwt(
+                            j ->
+                                j.subject("tenant-admin")
+                                    .issuer(
+                                        "http://localhost:8080/realms/conductor-"
+                                            + anotherTenantId))
+                        .authorities(new SimpleGrantedAuthority("ROLE_TENANT_ADMIN")))
                 .header("X-Tenant-ID", anotherTenantId.toString()))
         .andExpect(status().isNotFound());
   }

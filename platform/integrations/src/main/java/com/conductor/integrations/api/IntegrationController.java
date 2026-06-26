@@ -83,8 +83,8 @@ public class IntegrationController {
   }
 
   /**
-   * Generates a random server-side state token (CSRF protection) and returns the
-   * authorization URL. The integrationId never round-trips through the browser.
+   * Generates a random server-side state token (CSRF protection) and returns the authorization URL.
+   * The integrationId never round-trips through the browser.
    */
   @PostMapping("/oauth/authorize")
   public ResponseEntity<Map<String, String>> authorizeOAuth(
@@ -103,9 +103,9 @@ public class IntegrationController {
   }
 
   /**
-   * Validates the opaque state token (single-use, TTL-bounded), derives
-   * integrationId/tenantId from the server-side store, and exchanges the
-   * authorization code for real tokens. Mock tokens are never stored.
+   * Validates the opaque state token (single-use, TTL-bounded), derives integrationId/tenantId from
+   * the server-side store, and exchanges the authorization code for real tokens. Mock tokens are
+   * never stored.
    */
   @GetMapping("/oauth/callback")
   public ResponseEntity<String> oauthCallback(
@@ -119,10 +119,7 @@ public class IntegrationController {
     OAuthStateStore.PendingState pendingState = oauthStateStore.consume(stateToken).orElse(null);
     if (pendingState == null) {
       auditLogger.logEvent(
-          "OAUTH_CALLBACK_REJECTED",
-          "oauth:callback",
-          "FAILURE",
-          "Invalid or expired state token");
+          "OAUTH_CALLBACK_REJECTED", "oauth:callback", "FAILURE", "Invalid or expired state token");
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired OAuth state");
     }
     UUID integrationId = pendingState.integrationId();
@@ -154,8 +151,8 @@ public class IntegrationController {
   }
 
   /**
-   * Encrypts the webhook shared secret at rest before persisting.
-   * Decryption happens inside WebhookIngressController during signature validation.
+   * Encrypts the webhook shared secret at rest before persisting. Decryption happens inside
+   * WebhookIngressController during signature validation.
    */
   @PostMapping("/webhooks")
   public ResponseEntity<WebhookSubscription> subscribeWebhook(

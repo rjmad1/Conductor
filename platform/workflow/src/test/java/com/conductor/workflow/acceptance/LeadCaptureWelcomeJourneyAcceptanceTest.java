@@ -326,7 +326,7 @@ class LeadCaptureWelcomeJourneyAcceptanceTest extends BaseAcceptanceTest {
         .perform(
             withTenantContext(
                 post("/api/v1/workflows/" + definitionId + "/execute")
-                    .with(platformAdminJwt())
+                    .with(platformAdminJwt(tenantId))
                     .header("X-Correlation-ID", correlationId)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json(Map.of("phone", "+15555550002", "name", "Bob"))),

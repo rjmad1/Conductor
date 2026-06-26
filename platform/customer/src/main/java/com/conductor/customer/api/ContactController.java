@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/customers/{customerId}/contacts")
-@PreAuthorize("hasAnyRole('ROLE_TENANT_ADMIN', 'ROLE_PLATFORM_ADMIN')")
+@PreAuthorize("hasAnyAuthority('ROLE_TENANT_ADMIN', 'ROLE_PLATFORM_ADMIN')")
 public class ContactController {
 
   private final ContactService contactService;

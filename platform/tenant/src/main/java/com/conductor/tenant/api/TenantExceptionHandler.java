@@ -21,8 +21,7 @@ public class TenantExceptionHandler {
   @ExceptionHandler(IllegalArgumentException.class)
   public ProblemDetail handleNotFound(IllegalArgumentException ex, WebRequest request) {
     log.debug("Tenant resource not found: {}", ex.getMessage());
-    ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     problem.setType(URI.create("https://conductor.io/errors/tenant-not-found"));
     problem.setProperty("instance", request.getDescription(false));
     return problem;
@@ -31,8 +30,7 @@ public class TenantExceptionHandler {
   @ExceptionHandler(IllegalStateException.class)
   public ProblemDetail handleConflict(IllegalStateException ex, WebRequest request) {
     log.warn("Tenant conflict or invalid state: {}", ex.getMessage());
-    ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+    ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
     problem.setType(URI.create("https://conductor.io/errors/tenant-conflict"));
     problem.setProperty("instance", request.getDescription(false));
     return problem;
@@ -48,7 +46,8 @@ public class TenantExceptionHandler {
                     fe -> fe.getDefaultMessage() != null ? fe.getDefaultMessage() : "invalid",
                     (a, b) -> a));
     ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "One or more fields failed validation");
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.BAD_REQUEST, "One or more fields failed validation");
     problem.setType(URI.create("https://conductor.io/errors/validation"));
     problem.setTitle("Validation Failed");
     problem.setProperty("instance", request.getDescription(false));
@@ -60,7 +59,8 @@ public class TenantExceptionHandler {
   public ProblemDetail handleUnexpected(Exception ex, WebRequest request) {
     log.error("Unexpected error in tenant API", ex);
     ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
     problem.setType(URI.create("https://conductor.io/errors/internal"));
     problem.setProperty("instance", request.getDescription(false));
     return problem;

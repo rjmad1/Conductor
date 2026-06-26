@@ -33,8 +33,8 @@ public class ProxyHttpClient {
   }
 
   /**
-   * Returns a RestTemplate configured with explicit connect and read timeouts.
-   * Use for health checks and any bounded-latency operations.
+   * Returns a RestTemplate configured with explicit connect and read timeouts. Use for health
+   * checks and any bounded-latency operations.
    */
   public RestTemplate getRestTemplate(int connectTimeoutMs, int readTimeoutMs) {
     return buildRestTemplate(connectTimeoutMs, readTimeoutMs);

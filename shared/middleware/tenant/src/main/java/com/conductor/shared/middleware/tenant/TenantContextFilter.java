@@ -7,6 +7,8 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -14,24 +16,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.UUID;
-
 /**
  * Resolves the active tenant context for each request.
  *
- * For authenticated requests (JWT present):
- *   - Derives tenant ID from the JWT issuer claim (Keycloak realm = conductor-{tenantUUID}).
- *   - If an X-Tenant-ID header is also present, it MUST match the JWT-derived tenant.
- *     Mismatches are rejected with 403 to prevent cross-tenant header spoofing.
- *   - The JWT-derived value is always authoritative; the header is informational only.
+ * <p>For authenticated requests (JWT present): - Derives tenant ID from the JWT issuer claim
+ * (Keycloak realm = conductor-{tenantUUID}). - If an X-Tenant-ID header is also present, it MUST
+ * match the JWT-derived tenant. Mismatches are rejected with 403 to prevent cross-tenant header
+ * spoofing. - The JWT-derived value is always authoritative; the header is informational only.
  *
- * For unauthenticated requests (webhook ingress, health checks):
- *   - Falls back to the X-Tenant-ID header value if present.
- *   - Webhook endpoints set TenantContext directly from the URL path variable.
+ * <p>For unauthenticated requests (webhook ingress, health checks): - Falls back to the X-Tenant-ID
+ * header value if present. - Webhook endpoints set TenantContext directly from the URL path
+ * variable.
  *
- * This filter runs after Spring Security's FilterChainProxy (order -100), so the
- * SecurityContext is fully populated when this filter executes.
+ * <p>This filter runs after Spring Security's FilterChainProxy (order -100), so the SecurityContext
+ * is fully populated when this filter executes.
  */
 @Component
 public class TenantContextFilter implements Filter {
@@ -39,6 +37,7 @@ public class TenantContextFilter implements Filter {
   private static final Logger log = LoggerFactory.getLogger(TenantContextFilter.class);
   private static final String TENANT_HEADER = "X-Tenant-ID";
   private static final String USER_HEADER = "X-User-ID";
+
   /** Keycloak realm naming convention: conductor-{tenantUUID} */
   private static final String REALM_PREFIX = "conductor-";
 
@@ -61,7 +60,18 @@ public class TenantContextFilter implements Filter {
         UUID jwtTenantId = extractTenantFromJwt(jwtAuth);
 
         if (jwtTenantId == null) {
-          // JWT present but no parseable tenant — reject to fail closed
+          // No parseable tenant from issuer.
+          // Platform admins operate cross-tenant and do not belong to any specific realm;
+          // allow them through without a tenant context so global endpoints remain accessible.
+          boolean isPlatformAdmin =
+              jwtAuth.getAuthorities().stream()
+                  .anyMatch(a -> "ROLE_PLATFORM_ADMIN".equals(a.getAuthority()));
+          if (isPlatformAdmin) {
+            log.debug(
+                "Platform admin JWT without realm issuer — proceeding without tenant context");
+            chain.doFilter(request, response);
+            return;
+          }
           log.warn("JWT present but tenant could not be derived from issuer; rejecting request");
           httpResponse.sendError(
               HttpServletResponse.SC_FORBIDDEN,
@@ -121,8 +131,7 @@ public class TenantContextFilter implements Filter {
             return;
           }
         } else {
-          log.debug(
-              "No X-Tenant-ID header found in request: {}", httpRequest.getRequestURI());
+          log.debug("No X-Tenant-ID header found in request: {}", httpRequest.getRequestURI());
         }
       }
 
@@ -134,9 +143,9 @@ public class TenantContextFilter implements Filter {
   }
 
   /**
-   * Parses the tenant UUID from the Keycloak issuer string.
-   * Expected format: {scheme}://{host}/realms/conductor-{tenantUUID}
-   * Returns null if the issuer does not follow the expected pattern.
+   * Parses the tenant UUID from the Keycloak issuer string. Expected format:
+   * {scheme}://{host}/realms/conductor-{tenantUUID} Returns null if the issuer does not follow the
+   * expected pattern.
    */
   static UUID extractTenantFromJwt(JwtAuthenticationToken jwtAuth) {
     try {

@@ -236,15 +236,10 @@ class WelcomeWorkflowTemporalAcceptanceTest extends BaseAcceptanceTest {
 
   @Test
   @DisplayName("Action framework — WelcomeMessageAction registered in ActionRegistry")
-  void welcomeMessageActionRegistered() throws Exception {
-    com.conductor.shared.execution.action.ActionRegistry actionRegistry =
-        (com.conductor.shared.execution.action.ActionRegistry)
-            org.springframework.test.util.ReflectionTestUtils.getField(
-                conductorActivities, "actionRegistry");
-    // Verify via providerRegistry that the action is wired
-    // ActionRegistry is autowired into ConductorActivitiesImpl
-    // We verify it's present indirectly: step execution with WELCOME_MESSAGE must succeed
-    // (see welcomeWorkflowExecutesToCompletion above).
+  void welcomeMessageActionRegistered() {
+    // Verify WHATSAPP provider is wired into the registry — a prerequisite for
+    // WelcomeMessageAction.
+    // Full execution path is covered by welcomeWorkflowExecutesToCompletion.
     assertThat(providerRegistry.getProvider("WHATSAPP")).isPresent();
   }
 }

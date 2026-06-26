@@ -1,14 +1,12 @@
 package com.conductor.workflow.api;
 
 import java.net.URI;
-import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,8 +26,7 @@ public class WorkflowExceptionHandler {
   @ExceptionHandler(IllegalArgumentException.class)
   public ProblemDetail handleNotFound(IllegalArgumentException ex, WebRequest request) {
     log.debug("Workflow resource not found: {}", ex.getMessage());
-    ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     problem.setType(URI.create("https://conductor.io/errors/not-found"));
     problem.setTitle("Resource Not Found");
     problem.setProperty("instance", request.getDescription(false));
@@ -48,11 +45,11 @@ public class WorkflowExceptionHandler {
   }
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ProblemDetail handleMalformedJson(
-      HttpMessageNotReadableException ex, WebRequest request) {
+  public ProblemDetail handleMalformedJson(HttpMessageNotReadableException ex, WebRequest request) {
     log.warn("Malformed request body: {}", ex.getMessage());
     ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Request body could not be parsed");
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.BAD_REQUEST, "Request body could not be parsed");
     problem.setType(URI.create("https://conductor.io/errors/malformed-request"));
     problem.setTitle("Malformed Request Body");
     problem.setProperty("instance", request.getDescription(false));
@@ -69,7 +66,8 @@ public class WorkflowExceptionHandler {
                     fe -> fe.getDefaultMessage() != null ? fe.getDefaultMessage() : "invalid",
                     (a, b) -> a));
     ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "One or more fields failed validation");
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.BAD_REQUEST, "One or more fields failed validation");
     problem.setType(URI.create("https://conductor.io/errors/validation"));
     problem.setTitle("Validation Failed");
     problem.setProperty("instance", request.getDescription(false));
@@ -81,7 +79,8 @@ public class WorkflowExceptionHandler {
   public ProblemDetail handleUnexpected(Exception ex, WebRequest request) {
     log.error("Unexpected error in workflow API", ex);
     ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
     problem.setType(URI.create("https://conductor.io/errors/internal"));
     problem.setTitle("Internal Server Error");
     problem.setProperty("instance", request.getDescription(false));

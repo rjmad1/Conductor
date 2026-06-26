@@ -1,0 +1,6 @@
+management:
+  health:
+    nats:
+      enabled: false
+    connector:
+      enabled: false

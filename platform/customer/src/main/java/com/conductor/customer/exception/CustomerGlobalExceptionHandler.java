@@ -62,7 +62,8 @@ public class CustomerGlobalExceptionHandler {
                     fe -> fe.getDefaultMessage() != null ? fe.getDefaultMessage() : "invalid",
                     (a, b) -> a));
     ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "One or more fields failed validation");
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.BAD_REQUEST, "One or more fields failed validation");
     problem.setType(URI.create("https://conductor.io/errors/validation"));
     problem.setTitle("Validation Failed");
     problem.setProperty("instance", request.getDescription(false));
@@ -74,7 +75,8 @@ public class CustomerGlobalExceptionHandler {
   public ProblemDetail handleUnexpected(Exception ex, WebRequest request) {
     log.error("Unexpected error in customer API", ex);
     ProblemDetail problem =
-        ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
     problem.setType(URI.create("https://conductor.io/errors/internal"));
     problem.setProperty("instance", request.getDescription(false));
     return problem;

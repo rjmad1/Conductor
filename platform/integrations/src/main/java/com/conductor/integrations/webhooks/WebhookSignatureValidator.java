@@ -42,8 +42,8 @@ public class WebhookSignatureValidator {
   }
 
   /**
-   * Validates Zoho webhook using HMAC-SHA256.
-   * Zoho sends the signature as a hex-encoded HMAC-SHA256 of the raw body keyed with the shared secret.
+   * Validates Zoho webhook using HMAC-SHA256. Zoho sends the signature as a hex-encoded HMAC-SHA256
+   * of the raw body keyed with the shared secret.
    */
   public boolean validateZoho(byte[] body, String signatureHex, String secret) {
     if (body == null || signatureHex == null || secret == null) {

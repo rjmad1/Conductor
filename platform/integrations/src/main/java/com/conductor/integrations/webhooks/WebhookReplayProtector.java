@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 /**
  * In-process replay protection using a time-bounded event-ID cache.
  *
- * LIMITATION: This implementation is process-local. In a horizontally-scaled deployment,
- * a webhook may be replayed to a different instance and bypass this check. If distributed
- * replay protection is required, replace the ConcurrentHashMap with a distributed store
- * (e.g. Redis SETNX with TTL, or NATS KV). Feature-flag: webhook.replay.distributed=true.
+ * <p>LIMITATION: This implementation is process-local. In a horizontally-scaled deployment, a
+ * webhook may be replayed to a different instance and bypass this check. If distributed replay
+ * protection is required, replace the ConcurrentHashMap with a distributed store (e.g. Redis SETNX
+ * with TTL, or NATS KV). Feature-flag: webhook.replay.distributed=true.
  */
 @Component
 public class WebhookReplayProtector {
@@ -37,9 +37,8 @@ public class WebhookReplayProtector {
   }
 
   /**
-   * Returns true if the event has already been processed within the replay window.
-   * Uses atomic putIfAbsent to eliminate the TOCTOU race condition in the previous
-   * containsKey + put pattern.
+   * Returns true if the event has already been processed within the replay window. Uses atomic
+   * putIfAbsent to eliminate the TOCTOU race condition in the previous containsKey + put pattern.
    */
   public boolean isDuplicate(String eventId) {
     if (eventId == null) {

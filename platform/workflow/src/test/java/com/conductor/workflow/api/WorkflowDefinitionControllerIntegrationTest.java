@@ -55,7 +55,12 @@ class WorkflowDefinitionControllerIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(
             post("/api/v1/workflows")
-                .with(jwt())
+                .with(
+                    jwt()
+                        .jwt(
+                            j ->
+                                j.subject("test-user")
+                                    .issuer("http://localhost:8080/realms/conductor-" + tenantId)))
                 .header("X-Tenant-ID", tenantId.toString())
                 .header("X-User-ID", "test-user-1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -105,7 +110,12 @@ class WorkflowDefinitionControllerIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(
             get("/api/v1/workflows")
-                .with(jwt())
+                .with(
+                    jwt()
+                        .jwt(
+                            j ->
+                                j.subject("test-user")
+                                    .issuer("http://localhost:8080/realms/conductor-" + tenantId)))
                 .header("X-Tenant-ID", tenantId.toString())
                 .header("X-User-ID", "test-user-1"))
         .andExpect(status().isOk());

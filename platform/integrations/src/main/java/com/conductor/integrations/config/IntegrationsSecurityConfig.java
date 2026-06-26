@@ -52,7 +52,8 @@ public class IntegrationsSecurityConfig {
         .oauth2ResourceServer(
             oauth2 ->
                 oauth2.jwt(
-                    jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter())))
+                    jwt ->
+                        jwt.jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter())))
         .exceptionHandling(
             ex ->
                 ex.authenticationEntryPoint(authenticationEntryPoint)

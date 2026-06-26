@@ -39,7 +39,8 @@ class WebhookIngressIntegrationTest {
   @MockBean private org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder;
 
   @MockBean
-  private com.conductor.shared.auth.ConductorAuthenticationEntryPoint conductorAuthenticationEntryPoint;
+  private com.conductor.shared.auth.ConductorAuthenticationEntryPoint
+      conductorAuthenticationEntryPoint;
 
   @MockBean
   private com.conductor.shared.auth.ConductorAccessDeniedHandler conductorAccessDeniedHandler;
