@@ -47,6 +47,10 @@ class LeadControllerTest {
   @MockBean private io.micrometer.core.instrument.MeterRegistry meterRegistry;
   @MockBean private com.conductor.shared.middleware.tenant.TenantFilterAspect tenantFilterAspect;
   @MockBean private org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder;
+  @MockBean private com.conductor.customer.service.StopUnsubscribeListener stopUnsubscribeListener;
+
+  @MockBean
+  private com.conductor.customer.service.ScheduledAnonymizationTask scheduledAnonymizationTask;
 
   private UUID tenantId;
 

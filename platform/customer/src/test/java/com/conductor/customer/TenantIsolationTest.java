@@ -61,6 +61,11 @@ class TenantIsolationTest {
 
   @MockBean private org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder;
 
+  @MockBean private com.conductor.customer.service.StopUnsubscribeListener stopUnsubscribeListener;
+
+  @MockBean
+  private com.conductor.customer.service.ScheduledAnonymizationTask scheduledAnonymizationTask;
+
   private UUID tenantId;
 
   @BeforeEach

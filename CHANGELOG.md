@@ -5,6 +5,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [Unreleased]
+
+### Added
+- **DPDP Section 12 compliance**: `ScheduledAnonymizationTask` — daily scheduled PII erasure for customers with `DELETED` status (T-204).
+- **STOP keyword opt-out**: `StopUnsubscribeListener` — NATS JetStream listener that intercepts inbound "STOP" messages and revokes marketing consent within SLA (WA-C1).
+- Inbound message event schema (`config/schemas/messaging.message.inbound.v1.json`).
+- Unit tests for `ScheduledAnonymizationTask` (2 cases) and `StopUnsubscribeListener` (4 cases).
+- Loop engineering workspace configuration (`.agents/`, `loop-control.ps1`).
+- Governance, security, verification, and loop documentation under `docs/`.
+
+### Changed
+- Enabled `@EnableScheduling` on `CustomerApplication` to support scheduled background tasks.
+- Added `@MockBean` declarations for new services in `TenantIsolationTest` to maintain Spring context compatibility.
+
+---
+
 ## [1.0.0] - 2026-06-24
 
 ### Added
