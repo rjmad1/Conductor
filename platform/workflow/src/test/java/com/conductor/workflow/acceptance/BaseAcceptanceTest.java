@@ -37,6 +37,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("acceptance")
+@SuppressWarnings("resource")
 public abstract class BaseAcceptanceTest {
 
   // Singleton container — started once per JVM. Not managed by @Testcontainers so it is never

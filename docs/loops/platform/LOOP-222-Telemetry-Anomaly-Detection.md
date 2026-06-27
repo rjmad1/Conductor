@@ -1,0 +1,76 @@
+---
+# PROVENANCE METADATA
+Original Path: docs/loops/platform/LOOP-222-Telemetry-Anomaly-Detection.md
+Original Version: 0.1
+Extraction Date: 2026-06-27
+Original Purpose: Correlates real-time application error logs with sudden drops in specific API metrics, dynamically alerting product teams to hidden feature failures.
+Generalized Purpose: Correlates real-time application error logs with sudden drops in specific API metrics, dynamically alerting product teams to hidden feature failures.
+Dependencies Removed: RajaJeevanLoopEngineering business workflow configurations
+Dependencies Retained: LOOP-006 — Verification
+Compatibility Notes: Fully compatible with standard loop orchestrators and documentation frameworks.
+Migration Notes: Direct copy of the general loop framework specification.
+---
+# LOOP-222 — Telemetry Anomaly Detection
+
+**Loop ID:** LOOP-222
+**Name:** Telemetry Anomaly Detection
+**Version:** 0.1
+**Status:** Draft
+**Category:** Platform
+**Depends On:** LOOP-006 — Verification
+**Human Gates:** Hard, Soft
+**Owner:** Platform Engineering Function
+**Maintainer:** Platform Engineering Function
+
+---
+
+> [!NOTE]
+> This loop specification is planned. Content is not yet authored. Do not use.
+
+---
+
+## Purpose
+
+## Problem Statement
+
+## Why This Loop Exists
+
+## Scope
+
+## Inputs
+
+## Outputs
+
+## Dependencies
+
+## Trigger
+
+## Preconditions
+
+## External State
+
+## Required Context
+
+## Agents
+
+## Workflow
+
+## Verification
+
+## Reflection
+
+## Human Approval Gates
+
+## Failure Recovery
+
+## Metrics
+
+## Risks
+
+## Stop Conditions
+
+## Deliverables
+
+## Future Improvements
+
+## Version History

@@ -76,7 +76,6 @@ public class ActionExecutor {
   /**
    * Executes an action step with the given configuration and workflow execution context tracking.
    */
-  @SuppressWarnings("unchecked")
   public Map<String, Object> execute(
       ActionType actionType, Map<String, Object> config, String tenantId, UUID executionId) {
     log.info(
@@ -214,6 +213,7 @@ public class ActionExecutor {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private String sanitizeJson(Map<String, Object> map) {
     if (map == null) return "{}";
     Map<String, Object> sanitized = new java.util.HashMap<>(map);

@@ -129,7 +129,7 @@ class ProviderClientTest {
     ProviderClient client = new ProviderClient(null);
 
     RateLimitPolicy policy =
-        RateLimitPolicy.builder().enabled(true).requestsPerSecond(1.0).burstLimit(1).build();
+        RateLimitPolicy.builder().enabled(true).requestsPerSecond(0.01).burstLimit(1).build();
 
     ProviderRequest request =
         ProviderRequest.builder()

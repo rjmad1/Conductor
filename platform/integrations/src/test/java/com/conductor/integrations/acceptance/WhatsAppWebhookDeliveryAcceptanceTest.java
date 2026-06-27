@@ -45,6 +45,7 @@ import org.springframework.http.MediaType;
  * </ol>
  */
 @DisplayName("Acceptance: WhatsApp Webhook Delivery")
+@SuppressWarnings("null")
 class WhatsAppWebhookDeliveryAcceptanceTest extends BaseIntegrationsAcceptanceTest {
 
   private static final String WEBHOOK_SECRET = "acceptance-whatsapp-secret-2024";

@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(WebhookIngressController.class)
 @Import(com.conductor.integrations.config.IntegrationsSecurityConfig.class)
+@SuppressWarnings("null")
 class WebhookIngressIntegrationTest {
 
   @Autowired private MockMvc mockMvc;

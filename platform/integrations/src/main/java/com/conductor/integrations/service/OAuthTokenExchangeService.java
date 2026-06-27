@@ -29,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
  * pre-configured (stored via /credentials before OAuth initiation).
  */
 @Service
-@SuppressWarnings({"null", "unchecked", "rawtypes"})
+@SuppressWarnings({"null", "rawtypes"})
 public class OAuthTokenExchangeService {
 
   private static final Logger log = LoggerFactory.getLogger(OAuthTokenExchangeService.class);

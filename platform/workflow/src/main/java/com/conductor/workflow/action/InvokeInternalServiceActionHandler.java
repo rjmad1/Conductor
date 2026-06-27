@@ -31,7 +31,6 @@ public class InvokeInternalServiceActionHandler implements ActionHandler {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public ActionResult execute(ActionContext context) {
     Map<String, Object> config = context.getConfiguration();
     String serviceBeanName = (String) config.get("serviceBeanName");

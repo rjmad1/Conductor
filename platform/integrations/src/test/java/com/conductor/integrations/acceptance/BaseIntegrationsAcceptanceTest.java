@@ -33,6 +33,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class BaseIntegrationsAcceptanceTest {
 
   @Container
+  @SuppressWarnings("resource")
   static final PostgreSQLContainer<?> POSTGRES =
       new PostgreSQLContainer<>("postgres:15-alpine")
           .withDatabaseName("conductor_integrations_acceptance")

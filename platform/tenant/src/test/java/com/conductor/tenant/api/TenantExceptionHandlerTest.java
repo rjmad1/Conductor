@@ -16,6 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest({TenantController.class, TenantExceptionHandler.class})
+@SuppressWarnings("null")
 class TenantExceptionHandlerTest {
 
   @Autowired private MockMvc mockMvc;

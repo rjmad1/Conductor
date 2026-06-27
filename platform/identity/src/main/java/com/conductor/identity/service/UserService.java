@@ -6,10 +6,10 @@ import com.conductor.identity.domain.User;
 import com.conductor.identity.repository.APIKeyRepository;
 import com.conductor.identity.repository.MembershipRepository;
 import com.conductor.identity.repository.UserRepository;
+import com.conductor.shared.auth.KeycloakUserManager;
 import com.conductor.shared.middleware.tenant.AuditLogger;
 import com.conductor.shared.middleware.tenant.NatsEventPublisher;
 import com.conductor.shared.middleware.tenant.TenantContext;
-import com.conductor.tenant.service.KeycloakAdminService;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Base64;
@@ -29,10 +29,15 @@ public class UserService {
   private static final SecureRandom secureRandom = new SecureRandom();
   private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+  private static final String REALM_PREFIX = "conductor-";
+  private static final String EVENT_SOURCE_IDENTITY = "identity";
+  private static final String AUDIT_USER_PREFIX = "USER:";
+  private static final String AUDIT_SUCCESS = "SUCCESS";
+
   private final UserRepository userRepository;
   private final MembershipRepository membershipRepository;
   private final APIKeyRepository apiKeyRepository;
-  private final KeycloakAdminService keycloakAdminService;
+  private final KeycloakUserManager keycloakAdminService;
   private final NatsEventPublisher eventPublisher;
   private final AuditLogger auditLogger;
 
@@ -40,7 +45,7 @@ public class UserService {
       UserRepository userRepository,
       MembershipRepository membershipRepository,
       APIKeyRepository apiKeyRepository,
-      KeycloakAdminService keycloakAdminService,
+      KeycloakUserManager keycloakAdminService,
       NatsEventPublisher eventPublisher,
       AuditLogger auditLogger) {
     this.userRepository = userRepository;
@@ -63,7 +68,7 @@ public class UserService {
       throw new IllegalStateException("Cannot create user without active tenant context");
     }
 
-    String realmName = "conductor-" + tenantId;
+    String realmName = REALM_PREFIX + tenantId;
     String keycloakId = keycloakAdminService.createUser(realmName, email, email, password);
 
     User user = new User();
@@ -85,7 +90,7 @@ public class UserService {
     keycloakAdminService.assignRoleToUser(realmName, keycloakId, "Read Only User");
 
     eventPublisher.publishEvent(
-        "identity",
+        EVENT_SOURCE_IDENTITY,
         "user",
         "created",
         String.format(
@@ -94,8 +99,8 @@ public class UserService {
 
     auditLogger.logEvent(
         "CREATE",
-        "USER:" + savedUser.getId(),
-        "SUCCESS",
+        AUDIT_USER_PREFIX + savedUser.getId(),
+        AUDIT_SUCCESS,
         "User created and default membership assigned");
 
     return savedUser;
@@ -115,7 +120,7 @@ public class UserService {
       user = existingUserOpt.get();
     } else {
       // Provision keycloak skeleton user with temporary random password
-      String realmName = "conductor-" + tenantId;
+      String realmName = REALM_PREFIX + tenantId;
       String tempPassword = UUID.randomUUID().toString();
       String keycloakId = keycloakAdminService.createUser(realmName, email, email, tempPassword);
 
@@ -134,18 +139,18 @@ public class UserService {
     membership.setRole(role);
     membershipRepository.save(membership);
 
-    String realmName = "conductor-" + tenantId;
+    String realmName = REALM_PREFIX + tenantId;
     keycloakAdminService.assignRoleToUser(realmName, user.getKeycloakId(), role);
 
     eventPublisher.publishEvent(
-        "identity",
+        EVENT_SOURCE_IDENTITY,
         "user",
         "invited",
         String.format(
             "{\"id\":\"%s\",\"email\":\"%s\",\"role\":\"%s\"}", user.getId(), email, role));
 
     auditLogger.logEvent(
-        "INVITE", "USER:" + user.getId(), "SUCCESS", "User invited with role: " + role);
+        "INVITE", AUDIT_USER_PREFIX + user.getId(), AUDIT_SUCCESS, "User invited with role: " + role);
 
     return user;
   }
@@ -169,16 +174,16 @@ public class UserService {
     membership.setRole(role);
     membershipRepository.save(membership);
 
-    String realmName = "conductor-" + tenantId;
+    String realmName = REALM_PREFIX + tenantId;
     keycloakAdminService.assignRoleToUser(realmName, user.getKeycloakId(), role);
 
     eventPublisher.publishEvent(
-        "identity",
+        EVENT_SOURCE_IDENTITY,
         "role",
         "assigned",
         String.format("{\"userId\":\"%s\",\"role\":\"%s\"}", userId, role));
 
-    auditLogger.logEvent("ASSIGN_ROLE", "USER:" + userId, "SUCCESS", "Role assigned: " + role);
+    auditLogger.logEvent("ASSIGN_ROLE", AUDIT_USER_PREFIX + userId, AUDIT_SUCCESS, "Role assigned: " + role);
   }
 
   @Transactional
@@ -206,7 +211,7 @@ public class UserService {
 
     apiKeyRepository.save(apiKey);
 
-    auditLogger.logEvent("CREATE_API_KEY", "USER:" + userId, "SUCCESS", "API key generated");
+    auditLogger.logEvent("CREATE_API_KEY", AUDIT_USER_PREFIX + userId, AUDIT_SUCCESS, "API key generated");
     return plaintextKey;
   }
 

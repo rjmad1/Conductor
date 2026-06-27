@@ -14,8 +14,8 @@ Migration Notes: Direct copy of the general loop framework specification.
 
 **Loop ID:** LOOP-303
 **Name:** Compliance
-**Version:** 1.0
-**Status:** Active
+**Version:** 0.2
+**Status:** Draft
 **Category:** Governance
 **Depends On:** LOOP-006 — Verification, LOOP-207 — Security Validation
 **Human Gates:** Hard, Soft

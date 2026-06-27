@@ -30,7 +30,7 @@ public class ArchModuleBoundaryTest {
           .whereLayer("IdentityService")
           .mayOnlyBeAccessedByLayers("IdentityService")
           .whereLayer("TenantService")
-          .mayOnlyBeAccessedByLayers("TenantService", "IdentityService");
+          .mayOnlyBeAccessedByLayers("TenantService");
 
   @ArchTest
   public static final ArchRule noCyclicDependencies =

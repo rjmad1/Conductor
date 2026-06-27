@@ -26,6 +26,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
 @AutoConfigureMockMvc
+@SuppressWarnings("null")
 class TenantControllerTest extends BaseTenantIntegrationTest {
 
   @Autowired private MockMvc mockMvc;

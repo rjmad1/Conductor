@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice(basePackages = "com.conductor.tenant.api")
+@SuppressWarnings("null")
 public class TenantExceptionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(TenantExceptionHandler.class);

@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
+@SuppressWarnings("null")
 class TenantRepositoryTest extends BaseTenantIntegrationTest {
 
   @Autowired private TenantRepository tenantRepository;

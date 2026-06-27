@@ -161,7 +161,6 @@ public class ConductorActivitiesImpl implements ConductorActivities {
         .orElseThrow(() -> new IllegalArgumentException("Execution not found: " + executionId));
   }
 
-  @SuppressWarnings("unchecked")
   private List<Map<String, Object>> parseSteps(WorkflowDefinition definition) {
     try {
       String stepsStr = definition.getSteps();

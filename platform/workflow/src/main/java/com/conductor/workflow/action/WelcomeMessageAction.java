@@ -38,6 +38,7 @@ public class WelcomeMessageAction implements ActionHandler {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public ActionResult execute(ActionContext context) {
     Map<String, Object> config = context.getConfiguration();
     if (config == null) {
@@ -94,7 +95,10 @@ public class WelcomeMessageAction implements ActionHandler {
       if (response.isSuccess()) {
         String messageId = "msg_" + UUID.randomUUID().toString();
         try {
-          Map<String, Object> responseBody = objectMapper.readValue(response.getBody(), Map.class);
+          Map<String, Object> responseBody =
+              objectMapper.readValue(
+                  response.getBody(),
+                  new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {});
           if (responseBody != null) {
             java.util.List<Map<String, Object>> messages =
                 (java.util.List<Map<String, Object>>) responseBody.get("messages");

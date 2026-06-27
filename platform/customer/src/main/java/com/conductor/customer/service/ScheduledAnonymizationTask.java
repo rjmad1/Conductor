@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  * erase PII while preserving workflow and campaign statistics.
  */
 @Service
+@SuppressWarnings("null")
 public class ScheduledAnonymizationTask {
 
   private static final Logger log = LoggerFactory.getLogger(ScheduledAnonymizationTask.class);

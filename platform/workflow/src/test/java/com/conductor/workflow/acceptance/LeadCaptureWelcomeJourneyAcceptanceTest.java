@@ -61,6 +61,7 @@ import org.springframework.test.web.servlet.MvcResult;
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Acceptance: Lead Capture → Welcome Workflow Journey")
+@SuppressWarnings("null")
 class LeadCaptureWelcomeJourneyAcceptanceTest extends BaseAcceptanceTest {
 
   private static final String WELCOME_STEPS_JSON =

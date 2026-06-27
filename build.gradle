@@ -40,10 +40,11 @@ subprojects {
         options.encoding = 'UTF-8'
     }
 
+    ext['testcontainers.version'] = '1.20.4'
+
     dependencyManagement {
         imports {
             mavenBom "org.springframework.boot:spring-boot-dependencies:3.2.5"
-            mavenBom "org.testcontainers:testcontainers-bom:1.19.7"
         }
     }
 
@@ -66,7 +67,11 @@ subprojects {
 
     test {
         useJUnitPlatform()
-        environment "DOCKER_HOST", "npipe:////./pipe/docker_engine"
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            environment "DOCKER_HOST", "npipe:////./pipe/docker_engine"
+        } else {
+            environment "DOCKER_API_VERSION", "1.44"
+        }
     }
 
     spotless {

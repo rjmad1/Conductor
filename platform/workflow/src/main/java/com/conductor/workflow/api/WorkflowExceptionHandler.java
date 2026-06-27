@@ -19,6 +19,7 @@ import org.springframework.web.context.request.WebRequest;
  * resource-not-found, illegal state, and unexpected errors.
  */
 @RestControllerAdvice(basePackages = "com.conductor.workflow.api")
+@SuppressWarnings("null")
 public class WorkflowExceptionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(WorkflowExceptionHandler.class);

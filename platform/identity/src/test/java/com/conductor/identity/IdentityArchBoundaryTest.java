@@ -20,10 +20,7 @@ public class IdentityArchBoundaryTest {
           .should()
           .dependOnClassesThat()
           .resideInAnyPackage(
-              // Note: identity→tenant is an accepted dependency (UserService uses
-              // KeycloakAdminService for role assignment).
-              // TODO(CC-2): extract a shared interface so identity need not depend on
-              // platform:tenant.
+              "com.conductor.tenant..",
               "com.conductor.workflow..",
               "com.conductor.customer..",
               "com.conductor.integrations..",

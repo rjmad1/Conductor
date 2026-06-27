@@ -217,7 +217,10 @@ public class WorkflowExecutionService {
     Map<String, Object> originalInput = Map.of();
     if (original.getInput() != null) {
       try {
-        originalInput = objectMapper.readValue(original.getInput(), Map.class);
+        originalInput =
+            objectMapper.readValue(
+                original.getInput(),
+                new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {});
       } catch (JsonProcessingException e) {
         log.warn("Failed to parse original input for replay: {}", e.getMessage());
       }

@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest({IntegrationController.class, IntegrationExceptionHandler.class})
 @Import(com.conductor.integrations.config.IntegrationsSecurityConfig.class)
+@SuppressWarnings("null")
 class IntegrationExceptionHandlerTest {
 
   @Autowired MockMvc mockMvc;

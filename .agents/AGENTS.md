@@ -43,3 +43,11 @@ Migration Notes: Direct copy of the general loop framework specification.
 
 ## Escalation Path
 
+---
+
+## Workspace Rules for Conductor Project
+
+### Loop Engineering & Synchronization Rules
+- **Automatic Loop Verification:** Always check for the presence of useful, updated loops soon after starting development of any folder/subproject in this workspace.
+- **Upstream Repository:** The source of truth for loops is `https://github.com/rjmad1/RajaJeevanLoopEngineering`.
+- **Sync/Port Loop Process:** Ensure the local loops under `docs/loops/` and the rule execution engine under `RajaJeevanLoopEngineering/code/` match the remote repo. If newer loops exist, port them using `port-loops.ps1` or run the Java bootstrap script to retrieve them.

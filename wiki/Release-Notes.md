@@ -18,6 +18,23 @@ No technical prerequisites.
 
 ## E. Detailed Content
 
+### [Unreleased]
+This version includes the latest unreleased features spanning platform security, analytics, Loop engineering, and compliance tasks.
+
+#### Added
+- **Tenant-Scoped Security**: Implemented tenant isolation and action execution frameworks.
+- **Provider Health Probes**: Replaced placeholder health checks with real provider connection probes for connectors.
+- **DPDP Section 12 compliance**: Scheduled anonymization for PII erasure.
+- **STOP keyword opt-out**: NATS JetStream listener for marketing consent revocation within SLA.
+- **Loop Engineering Framework**: Agent templates, Loop engineering workspace configs, and `docs/loops/` catalogs.
+
+#### Changed
+- Standardized all REST error responses to conform to RFC 7807 ProblemDetail format.
+- Resolved RC1 P1 release blockers (OAuth CSRF state validation, webhook encryption at rest).
+- Reorganized codebase to support `@EnableScheduling` on CustomerApplication.
+
+---
+
 ### [1.0.0] - 2026-06-24
 This is the initial release of the remediated, implementation-ready Conductor platform and documentation suite.
 
