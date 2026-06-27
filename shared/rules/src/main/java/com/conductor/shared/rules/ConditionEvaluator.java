@@ -71,7 +71,6 @@ public class ConditionEvaluator {
     return !evaluateNode(children.get(0), variables);
   }
 
-  @SuppressWarnings("unchecked")
   private boolean evaluateComparison(Condition condition, Map<String, Object> variables) {
     String field = condition.getField();
     Object resolvedValue = resolveVariable(field, variables);

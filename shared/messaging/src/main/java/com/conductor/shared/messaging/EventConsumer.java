@@ -136,7 +136,9 @@ public class EventConsumer {
               // Deserialize specific payload type
               T typedPayload;
               if (payloadClass == String.class) {
-                typedPayload = (T) rawEvent.getPayload();
+                @SuppressWarnings("unchecked")
+                T casted = (T) rawEvent.getPayload();
+                typedPayload = casted;
               } else {
                 typedPayload = objectMapper.readValue(rawEvent.getPayload(), payloadClass);
               }

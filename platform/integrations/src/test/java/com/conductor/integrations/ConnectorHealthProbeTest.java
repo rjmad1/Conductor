@@ -26,6 +26,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+@SuppressWarnings({"unchecked", "null"})
 class ConnectorHealthProbeTest {
 
   private ProxyHttpClient proxyHttpClient;

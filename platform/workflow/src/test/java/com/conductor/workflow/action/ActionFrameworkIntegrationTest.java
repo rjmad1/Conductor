@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 import com.conductor.shared.execution.action.ActionRegistry;
-import com.conductor.shared.execution.action.ActionValidator;
 import com.conductor.shared.messaging.EventPublisher;
 import com.conductor.shared.middleware.tenant.AuditLogger;
 import com.conductor.shared.workflow.ActionType;
@@ -30,8 +29,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 class ActionFrameworkIntegrationTest extends BaseIntegrationTest {
 
   @Autowired private ActionRegistry actionRegistry;
-
-  @Autowired private ActionValidator actionValidator;
 
   @Autowired private ActionExecutor actionExecutor;
 

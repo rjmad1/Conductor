@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
+@SuppressWarnings({"unchecked", "null"})
 public class ConnectorLifecycleTest {
 
   private ConnectorRegistry registry;

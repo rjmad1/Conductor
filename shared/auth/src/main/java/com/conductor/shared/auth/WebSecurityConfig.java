@@ -43,7 +43,7 @@ public class WebSecurityConfig {
     ConductorAccessDeniedHandler accessDeniedHandler =
         new ConductorAccessDeniedHandler(securityMetrics);
 
-    http.csrf(AbstractHttpConfigurer::disable)
+    http.csrf(csrf -> csrf.disable())
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -14,7 +14,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@SuppressWarnings({"null", "unchecked"})
+@SuppressWarnings("unchecked")
 public class CustomerEventListener {
 
   private static final Logger log = LoggerFactory.getLogger(CustomerEventListener.class);

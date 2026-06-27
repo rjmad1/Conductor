@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("unchecked")
 class StopUnsubscribeListenerTest {
 
   @Mock private EventConsumer eventConsumer;

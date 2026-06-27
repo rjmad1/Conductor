@@ -16,6 +16,7 @@ public class KeycloakAuthenticatedPrincipal implements AuthenticatedPrincipal {
   private final Set<String> roles;
   private final String correlationId;
 
+  @SuppressWarnings("null")
   public KeycloakAuthenticatedPrincipal(
       Jwt jwt, Collection<? extends GrantedAuthority> authorities, String correlationId) {
     this.jwt = jwt;

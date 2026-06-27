@@ -19,6 +19,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -63,12 +64,13 @@ public class ProviderClient {
     this.restTemplate.setErrorHandler(
         new DefaultResponseErrorHandler() {
           @Override
-          public void handleError(ClientHttpResponse response) throws IOException {
+          public void handleError(@NonNull ClientHttpResponse response) throws IOException {
             // Do not throw exceptions, allow the framework to capture error codes.
           }
         });
   }
 
+  @SuppressWarnings("null")
   public ProviderResponse execute(
       String providerName, ProviderRequest request, ProviderCredential credential) {
     log.info("Executing request to provider: {} at path: {}", providerName, request.getPath());

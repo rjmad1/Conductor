@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@SuppressWarnings({"rawtypes", "null"})
 public class ReferenceAppE2ETest {
 
   private static final Logger log = LoggerFactory.getLogger(ReferenceAppE2ETest.class);

@@ -50,7 +50,6 @@ class InvokeIntegrationActionHandlerTest {
     assertEquals("INVOKE_INTEGRATION", handler.getActionType());
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   void testExecuteSuccess() {
     String providerType = "Shopify";

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * compensation action is recorded in history for auditability.
  */
 @Service
+@SuppressWarnings("unchecked")
 public class CompensationService {
 
   private static final Logger log = LoggerFactory.getLogger(CompensationService.class);
