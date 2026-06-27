@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "messaging.message.inbound",
+  "type": "object",
+  "properties": {
+    "message_id": { "type": "string" },
+    "wa_message_id": { "type": "string" },
+    "from_phone": { "type": "string" },
+    "to_phone_number_id": { "type": "string" },
+    "message_type": { "type": "string" },
+    "content": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" }
+      },
+      "required": ["text"]
+    },
+    "customer_id": { "type": "string" },
+    "timestamp": { "type": "string" }
+  },
+  "required": ["from_phone", "content"]
+}
