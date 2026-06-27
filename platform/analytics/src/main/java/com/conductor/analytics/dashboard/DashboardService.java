@@ -5,8 +5,6 @@ import com.conductor.shared.middleware.tenant.TenantContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class DashboardService {
 
-  private static final Logger log = LoggerFactory.getLogger(DashboardService.class);
   private final DashboardRepository repository;
 
   public DashboardService(DashboardRepository repository) {

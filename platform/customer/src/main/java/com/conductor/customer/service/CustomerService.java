@@ -17,24 +17,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@SuppressWarnings("null")
 public class CustomerService {
 
   private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
   private final CustomerRepository customerRepository;
-  private final CustomerIdentifierRepository identifierRepository;
   private final CustomerTimelineService timelineService;
   private final NatsEventPublisher eventPublisher;
   private final AuditLogger auditLogger;
 
   public CustomerService(
       CustomerRepository customerRepository,
-      CustomerIdentifierRepository identifierRepository,
       CustomerTimelineService timelineService,
       NatsEventPublisher eventPublisher,
       AuditLogger auditLogger) {
     this.customerRepository = customerRepository;
-    this.identifierRepository = identifierRepository;
     this.timelineService = timelineService;
     this.eventPublisher = eventPublisher;
     this.auditLogger = auditLogger;

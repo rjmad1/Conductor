@@ -12,8 +12,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -31,9 +29,8 @@ import org.springframework.util.StringUtils;
  * primary automatically clears the previous one.
  */
 @Service
+@SuppressWarnings("null")
 public class ContactService {
-
-  private static final Logger log = LoggerFactory.getLogger(ContactService.class);
 
   private static final Pattern EMAIL_PATTERN =
       Pattern.compile("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$");

@@ -47,15 +47,13 @@ public class TenantSecurityFilter extends OncePerRequestFilter {
     MDC.put(CORRELATION_MDC_KEY, correlationId);
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    boolean isAuthenticated =
-        authentication != null
-            && authentication.isAuthenticated()
-            && !(authentication.getClass().getSimpleName().equals("AnonymousAuthenticationToken"));
 
     UUID tenantId = null;
     String principalId = null;
 
-    if (isAuthenticated) {
+    if (authentication != null
+        && authentication.isAuthenticated()
+        && !(authentication.getClass().getSimpleName().equals("AnonymousAuthenticationToken"))) {
       // 2. Resolve Tenant context from request/token
       var resolvedTenant = tenantContextResolver.resolveTenantId(request);
       if (resolvedTenant.isPresent()) {

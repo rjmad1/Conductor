@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
  * queries to the active tenant.
  */
 @Service
+@SuppressWarnings("null")
 public class CustomerMergeService {
 
   private static final Logger log = LoggerFactory.getLogger(CustomerMergeService.class);
@@ -39,7 +40,6 @@ public class CustomerMergeService {
   private final CustomerContactRepository contactRepository;
   private final CustomerTagRepository tagRepository;
   private final CustomerSegmentRepository segmentRepository;
-  private final ConsentRecordRepository consentRepository;
   private final CustomerAttributeRepository attributeRepository;
   private final CustomerTimelineService timelineService;
   private final NatsEventPublisher eventPublisher;
@@ -50,7 +50,6 @@ public class CustomerMergeService {
       CustomerContactRepository contactRepository,
       CustomerTagRepository tagRepository,
       CustomerSegmentRepository segmentRepository,
-      ConsentRecordRepository consentRepository,
       CustomerAttributeRepository attributeRepository,
       CustomerTimelineService timelineService,
       NatsEventPublisher eventPublisher,
@@ -59,7 +58,6 @@ public class CustomerMergeService {
     this.contactRepository = contactRepository;
     this.tagRepository = tagRepository;
     this.segmentRepository = segmentRepository;
-    this.consentRepository = consentRepository;
     this.attributeRepository = attributeRepository;
     this.timelineService = timelineService;
     this.eventPublisher = eventPublisher;
@@ -73,7 +71,7 @@ public class CustomerMergeService {
     }
 
     Customer source = requireMergeable(sourceId);
-    Customer target = requireMergeable(targetId);
+    requireMergeable(targetId);
 
     log.info("Merging customer {} into {}", sourceId, targetId);
 

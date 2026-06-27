@@ -31,6 +31,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("acceptance")
+@SuppressWarnings({"null", "resource"})
 public abstract class BaseCustomerAcceptanceTest {
 
   static final PostgreSQLContainer<?> POSTGRES;

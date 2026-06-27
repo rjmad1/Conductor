@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(LeadController.class)
 @WithMockUser(roles = {"TENANT_ADMIN"})
+@SuppressWarnings("null")
 class LeadControllerTest {
 
   @Autowired private MockMvc mockMvc;

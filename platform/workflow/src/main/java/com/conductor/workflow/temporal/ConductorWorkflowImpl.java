@@ -28,7 +28,6 @@ public class ConductorWorkflowImpl implements ConductorWorkflow {
   private final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
   private String currentStatus = "RUNNING";
-  private boolean waitForSignal = false;
   private String receivedSignal = null;
 
   @Override
@@ -75,9 +74,7 @@ public class ConductorWorkflowImpl implements ConductorWorkflow {
         Map<String, Object> config = (Map<String, Object>) step.getOrDefault("config", Map.of());
         String signal = (String) config.getOrDefault("signal", "continue");
         log.info("Step '{}': waiting for signal '{}'", stepName, signal);
-        waitForSignal = true;
         Workflow.await(() -> receivedSignal != null && receivedSignal.equals(signal));
-        waitForSignal = false;
         receivedSignal = null;
         continue;
       }

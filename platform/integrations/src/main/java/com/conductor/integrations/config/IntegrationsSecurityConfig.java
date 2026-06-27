@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@SuppressWarnings("null")
 public class IntegrationsSecurityConfig {
 
   private final ConductorAuthenticationEntryPoint authenticationEntryPoint;

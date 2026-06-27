@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MvcResult;
  * a real PostgreSQL database. NATS event publishing is the only infrastructure stub.
  */
 @DisplayName("Acceptance: Lead Capture — Customer Service")
+@SuppressWarnings("null")
 class LeadCaptureAcceptanceTest extends BaseCustomerAcceptanceTest {
 
   @Autowired private CustomerRepository customerRepository;

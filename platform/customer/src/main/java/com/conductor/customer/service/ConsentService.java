@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Messaging domain publishes opt-out events; this service reacts via event consumer.
  */
 @Service
+@SuppressWarnings("null")
 public class ConsentService {
 
   private static final Logger log = LoggerFactory.getLogger(ConsentService.class);

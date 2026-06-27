@@ -1,14 +1,12 @@
 package com.conductor.shared.messaging;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 
 import com.conductor.shared.contracts.SchemaValidator;
 import com.conductor.shared.events.ConductorEvent;
 import com.conductor.shared.middleware.tenant.AuditLogger;
 import com.conductor.shared.middleware.tenant.TenantContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.nats.client.*;
 import io.nats.client.api.RetentionPolicy;
@@ -30,7 +28,6 @@ class EventPlatformIntegrationTest {
   private EventObservability observability;
   private EventPublisher publisher;
   private EventConsumer consumer;
-  private ObjectMapper objectMapper;
 
   @BeforeEach
   void setUp() throws Exception {
@@ -40,7 +37,6 @@ class EventPlatformIntegrationTest {
 
     auditLogger = mock(AuditLogger.class);
     observability = new EventObservability(new SimpleMeterRegistry());
-    objectMapper = new ObjectMapper();
 
     publisher =
         new EventPublisher(

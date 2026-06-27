@@ -13,7 +13,6 @@ public class WhatsAppProvider implements Provider {
   private static final Logger log = LoggerFactory.getLogger(WhatsAppProvider.class);
   private final ProviderClient providerClient;
   private ProviderCredential credential;
-  private Map<String, Object> connectionParams;
 
   public WhatsAppProvider(ProviderClient providerClient) {
     this.providerClient = providerClient;
@@ -32,7 +31,6 @@ public class WhatsAppProvider implements Provider {
   @Override
   public void connect(ProviderCredential credential, Map<String, Object> params) {
     this.credential = credential;
-    this.connectionParams = params;
     log.info("Connected to WhatsApp Provider");
   }
 

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
  * trail is maintained by callers (CustomerService, CustomerMergeService).
  */
 @Service
+@SuppressWarnings("null")
 public class IdentityResolutionService {
 
   private final CustomerContactRepository contactRepository;

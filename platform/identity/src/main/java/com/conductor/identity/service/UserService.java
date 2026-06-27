@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@SuppressWarnings("null")
 public class UserService {
 
   private static final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -210,9 +211,7 @@ public class UserService {
   }
 
   public Optional<APIKey> validateApiKey(String plaintextKey) {
-    // Exclude prefix and find in DB
-    String hashedCompare = plaintextKey;
-    // Verify key matching
+    // Exclude prefix and find in DB; verify key via bcrypt matching
     Optional<APIKey> apiKeyOpt =
         apiKeyRepository.findAll().stream()
             .filter(k -> passwordEncoder.matches(plaintextKey, k.getKeyHash()))

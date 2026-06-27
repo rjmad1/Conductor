@@ -8,8 +8,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import javax.crypto.SecretKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +20,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MetabaseEmbedService {
-
-  private static final Logger log = LoggerFactory.getLogger(MetabaseEmbedService.class);
 
   private final String metabaseUrl;
   private final String embeddingSecret;

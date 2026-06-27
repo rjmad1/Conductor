@@ -29,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
  * pre-configured (stored via /credentials before OAuth initiation).
  */
 @Service
+@SuppressWarnings({"null", "unchecked", "rawtypes"})
 public class OAuthTokenExchangeService {
 
   private static final Logger log = LoggerFactory.getLogger(OAuthTokenExchangeService.class);
@@ -116,7 +117,8 @@ public class OAuthTokenExchangeService {
       throw new IllegalStateException("OAuth token exchange failed: " + e.getMessage(), e);
     }
 
-    if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+    Map<?, ?> tokenResponse = response.getBody();
+    if (!response.getStatusCode().is2xxSuccessful() || tokenResponse == null) {
       auditLogger.logEvent(
           "OAUTH_TOKEN_EXCHANGE_FAILED",
           "integration:" + integrationId,
@@ -125,8 +127,6 @@ public class OAuthTokenExchangeService {
       throw new IllegalStateException(
           "OAuth token exchange failed: provider returned " + response.getStatusCode());
     }
-
-    Map<?, ?> tokenResponse = response.getBody();
     String accessToken =
         Optional.ofNullable(tokenResponse.get("access_token"))
             .map(Object::toString)

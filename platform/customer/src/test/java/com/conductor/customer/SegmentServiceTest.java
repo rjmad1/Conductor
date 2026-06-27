@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 import com.conductor.customer.domain.Customer;
 import com.conductor.customer.domain.CustomerSegment;
 import com.conductor.customer.domain.Segment;
-import com.conductor.customer.repository.CustomerRepository;
 import com.conductor.customer.repository.CustomerSegmentRepository;
 import com.conductor.customer.repository.CustomerTagRepository;
 import com.conductor.customer.repository.SegmentRepository;
@@ -26,13 +25,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 class SegmentServiceTest {
 
   @Mock private SegmentRepository segmentRepository;
 
   @Mock private CustomerSegmentRepository customerSegmentRepository;
-
-  @Mock private CustomerRepository customerRepository;
 
   @Mock private CustomerTagRepository customerTagRepository;
 
@@ -52,7 +50,6 @@ class SegmentServiceTest {
         new SegmentService(
             segmentRepository,
             customerSegmentRepository,
-            customerRepository,
             customerTagRepository,
             customerService,
             timelineService,

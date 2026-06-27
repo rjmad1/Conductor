@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import com.conductor.customer.domain.Customer;
 import com.conductor.customer.exception.CustomerNotFoundException;
-import com.conductor.customer.repository.CustomerIdentifierRepository;
 import com.conductor.customer.repository.CustomerRepository;
 import com.conductor.customer.service.CustomerService;
 import com.conductor.customer.service.CustomerTimelineService;
@@ -25,11 +24,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 class CustomerServiceTest {
 
   @Mock private CustomerRepository customerRepository;
-
-  @Mock private CustomerIdentifierRepository identifierRepository;
 
   @Mock private CustomerTimelineService timelineService;
 
@@ -42,8 +40,7 @@ class CustomerServiceTest {
   @BeforeEach
   void setUp() {
     customerService =
-        new CustomerService(
-            customerRepository, identifierRepository, timelineService, eventPublisher, auditLogger);
+        new CustomerService(customerRepository, timelineService, eventPublisher, auditLogger);
   }
 
   @Test

@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 class CustomerMergeServiceTest {
 
   @Mock private CustomerRepository customerRepository;
@@ -30,8 +31,6 @@ class CustomerMergeServiceTest {
   @Mock private CustomerTagRepository tagRepository;
 
   @Mock private CustomerSegmentRepository segmentRepository;
-
-  @Mock private ConsentRecordRepository consentRepository;
 
   @Mock private CustomerAttributeRepository attributeRepository;
 
@@ -51,7 +50,6 @@ class CustomerMergeServiceTest {
             contactRepository,
             tagRepository,
             segmentRepository,
-            consentRepository,
             attributeRepository,
             timelineService,
             eventPublisher,

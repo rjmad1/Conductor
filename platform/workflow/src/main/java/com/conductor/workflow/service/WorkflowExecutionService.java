@@ -182,7 +182,6 @@ public class WorkflowExecutionService {
   /** Cancels a running workflow execution by signaling Temporal. */
   @Transactional
   public WorkflowExecution cancelExecution(UUID executionId) {
-    UUID tenantId = TenantContext.getCurrentTenantId();
     WorkflowExecution execution = getExecution(executionId);
 
     if (execution.getTemporalWorkflowId() != null) {

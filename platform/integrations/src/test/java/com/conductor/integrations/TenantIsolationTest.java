@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.conductor.integrations.api.IntegrationController;
-import com.conductor.integrations.domain.*;
 import com.conductor.integrations.framework.ConnectorRegistry;
 import com.conductor.integrations.repository.*;
 import com.conductor.integrations.service.CredentialService;
@@ -27,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(IntegrationController.class)
 @Import(com.conductor.integrations.config.IntegrationsSecurityConfig.class)
+@SuppressWarnings("null")
 class TenantIsolationTest {
 
   @Autowired private MockMvc mockMvc;

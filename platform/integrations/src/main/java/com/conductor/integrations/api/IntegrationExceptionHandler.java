@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice(basePackages = "com.conductor.integrations.api")
+@SuppressWarnings("null")
 public class IntegrationExceptionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(IntegrationExceptionHandler.class);

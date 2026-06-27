@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
  * HEALTHY (API is up; auth context is tenant-level) 429 → DEGRADED (provider rate-limiting) 5xx →
  * UNAVAILABLE IOException/timeout → UNAVAILABLE, retried once before giving up
  */
+@SuppressWarnings("null")
 public final class ConnectorHealthProbe {
 
   private static final Logger log = LoggerFactory.getLogger(ConnectorHealthProbe.class);

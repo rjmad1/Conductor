@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
  * strategies yield the same customer.
  */
 @Service
+@SuppressWarnings("null")
 public class CustomerSearchService {
 
   private static final Logger log = LoggerFactory.getLogger(CustomerSearchService.class);

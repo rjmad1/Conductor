@@ -16,6 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest({IdentityController.class, IdentityExceptionHandler.class})
+@SuppressWarnings("null")
 class IdentityExceptionHandlerTest {
 
   @Autowired private MockMvc mockMvc;

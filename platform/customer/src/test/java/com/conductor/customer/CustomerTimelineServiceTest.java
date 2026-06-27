@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 class CustomerTimelineServiceTest {
 
   @Mock private CustomerTimelineRepository timelineRepository;

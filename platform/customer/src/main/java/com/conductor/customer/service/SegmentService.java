@@ -3,7 +3,6 @@ package com.conductor.customer.service;
 import com.conductor.customer.domain.CustomerSegment;
 import com.conductor.customer.domain.Segment;
 import com.conductor.customer.exception.CustomerNotFoundException;
-import com.conductor.customer.repository.CustomerRepository;
 import com.conductor.customer.repository.CustomerSegmentRepository;
 import com.conductor.customer.repository.CustomerTagRepository;
 import com.conductor.customer.repository.SegmentRepository;
@@ -35,13 +34,13 @@ import org.springframework.transaction.annotation.Transactional;
  * <p>The customerCount field on Segment is a cached value refreshed on recompute.
  */
 @Service
+@SuppressWarnings("null")
 public class SegmentService {
 
   private static final Logger log = LoggerFactory.getLogger(SegmentService.class);
 
   private final SegmentRepository segmentRepository;
   private final CustomerSegmentRepository customerSegmentRepository;
-  private final CustomerRepository customerRepository;
   private final CustomerTagRepository customerTagRepository;
   private final CustomerService customerService;
   private final CustomerTimelineService timelineService;
@@ -51,7 +50,6 @@ public class SegmentService {
   public SegmentService(
       SegmentRepository segmentRepository,
       CustomerSegmentRepository customerSegmentRepository,
-      CustomerRepository customerRepository,
       CustomerTagRepository customerTagRepository,
       CustomerService customerService,
       CustomerTimelineService timelineService,
@@ -59,7 +57,6 @@ public class SegmentService {
       AuditLogger auditLogger) {
     this.segmentRepository = segmentRepository;
     this.customerSegmentRepository = customerSegmentRepository;
-    this.customerRepository = customerRepository;
     this.customerTagRepository = customerTagRepository;
     this.customerService = customerService;
     this.timelineService = timelineService;

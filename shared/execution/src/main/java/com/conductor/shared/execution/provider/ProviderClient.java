@@ -217,7 +217,6 @@ public class ProviderClient {
         }
 
       } catch (Exception ex) {
-        long durationMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
         lastException = ex;
         recordFailureMetric(providerName, ex.getClass().getSimpleName());
 
@@ -242,6 +241,9 @@ public class ProviderClient {
       throw new RuntimeException("Provider call exhausted retries and failed", lastException);
     }
 
+    if (response == null) {
+      throw new RuntimeException("Provider call failed with no response");
+    }
     breaker.recordFailure(
         new RuntimeException("Server error response: status=" + response.getStatusCode()));
     return response;

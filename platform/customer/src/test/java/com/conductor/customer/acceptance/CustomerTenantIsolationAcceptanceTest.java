@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
  * Tenant A can never read, modify, or list Tenant B's data.
  */
 @DisplayName("Acceptance: Customer Tenant Isolation")
+@SuppressWarnings("null")
 class CustomerTenantIsolationAcceptanceTest extends BaseCustomerAcceptanceTest {
 
   private UUID tenantA;
