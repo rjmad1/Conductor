@@ -183,3 +183,10 @@ payments (id, invoice_id, gateway_ref, amount, status, paid_at)
 
 ## Maintenance Guidance
 Update after each pricing experiment or business model change. Financial projections must be reviewed by founding team monthly during Year 1.
+
+---
+
+## Key Drivers (Synthesized via LOOP-502)
+- **Compliance as a Feature:** Targeting regions with strict data laws like India (DPDP) and Europe (GDPR) via immutable audit logs and data residency (Mumbai region).
+- **Scale:** Handling high-volume events seamlessly.
+- **Enterprise Features:** Multi-tenancy, SSO (Keycloak), and deep integration into existing business tools (Zoho, Shopify, WhatsApp).

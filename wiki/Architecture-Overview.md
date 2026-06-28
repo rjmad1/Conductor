@@ -57,3 +57,17 @@ By maintaining a clean separation of packages (modules) in a single Spring Boot 
 - [Service Catalog](Service-Catalog)
 - [Component Catalog](Component-Catalog)
 - [Decision Records Index](Decision-Records-Index)
+
+---
+
+## F. Current Architecture State (LOOP-502)
+
+- **High Alignment:** Single JAR deployment on AWS ECS Fargate minimizes friction (9/10 Architecture Alignment).
+- **Complexity:** Maintaining multiple database runtimes and event engines (NATS + Redpanda) increases operational overhead.
+
+### Identified Technical Debt
+- **Package Coupling:** Risk of bypasses in the modular monolith boundaries leading to spaghetti code.
+- **PostgreSQL Bottleneck:** Bulk contact imports and high-frequency webhook statuses risk saturating the PostgreSQL master instance.
+- **Vector DB Leakage:** Multi-tenancy isolation at the Qdrant vector database layer is undefined.
+- **SLA Automation:** 30-day contact erasure SLA trigger logic for DPDP needs automated workflow (Temporal).
+- **Resource Constraints:** High Docker system resource footprint requires minimum 12-16GB RAM.

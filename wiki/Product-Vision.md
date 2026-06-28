@@ -185,3 +185,11 @@ The product vision is realized when:
 
 ## Maintenance Guidance
 This document should be reviewed quarterly. Any change to the platform's fundamental positioning (what it is/is not) requires review board approval. The "What Conductor Is NOT" section is especially critical to maintain — scope creep into CRM, helpdesk, or marketing tool territory is the primary product risk.
+
+---
+
+## Strategic Pillars (Synthesized via LOOP-502)
+- **Uncompromised Security & Compliance:** Leading with immutable auditing, row-level isolation, and DPDP/GDPR adherence.
+- **Resilient Orchestration:** Leveraging Temporal and NATS to guarantee state execution.
+- **AI-Powered:** Deep integration with state-of-the-art LLMs, multi-agent frameworks, and vector search capabilities.
+- **Operational Simplicity at Scale:** Maintaining a modular monolith that is easy to reason about and deploy via GitOps while scaling like a distributed system.

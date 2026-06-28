@@ -204,3 +204,12 @@ The following features are documented but NOT on the roadmap until a phase gate 
 - `03-Product/Capabilities.md` — Capability specifications
 - `09-Program/Implementation-Plan.md` — Engineering delivery plan
 - `09-Program/Release-Plan.md` — Release cadence and versioning
+
+---
+
+## Near-Term Initiatives (LOOP-502 Priority)
+1. **Automated Erasure:** Create a Temporal workflow that executes contact erasure across all database tables and vector collection nodes to meet DPDP SLAs.
+2. **ArchUnit Enforcement:** Add ArchUnit rules to CI/build to fail on boundary violations.
+3. **Qdrant Multi-Tenancy:** Enforce tenant-scoped collections or append logical metadata filtering tags to all vector search queries.
+4. **Analytics Offload:** Offload high-frequency analytics tracking to ClickHouse to relieve PostgreSQL.
+5. **DevX Improvements:** Provide port override mappings in local `.env` templates.

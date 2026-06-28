@@ -93,3 +93,25 @@ timeline
 ## G. Related Wiki Pages
 - [User Guide](User-Guide)
 - [Developer & API Guide](Developer-and-API-Guide)
+
+---
+
+## H. LOOP-502 Strategic Context
+
+### Strategic Pillars
+- **Uncompromised Security & Compliance:** Leading with immutable auditing, row-level isolation, and DPDP/GDPR adherence.
+- **Resilient Orchestration:** Leveraging Temporal and NATS to guarantee state execution.
+- **AI-Powered:** Deep integration with state-of-the-art LLMs, multi-agent frameworks, and vector search capabilities.
+- **Operational Simplicity at Scale:** Maintaining a modular monolith that is easy to reason about and deploy via GitOps while scaling like a distributed system.
+
+### Business Model Drivers
+- **Compliance as a Feature:** Targeting regions with strict data laws like India (DPDP) and Europe (GDPR) via immutable audit logs and data residency (Mumbai region).
+- **Scale:** Handling high-volume events seamlessly.
+- **Enterprise Features:** Multi-tenancy, SSO (Keycloak), and deep integration into existing business tools (Zoho, Shopify, WhatsApp).
+
+### Near-Term Initiatives
+1. **Automated Erasure:** Create a Temporal workflow that executes contact erasure across all database tables and vector collection nodes to meet DPDP SLAs.
+2. **ArchUnit Enforcement:** Add ArchUnit rules to CI/build to fail on boundary violations.
+3. **Qdrant Multi-Tenancy:** Enforce tenant-scoped collections or append logical metadata filtering tags to all vector search queries.
+4. **Analytics Offload:** Offload high-frequency analytics tracking to ClickHouse to relieve PostgreSQL.
+5. **DevX Improvements:** Provide port override mappings in local `.env` templates.

@@ -161,3 +161,22 @@
 - `10-Gap-Analysis/Infrastructure-Gaps.md` — Infrastructure-specific gaps
 - `10-Gap-Analysis/Compliance-Gaps.md` — Compliance gaps
 - `07-Governance/Decision-Records.md` — ADRs resolving key technical conflicts
+
+---
+
+## LOOP-502 Identified Technical Debt
+
+### Architectural Risks
+- **Package Coupling:** Risk of bypasses in the modular monolith boundaries leading to spaghetti code.
+- **Complexity Overhead:** Maintaining ClickHouse, Redis, PostgreSQL, NATS, Kafka, and multiple Orchestrators increases the operational surface area.
+
+### Scalability Risks
+- **PostgreSQL Bottleneck:** Bulk contact imports and high-frequency webhook statuses risk saturating the PostgreSQL master instance.
+
+### Security & Compliance Risks
+- **Vector DB Leakage:** Multi-tenancy isolation at the Qdrant vector database layer is undefined.
+- **SLA Automation:** 30-day contact erasure SLA trigger logic for DPDP needs automated workflow (Temporal).
+
+### Developer Experience
+- **Resource Constraints:** High Docker system resource footprint requires minimum 12-16GB RAM.
+- **Port Conflicts:** Local sandbox ports easily conflict with existing developer setups.

@@ -229,3 +229,19 @@ conductor-docs/
 ---
 
 *This document is the master entry point for the Conductor project knowledge base. All other documents in this repository are canonical and implementation-ready. Content marked ⚡ is inferred from context. Content marked ✓ is explicitly documented in source artifacts.*
+
+---
+
+## 9. Platform Core Domains (Synthesized via LOOP-502)
+
+Conductor is highly modular and relies on strict boundaries across 10 core domains:
+1. **Tenant:** Multi-tenancy registry.
+2. **Identity:** Keycloak-backed user session security and IAM.
+3. **Customer:** Contact registry and DPDP consent controls.
+4. **Workflow:** Temporal/Camunda-backed DSL execution state machine.
+5. **Messaging:** Outbound broker and webhook ingestion.
+6. **Integration:** External CRM/eCommerce sync adapters.
+7. **Analytics:** ClickHouse-backed telemetry and reporting.
+8. **AI:** LLM integration, copilots, and vector search (Qdrant/Weaviate).
+9. **Audit:** Immutable row-based regulatory compliance logging.
+10. **Observability:** OTel-backed metrics, traces, and logs.

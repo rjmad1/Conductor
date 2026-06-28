@@ -48,3 +48,18 @@ Navigate through the comprehensive Conductor documentation suite:
 *   **Architectural Style**: Modular Monolith + Event-Driven Async Core
 *   **Primary Technologies**: Java 21 / Spring Boot 3.x, Temporal, NATS JetStream, Keycloak, PostgreSQL, ClickHouse
 *   **Target Cloud Environment**: AWS ECS Fargate, Mumbai Region (`ap-south-1`) for Indian geographical data residency.
+
+---
+
+## 🌐 Platform Core Domains (LOOP-502)
+Conductor is highly modular and relies on strict boundaries across 10 core domains:
+1. **Tenant:** Multi-tenancy registry.
+2. **Identity:** Keycloak-backed user session security and IAM.
+3. **Customer:** Contact registry and DPDP consent controls.
+4. **Workflow:** Temporal/Camunda-backed DSL execution state machine.
+5. **Messaging:** Outbound broker and webhook ingestion.
+6. **Integration:** External CRM/eCommerce sync adapters.
+7. **Analytics:** ClickHouse-backed telemetry and reporting.
+8. **AI:** LLM integration, copilots, and vector search (Qdrant/Weaviate).
+9. **Audit:** Immutable row-based regulatory compliance logging.
+10. **Observability:** OTel-backed metrics, traces, and logs.
