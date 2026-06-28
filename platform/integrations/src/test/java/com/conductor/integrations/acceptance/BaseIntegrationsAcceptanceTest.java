@@ -54,6 +54,7 @@ public abstract class BaseIntegrationsAcceptanceTest {
   @MockBean protected NatsConnectionManager natsConnectionManager;
   @MockBean protected NatsEventPublisher natsEventPublisher;
   @MockBean protected EventPublisher eventPublisher;
+  @MockBean protected io.nats.client.Connection natsConnection;
 
   @Autowired protected MockMvc mockMvc;
   @Autowired protected ObjectMapper objectMapper;

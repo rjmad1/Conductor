@@ -8,6 +8,14 @@ dependencies {
     implementation project(':shared:middleware:tenant-middleware')
     implementation project(':shared:messaging')
 
+    implementation project(':platform:tenant')
+    implementation project(':platform:identity')
+    implementation project(':platform:customer')
+    implementation project(':platform:workflow')
+    implementation project(':platform:analytics')
+    implementation project(':platform:integrations')
+    implementation project(':platform:ai')
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -17,4 +25,5 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.2.1'
 }

@@ -12,8 +12,7 @@ public class ReferenceAppSecurityConfig {
 
   @Bean
   public SecurityFilterChain referenceAppSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+    http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
     return http.build();
   }
 }

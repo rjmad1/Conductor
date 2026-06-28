@@ -75,10 +75,13 @@ public class WorkflowWorkerConfig {
    */
   @Bean(initMethod = "start")
   public WorkerFactory startWorkerFactory(
-      WorkerFactory workerFactory, ConductorActivitiesImpl activitiesImpl) {
+      WorkerFactory workerFactory,
+      ConductorActivitiesImpl activitiesImpl,
+      DataErasureActivitiesImpl dataErasureActivitiesImpl) {
     Worker systemWorker = workerFactory.newWorker(SYSTEM_TASK_QUEUE);
-    systemWorker.registerWorkflowImplementationTypes(ConductorWorkflowImpl.class);
-    systemWorker.registerActivitiesImplementations(activitiesImpl);
+    systemWorker.registerWorkflowImplementationTypes(
+        ConductorWorkflowImpl.class, DataErasureWorkflowImpl.class);
+    systemWorker.registerActivitiesImplementations(activitiesImpl, dataErasureActivitiesImpl);
     log.info("Registered system worker on task queue: {}", SYSTEM_TASK_QUEUE);
     return workerFactory;
   }

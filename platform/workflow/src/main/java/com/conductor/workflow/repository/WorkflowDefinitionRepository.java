@@ -22,4 +22,7 @@ public interface WorkflowDefinitionRepository extends JpaRepository<WorkflowDefi
   long countByTenantId(UUID tenantId);
 
   long countByTenantIdAndVersionStatus(UUID tenantId, WorkflowVersionStatus versionStatus);
+
+  List<WorkflowDefinition> findByTriggerTypeAndVersionStatus(
+      com.conductor.shared.workflow.TriggerType triggerType, WorkflowVersionStatus versionStatus);
 }

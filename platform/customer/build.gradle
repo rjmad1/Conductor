@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.postgresql:postgresql'
     implementation 'org.flywaydb:flyway-core'
+    implementation 'org.apache.commons:commons-csv:1.10.0'
     implementation 'io.nats:jnats:2.17.2'
 
     testImplementation 'org.springframework.security:spring-security-test'

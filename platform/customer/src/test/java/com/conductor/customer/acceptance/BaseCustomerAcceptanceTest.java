@@ -61,6 +61,7 @@ public abstract class BaseCustomerAcceptanceTest {
   @MockBean protected NatsConnectionManager natsConnectionManager;
   @MockBean protected NatsEventPublisher natsEventPublisher;
   @MockBean protected EventPublisher eventPublisher;
+  @MockBean protected io.nats.client.Connection natsConnection;
 
   // ── Shared test helpers ────────────────────────────────────────────────────
 

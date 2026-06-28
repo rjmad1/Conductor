@@ -91,6 +91,7 @@ public abstract class BaseAcceptanceTest {
 
   @MockBean protected NatsEventPublisher natsEventPublisher;
   @MockBean protected EventPublisher eventPublisher;
+  @MockBean protected io.nats.client.Connection natsConnection;
 
   /** Meta WhatsApp Cloud API — the sole external commercial API in the journey. */
   @MockBean protected ProviderClient providerClient;

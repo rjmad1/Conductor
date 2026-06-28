@@ -32,5 +32,6 @@ public abstract class BaseTenantIntegrationTest {
   @MockBean protected KeycloakAdminService keycloakAdminService;
   @MockBean protected NatsConnectionManager natsConnectionManager;
   @MockBean protected NatsEventPublisher natsEventPublisher;
+  @MockBean protected io.nats.client.Connection natsConnection;
   @MockBean protected JwtDecoder jwtDecoder;
 }

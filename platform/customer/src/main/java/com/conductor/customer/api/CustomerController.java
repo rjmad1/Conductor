@@ -26,14 +26,23 @@ public class CustomerController {
   private final CustomerService customerService;
   private final CustomerMergeService customerMergeService;
   private final CustomerSearchService customerSearchService;
+  private final com.conductor.customer.service.CustomerImportService customerImportService;
 
   public CustomerController(
       CustomerService customerService,
       CustomerMergeService customerMergeService,
-      CustomerSearchService customerSearchService) {
+      CustomerSearchService customerSearchService,
+      com.conductor.customer.service.CustomerImportService customerImportService) {
     this.customerService = customerService;
     this.customerMergeService = customerMergeService;
     this.customerSearchService = customerSearchService;
+    this.customerImportService = customerImportService;
+  }
+
+  @PostMapping("/import")
+  public ResponseEntity<com.conductor.customer.service.CustomerImportService.ImportSummary>
+      importCustomers(@RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+    return ResponseEntity.ok(customerImportService.importCsv(file));
   }
 
   @PostMapping

@@ -1,0 +1,60 @@
+{
+  "templateId": "abandoned-cart-recovery",
+  "name": "Abandoned Cart Recovery",
+  "description": "Recovers lost sales by reminding customers about items left in their cart and offering an incentive if they do not checkout within 24 hours.",
+  "category": "ecommerce",
+  "version": "1.0.0",
+  "triggerType": "EVENT",
+  "triggerConfig": {
+    "eventName": "cart.abandoned",
+    "description": "Triggered by Shopify connector when a cart is abandoned"
+  },
+  "steps": [
+    {
+      "name": "send-reminder",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "cart_recovery_v1",
+        "recipient": "{{customer.phone}}",
+        "parameters": {
+          "name": "{{customer.name}}",
+          "cartValue": "{{cart.value}}",
+          "checkoutUrl": "{{cart.url}}"
+        }
+      }
+    },
+    {
+      "name": "wait-for-checkout",
+      "type": "DELAY",
+      "config": {
+        "duration": "PT24H"
+      }
+    },
+    {
+      "name": "send-discount",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "cart_recovery_discount",
+        "recipient": "{{customer.phone}}",
+        "parameters": {
+          "discountCode": "COMEBACK10",
+          "checkoutUrl": "{{cart.url}}"
+        }
+      },
+      "condition": {
+        "field": "cart.status",
+        "operator": "EQUALS",
+        "value": "abandoned"
+      }
+    }
+  ],
+  "variables": {
+    "customer.name": "",
+    "customer.phone": "",
+    "cart.value": "",
+    "cart.url": "",
+    "cart.status": "abandoned"
+  }
+}

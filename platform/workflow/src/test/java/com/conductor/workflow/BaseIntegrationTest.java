@@ -35,4 +35,6 @@ public abstract class BaseIntegrationTest {
   @MockBean protected WorkerFactory workerFactory;
 
   @MockBean protected JwtDecoder jwtDecoder;
+
+  @MockBean protected io.nats.client.Connection natsConnection;
 }

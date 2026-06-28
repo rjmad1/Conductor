@@ -67,6 +67,7 @@ subprojects {
 
     test {
         useJUnitPlatform()
+        jvmArgs("-XX:+EnableDynamicAgentLoading")
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             environment "DOCKER_HOST", "npipe:////./pipe/docker_engine"
         } else {

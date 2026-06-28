@@ -9,6 +9,7 @@ dependencies {
     implementation project(':shared:messaging')
     implementation project(':shared:events-model')
     implementation project(':shared:contracts')
+    implementation project(':shared:execution')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

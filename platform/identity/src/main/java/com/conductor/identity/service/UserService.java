@@ -150,7 +150,10 @@ public class UserService {
             "{\"id\":\"%s\",\"email\":\"%s\",\"role\":\"%s\"}", user.getId(), email, role));
 
     auditLogger.logEvent(
-        "INVITE", AUDIT_USER_PREFIX + user.getId(), AUDIT_SUCCESS, "User invited with role: " + role);
+        "INVITE",
+        AUDIT_USER_PREFIX + user.getId(),
+        AUDIT_SUCCESS,
+        "User invited with role: " + role);
 
     return user;
   }
@@ -183,7 +186,8 @@ public class UserService {
         "assigned",
         String.format("{\"userId\":\"%s\",\"role\":\"%s\"}", userId, role));
 
-    auditLogger.logEvent("ASSIGN_ROLE", AUDIT_USER_PREFIX + userId, AUDIT_SUCCESS, "Role assigned: " + role);
+    auditLogger.logEvent(
+        "ASSIGN_ROLE", AUDIT_USER_PREFIX + userId, AUDIT_SUCCESS, "Role assigned: " + role);
   }
 
   @Transactional
@@ -211,7 +215,8 @@ public class UserService {
 
     apiKeyRepository.save(apiKey);
 
-    auditLogger.logEvent("CREATE_API_KEY", AUDIT_USER_PREFIX + userId, AUDIT_SUCCESS, "API key generated");
+    auditLogger.logEvent(
+        "CREATE_API_KEY", AUDIT_USER_PREFIX + userId, AUDIT_SUCCESS, "API key generated");
     return plaintextKey;
   }
 
