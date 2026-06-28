@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LoopDefinitionRuntime",
+  "description": "Runtime-oriented schema for the loop state transition API contract.",
+  "type": "object",
+  "properties": {
+    "loop_id": {
+      "type": "string",
+      "description": "Unique identifier for the loop instance."
+    },
+    "current_phase": {
+      "type": "string",
+      "enum": ["DISCOVERY", "PLANNING", "IMPLEMENTATION", "VERIFICATION", "REFLECTION"],
+      "description": "The current execution phase of the loop."
+    },
+    "gate_criteria": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of criteria that must be satisfied before transitioning to the next phase."
+    },
+    "max_retries": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 3,
+      "description": "Maximum retry attempts before the circuit breaker trips."
+    },
+    "circuit_breaker_threshold": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 3,
+      "description": "Number of consecutive failures that triggers the circuit breaker."
+    }
+  },
+  "required": ["loop_id", "current_phase", "gate_criteria"]
+}

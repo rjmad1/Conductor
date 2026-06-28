@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LoopSpecification",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^LOOP-[0-9]{3}$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Active", "Deprecated", "Draft"]
+    },
+    "category": {
+      "type": "string",
+      "enum": ["Core", "Engineering", "Platform", "Governance", "Release"]
+    },
+    "dependsOn": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "humanGates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["Hard", "Soft", "None"]
+      }
+    },
+    "owner": {
+      "type": "string"
+    },
+    "maintainer": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "problemStatement": {
+      "type": "string"
+    },
+    "whyExists": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "inScope": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "outScope": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "maxDurationHours": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": ["inScope", "outScope", "maxDurationHours"]
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "source": { "type": "string" },
+          "required": { "type": "boolean" }
+        },
+        "required": ["name", "type", "source", "required"]
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "artifact": { "type": "string" },
+          "path": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["artifact", "path", "description"]
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "version",
+    "status",
+    "category",
+    "owner",
+    "purpose",
+    "problemStatement",
+    "whyExists",
+    "scope",
+    "inputs",
+    "outputs"
+  ]
+}
