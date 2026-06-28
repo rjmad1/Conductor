@@ -18,16 +18,16 @@ The roadmap is organized into three phases, each with a clear validation gate be
 
 **Theme:** Core infrastructure, no customer-facing features
 
-| Deliverable                                                 | Owner       | Status |
-| ----------------------------------------------------------- | ----------- | ------ |
-| Repository structure and monorepo setup                     | Engineering | TBD    |
-| Infrastructure: AWS/GCP baseline (VPC, RDS, Redis, S3)      | DevOps      | TBD    |
-| Keycloak setup (auth, RBAC, multi-tenancy)                  | Engineering | TBD    |
-| PostgreSQL schema (tenant, user, customer, workflow tables) | Engineering | TBD    |
-| NATS event bus baseline                                     | Engineering | TBD    |
-| WhatsApp Cloud API integration (sandbox)                    | Engineering | TBD    |
-| CI/CD pipeline (GitHub Actions → staging)                   | DevOps      | TBD    |
-| Basic health monitoring (Prometheus + Grafana)              | DevOps      | TBD    |
+| Deliverable                                                 | Owner       | Status          |
+| ----------------------------------------------------------- | ----------- | --------------- |
+| Repository structure and monorepo setup                     | Engineering | Implemented     |
+| Infrastructure: AWS/GCP baseline (VPC, RDS, Redis, S3)      | DevOps      | Not Implemented |
+| Keycloak setup (auth, RBAC, multi-tenancy)                  | Engineering | Not Implemented |
+| PostgreSQL schema (tenant, user, customer, workflow tables) | Engineering | Not Implemented |
+| NATS event bus baseline                                     | Engineering | Not Implemented |
+| WhatsApp Cloud API integration (sandbox)                    | Engineering | Not Implemented |
+| CI/CD pipeline (GitHub Actions → staging)                   | DevOps      | Not Implemented |
+| Basic health monitoring (Prometheus + Grafana)              | DevOps      | Not Implemented |
 
 **Gate:** Can send a WhatsApp message from the platform via API call.
 
@@ -40,41 +40,41 @@ The roadmap is organized into three phases, each with a clear validation gate be
 
 ### Core Platform
 
-| Feature                                   | Capability           | Priority |
-| ----------------------------------------- | -------------------- | -------- |
-| Business onboarding flow                  | Tenant Management    | P0       |
-| WhatsApp number connection (WABA)         | WhatsApp Adapter     | P0       |
-| Customer contact import (CSV + manual)    | Customer Registry    | P0       |
-| Workflow designer (visual, no-code)       | Workflow Engine      | P0       |
-| Trigger: Event-based (inbound WA message) | Workflow Engine      | P0       |
-| Trigger: Schedule-based (time/cron)       | Workflow Engine      | P0       |
-| Actions: Send WhatsApp template           | WhatsApp Adapter     | P0       |
-| Actions: Delay, branch, update customer   | Workflow Engine      | P0       |
-| Template management + variable binding    | Template Management  | P0       |
-| Basic customer segmentation (tags)        | Customer Registry    | P0       |
-| Consent management (opt-in/opt-out/STOP)  | Consent & Compliance | P0       |
-| Audit log (basic)                         | Audit Layer          | P0       |
-| Analytics dashboard (messages, workflows) | Analytics            | P0       |
+| Feature                                   | Capability           | Priority | Status          |
+| ----------------------------------------- | -------------------- | -------- | --------------- |
+| Business onboarding flow                  | Tenant Management    | P0       | Not Implemented |
+| WhatsApp number connection (WABA)         | WhatsApp Adapter     | P0       | Not Implemented |
+| Customer contact import (CSV + manual)    | Customer Registry    | P0       | Not Implemented |
+| Workflow designer (visual, no-code)       | Workflow Engine      | P0       | Not Implemented |
+| Trigger: Event-based (inbound WA message) | Workflow Engine      | P0       | Not Implemented |
+| Trigger: Schedule-based (time/cron)       | Workflow Engine      | P0       | Not Implemented |
+| Actions: Send WhatsApp template           | WhatsApp Adapter     | P0       | Not Implemented |
+| Actions: Delay, branch, update customer   | Workflow Engine      | P0       | Not Implemented |
+| Template management + variable binding    | Template Management  | P0       | Not Implemented |
+| Basic customer segmentation (tags)        | Customer Registry    | P0       | Not Implemented |
+| Consent management (opt-in/opt-out/STOP)  | Consent & Compliance | P0       | Not Implemented |
+| Audit log (basic)                         | Audit Layer          | P0       | Not Implemented |
+| Analytics dashboard (messages, workflows) | Analytics            | P0       | Not Implemented |
 
 ### Initial Connectors
 
-| Connector                                           | Priority |
-| --------------------------------------------------- | -------- |
-| Google Calendar (appointment trigger)               | P0       |
-| Razorpay (payment events + payment link generation) | P0       |
-| Shopify (order, cart events)                        | P1       |
-| Zoho CRM (lead sync)                                | P1       |
+| Connector                                           | Priority | Status          |
+| --------------------------------------------------- | -------- | --------------- |
+| Google Calendar (appointment trigger)               | P0       | Not Implemented |
+| Razorpay (payment events + payment link generation) | P0       | Not Implemented |
+| Shopify (order, cart events)                        | P1       | Not Implemented |
+| Zoho CRM (lead sync)                                | P1       | Not Implemented |
 
 ### Pre-Built Capability Packs (MVP)
 
-| Pack                    | Vertical              |
-| ----------------------- | --------------------- |
-| Appointment Reminder    | Healthcare            |
-| Lab Report Delivery     | Healthcare            |
-| Payment Reminder        | All                   |
-| Abandoned Cart Recovery | Retail/E-Commerce     |
-| Lead Follow-up          | Professional Services |
-| Order Status Updates    | Retail                |
+| Pack                    | Vertical              | Status          |
+| ----------------------- | --------------------- | --------------- |
+| Appointment Reminder    | Healthcare            | Not Implemented |
+| Lab Report Delivery     | Healthcare            | Not Implemented |
+| Payment Reminder        | All                   | Not Implemented |
+| Abandoned Cart Recovery | Retail/E-Commerce     | Not Implemented |
+| Lead Follow-up          | Professional Services | Not Implemented |
+| Order Status Updates    | Retail                | Not Implemented |
 
 **Gate:** 10 paying customers, 80% activation rate (first message sent within 24h of signup), NPS > 40
 
