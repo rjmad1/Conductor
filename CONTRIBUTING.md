@@ -33,7 +33,7 @@ Before writing any source code, you must ensure that matching specifications are
 1.  **Use the PR Template**: Ensure your Pull Request description uses the template guidelines defined in the [Engineering Wisdom Operating System](file:///c:/Users/rajaj/Projects/Conductor/docs/standards/Engineering-Wisdom-OS.md).
 2.  **Pass CI Gates**:
     *   Code must compile successfully with zero warnings.
-    *   Unit and integration tests must pass.
+    *   Unit and integration tests must pass. **Note:** Docker or Docker Desktop must be running locally for Testcontainers-based Acceptance tests to execute successfully.
     *   Code coverage must satisfy the 80% minimum service-layer requirement.
     *   Linter and formatting checks (`.editorconfig`) must pass.
     *   Static analysis (SonarQube) must have zero CRITICAL or BLOCKER issues.
