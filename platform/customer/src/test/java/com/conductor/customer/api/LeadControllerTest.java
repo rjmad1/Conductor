@@ -41,6 +41,7 @@ class LeadControllerTest {
   @MockBean private CustomerTimelineService customerTimelineService;
   @MockBean private CustomerSearchService customerSearchService;
 
+  @MockBean private io.nats.client.Connection connection;
   @MockBean private com.conductor.shared.messaging.NatsConnectionManager natsConnectionManager;
   @MockBean private com.conductor.shared.messaging.EventConsumer eventConsumer;
   @MockBean private com.conductor.shared.messaging.EventObservability eventObservability;

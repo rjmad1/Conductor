@@ -1,5 +1,6 @@
 package com.conductor.shared.messaging.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import io.nats.client.Connection;
 import io.nats.client.Nats;
 import io.nats.client.Options;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConditionalOnProperty(name = "nats.enabled", havingValue = "true", matchIfMissing = true)
 public class NatsConfig {
 
   @Value("${nats.url:nats://localhost:4222}")

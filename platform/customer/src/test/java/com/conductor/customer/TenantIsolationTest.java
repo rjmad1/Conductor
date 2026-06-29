@@ -49,6 +49,7 @@ class TenantIsolationTest {
 
   @MockBean private com.conductor.customer.service.CustomerTimelineService timelineService;
 
+  @MockBean private io.nats.client.Connection connection;
   @MockBean private com.conductor.shared.messaging.NatsConnectionManager natsConnectionManager;
 
   @MockBean private com.conductor.shared.messaging.EventConsumer eventConsumer;
