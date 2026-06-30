@@ -5,10 +5,12 @@ import com.conductor.shared.middleware.tenant.TenantContext;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/events/replay")
+@PreAuthorize("hasAnyAuthority('ROLE_TENANT_OWNER', 'ROLE_TENANT_ADMIN', 'ROLE_PLATFORM_ADMIN')")
 public class ReplayController {
 
   private final ReplayService replayService;

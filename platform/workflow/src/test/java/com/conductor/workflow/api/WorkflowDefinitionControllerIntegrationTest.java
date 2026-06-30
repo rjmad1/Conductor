@@ -21,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
 @AutoConfigureMockMvc
@@ -40,6 +42,14 @@ class WorkflowDefinitionControllerIntegrationTest extends BaseIntegrationTest {
     repository.deleteAll();
   }
 
+  private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor tenantAgentJwt() {
+    return jwt()
+        .jwt(
+            j ->
+                j.subject("test-user").issuer("http://localhost:8080/realms/conductor-" + tenantId))
+        .authorities(new SimpleGrantedAuthority("ROLE_TENANT_AGENT"));
+  }
+
   @Test
   @DisplayName("POST /api/v1/workflows creates a new draft workflow definition")
   void createWorkflowDefinition() throws Exception {
@@ -55,12 +65,7 @@ class WorkflowDefinitionControllerIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(
             post("/api/v1/workflows")
-                .with(
-                    jwt()
-                        .jwt(
-                            j ->
-                                j.subject("test-user")
-                                    .issuer("http://localhost:8080/realms/conductor-" + tenantId)))
+                .with(tenantAgentJwt())
                 .header("X-Tenant-ID", tenantId.toString())
                 .header("X-User-ID", "test-user-1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -110,12 +115,7 @@ class WorkflowDefinitionControllerIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(
             get("/api/v1/workflows")
-                .with(
-                    jwt()
-                        .jwt(
-                            j ->
-                                j.subject("test-user")
-                                    .issuer("http://localhost:8080/realms/conductor-" + tenantId)))
+                .with(tenantAgentJwt())
                 .header("X-Tenant-ID", tenantId.toString())
                 .header("X-User-ID", "test-user-1"))
         .andExpect(status().isOk());

@@ -6,11 +6,14 @@ import com.conductor.analytics.kpi.KpiService;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /** REST API for KPI definitions and current values. */
 @RestController
 @RequestMapping("/api/v1/analytics/kpis")
+@PreAuthorize(
+    "hasAnyAuthority('ROLE_TENANT_OWNER', 'ROLE_TENANT_ADMIN', 'ROLE_TENANT_AGENT', 'ROLE_PLATFORM_ADMIN')")
 public class KpiController {
 
   private final KpiService kpiService;

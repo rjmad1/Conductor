@@ -80,9 +80,9 @@ class WorkflowSecurityAcceptanceTest extends BaseAcceptanceTest {
                             j ->
                                 j.subject("read-only-user")
                                     .issuer("http://localhost:8080/realms/conductor-" + tenantId))
-                        .authorities(new SimpleGrantedAuthority("ROLE_VIEWER")))
+                        .authorities(new SimpleGrantedAuthority("ROLE_TENANT_AGENT")))
                 .header("X-Tenant-ID", tenantId.toString()))
-        // Workflow list is accessible to any authenticated user (no explicit @PreAuthorize).
+        // Workflow list is accessible to any authenticated user with a valid tenant role.
         .andExpect(status().isOk());
   }
 

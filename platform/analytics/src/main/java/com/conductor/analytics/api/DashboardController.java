@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /** REST API for analytics dashboard management and Metabase embedding. */
@@ -29,11 +30,15 @@ public class DashboardController {
   }
 
   @GetMapping
+  @PreAuthorize(
+      "hasAnyAuthority('ROLE_TENANT_OWNER', 'ROLE_TENANT_ADMIN', 'ROLE_TENANT_AGENT', 'ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<List<Dashboard>> list() {
     return ResponseEntity.ok(dashboardService.getDashboards());
   }
 
   @GetMapping("/{id}")
+  @PreAuthorize(
+      "hasAnyAuthority('ROLE_TENANT_OWNER', 'ROLE_TENANT_ADMIN', 'ROLE_TENANT_AGENT', 'ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<Dashboard> get(@PathVariable UUID id) {
     metrics.recordDashboardView();
     return dashboardService
@@ -43,22 +48,27 @@ public class DashboardController {
   }
 
   @PostMapping
+  @PreAuthorize("hasAnyAuthority('ROLE_TENANT_OWNER', 'ROLE_TENANT_ADMIN', 'ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<Dashboard> create(@RequestBody Dashboard dashboard) {
     return ResponseEntity.ok(dashboardService.createDashboard(dashboard));
   }
 
   @PutMapping("/{id}")
+  @PreAuthorize("hasAnyAuthority('ROLE_TENANT_OWNER', 'ROLE_TENANT_ADMIN', 'ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<Dashboard> update(@PathVariable UUID id, @RequestBody Dashboard dashboard) {
     return ResponseEntity.ok(dashboardService.updateDashboard(id, dashboard));
   }
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAnyAuthority('ROLE_TENANT_OWNER', 'ROLE_TENANT_ADMIN', 'ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     dashboardService.deleteDashboard(id);
     return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/{id}/embed-url")
+  @PreAuthorize(
+      "hasAnyAuthority('ROLE_TENANT_OWNER', 'ROLE_TENANT_ADMIN', 'ROLE_TENANT_AGENT', 'ROLE_PLATFORM_ADMIN')")
   public ResponseEntity<Map<String, String>> getEmbedUrl(
       @PathVariable UUID id, @RequestParam int metabaseDashboardId) {
     String url = metabaseEmbedService.generateEmbedUrl(metabaseDashboardId);

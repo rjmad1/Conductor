@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
 /** Controller-level integration tests for pluggable actions API. */
@@ -33,6 +35,14 @@ class ActionControllerIntegrationTest extends BaseIntegrationTest {
     tenantId = UUID.randomUUID();
   }
 
+  private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor tenantAgentJwt() {
+    return jwt()
+        .jwt(
+            j ->
+                j.subject("test-user").issuer("http://localhost:8080/realms/conductor-" + tenantId))
+        .authorities(new SimpleGrantedAuthority("ROLE_TENANT_AGENT"));
+  }
+
   @Test
   @DisplayName("GET /api/v1/actions lists all pluggable actions")
   void testListActions() throws Exception {
@@ -40,13 +50,7 @@ class ActionControllerIntegrationTest extends BaseIntegrationTest {
         mockMvc
             .perform(
                 get("/api/v1/actions")
-                    .with(
-                        jwt()
-                            .jwt(
-                                j ->
-                                    j.subject("test-user")
-                                        .issuer(
-                                            "http://localhost:8080/realms/conductor-" + tenantId)))
+                    .with(tenantAgentJwt())
                     .header("X-Tenant-ID", tenantId.toString()))
             .andExpect(status().isOk())
             .andReturn()
@@ -65,13 +69,7 @@ class ActionControllerIntegrationTest extends BaseIntegrationTest {
         mockMvc
             .perform(
                 get("/api/v1/actions/LOG/metadata")
-                    .with(
-                        jwt()
-                            .jwt(
-                                j ->
-                                    j.subject("test-user")
-                                        .issuer(
-                                            "http://localhost:8080/realms/conductor-" + tenantId)))
+                    .with(tenantAgentJwt())
                     .header("X-Tenant-ID", tenantId.toString()))
             .andExpect(status().isOk())
             .andReturn()
@@ -89,12 +87,7 @@ class ActionControllerIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(
             post("/api/v1/actions/LOG/validate")
-                .with(
-                    jwt()
-                        .jwt(
-                            j ->
-                                j.subject("test-user")
-                                    .issuer("http://localhost:8080/realms/conductor-" + tenantId)))
+                .with(tenantAgentJwt())
                 .header("X-Tenant-ID", tenantId.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("message", "valid log text"))))
@@ -109,12 +102,7 @@ class ActionControllerIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(
             post("/api/v1/actions/LOG/validate")
-                .with(
-                    jwt()
-                        .jwt(
-                            j ->
-                                j.subject("test-user")
-                                    .issuer("http://localhost:8080/realms/conductor-" + tenantId)))
+                .with(tenantAgentJwt())
                 .header("X-Tenant-ID", tenantId.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("level", "INFO"))))
