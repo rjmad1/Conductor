@@ -1,0 +1,36 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: reference-app
+  main:
+    allow-bean-definition-overriding: true
+  
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/conductor_db
+    username: ${POSTGRES_USER:conductor}
+    password: ${POSTGRES_PASSWORD:conductor_password}
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_SERVER_URL:http://localhost:8080}/realms/conductor
+          jwk-set-uri: ${KEYCLOAK_SERVER_URL:http://localhost:8080}/realms/conductor/protocol/openid-connect/certs
+
+keycloak:
+  server-url: ${KEYCLOAK_SERVER_URL:http://localhost:8080}
+  admin:
+    username: ${KEYCLOAK_ADMIN_USERNAME:admin}
+    password: ${KEYCLOAK_ADMIN_PASSWORD:admin_password}
+
+logging:
+  level:
+    com.conductor: DEBUG
+    org.springframework.security: INFO

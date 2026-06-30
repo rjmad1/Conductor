@@ -1,3 +1,7 @@
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+
 rootProject.name = 'conductor'
 
 include 'shared:auth'
@@ -26,3 +30,6 @@ include 'platform:customer'
 
 include 'platform:integrations'
 
+include 'platform:analytics'
+include 'platform:reference-app'
+include 'platform:ai'

@@ -1,0 +1,345 @@
+openapi: 3.0.3
+info:
+  title: Conductor Tenant API
+  description: API contract governing Tenant management, registrations, and lifecycle operations in Conductor.
+  version: 1.0.0
+paths:
+  /api/v1/tenants:
+    post:
+      summary: Create a new Tenant
+      description: Registers a new tenant in the platform and dynamically provisions identity resources.
+      operationId: createTenant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenantRequest'
+      responses:
+        '201':
+          description: Tenant created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantResponse'
+        '400':
+          description: Validation failed or duplicate tenant key/domain detected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (Requires ROLE_PLATFORM_ADMIN)
+    get:
+      summary: List all Tenants
+      description: Retrieves a cursor-paginated list of active and deactivated tenants. Excludes deleted tenants.
+      operationId: listTenants
+      parameters:
+        - name: limit
+          in: query
+          description: Number of records to return (1-100)
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: starting_after
+          in: query
+          description: Base64-encoded cursor token representing the UUID of the last record of the previous page
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paginated list of tenants
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantPageResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (Requires ROLE_PLATFORM_ADMIN)
+
+  /api/v1/tenants/{id}:
+    get:
+      summary: Retrieve Tenant profile
+      description: Fetches a single tenant profile by its unique ID.
+      operationId: getTenant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Tenant profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantResponse'
+        '404':
+          description: Tenant not found or unauthorized cross-tenant query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (Requires ROLE_PLATFORM_ADMIN or matching ROLE_TENANT_ADMIN)
+    patch:
+      summary: Update Tenant profile
+      description: Performs partial updates on a tenant's profile (name, legal name, domain, settings, locale, currency).
+      operationId: updateTenant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTenantRequest'
+      responses:
+        '200':
+          description: Tenant profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantResponse'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Version conflict (Optimistic locking check failed)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Invalid state transition (e.g. modifying a deleted tenant)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Soft-delete Tenant
+      description: Deletes a tenant by marking its status as DELETED and setting a deleted_at timestamp.
+      operationId: deleteTenant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Tenant deleted successfully
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Invalid state transition (e.g. tenant is already deleted)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/tenants/{id}/deactivate:
+    post:
+      summary: Deactivate Tenant
+      description: Suspends operations for a tenant by marking its status as DEACTIVATED.
+      operationId: deactivateTenant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Tenant deactivated successfully
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Invalid state transition (e.g. tenant is deleted)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/tenants/{id}/activate:
+    post:
+      summary: Activate Tenant
+      description: Restores operations for a deactivated tenant by marking its status as ACTIVE.
+      operationId: activateTenant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Tenant activated successfully
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Invalid state transition (e.g. tenant is deleted)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CreateTenantRequest:
+      type: object
+      required:
+        - tenantKey
+        - displayName
+        - domain
+      properties:
+        tenantKey:
+          type: string
+          description: Unique, immutable alphanumeric/kebab key for the tenant
+          pattern: '^[a-zA-Z0-9-_]+$'
+        displayName:
+          type: string
+          description: Human-readable display name of the tenant
+        legalName:
+          type: string
+          description: Official registered legal name of the entity
+        domain:
+          type: string
+          description: Domain name mapping to client configuration
+        timezone:
+          type: string
+          description: Timezone of the tenant (e.g. UTC, Asia/Kolkata)
+        locale:
+          type: string
+          description: Locale of the tenant (e.g. en_US, en_IN)
+        defaultCurrency:
+          type: string
+          description: Default billing currency (e.g. USD, INR)
+
+    UpdateTenantRequest:
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: Human-readable display name of the tenant
+        legalName:
+          type: string
+          description: Official registered legal name of the entity
+        domain:
+          type: string
+          description: Domain name mapping to client configuration
+        timezone:
+          type: string
+          description: Timezone of the tenant
+        locale:
+          type: string
+          description: Locale of the tenant
+        defaultCurrency:
+          type: string
+          description: Default billing currency
+
+    TenantResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantKey:
+          type: string
+        displayName:
+          type: string
+        legalName:
+          type: string
+        domain:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, DEACTIVATED, DELETED]
+        timezone:
+          type: string
+        locale:
+          type: string
+        defaultCurrency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        version:
+          type: integer
+
+    TenantPageResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantResponse'
+        count:
+          type: integer
+        hasMore:
+          type: boolean
+        nextCursor:
+          type: string
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        extensions:
+          type: object
+          additionalProperties: true

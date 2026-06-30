@@ -11,10 +11,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Generate Gradle wrapper jar
@@ -32,6 +32,9 @@ jobs:
 
       - name: Run Tests
         run: ./gradlew test --no-daemon
+
+      - name: Static Analysis
+        run: ./gradlew check --no-daemon
 
       - name: Validate Threat Models and Documentation
         run: |

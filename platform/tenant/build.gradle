@@ -14,15 +14,29 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.postgresql:postgresql'
     implementation 'org.flywaydb:flyway-core'
-    
+
     implementation 'org.keycloak:keycloak-admin-client:24.0.0'
     implementation 'io.nats:jnats:2.17.2'
 
+    // Micrometer metrics dependency
+    implementation 'io.micrometer:micrometer-core'
+
+    // Test dependencies
+    testImplementation 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+}
+
+bootJar {
+    enabled = false
 }
 
 jar {
     enabled = true
+}
+
+test {
+    environment "DOCKER_HOST", "npipe:////./pipe/dockerDesktopLinuxEngine"
 }

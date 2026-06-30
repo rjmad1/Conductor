@@ -1,26 +1,28 @@
 package com.conductor.workflow.repository;
 
-import com.conductor.workflow.domain.WorkflowDefinition;
 import com.conductor.shared.workflow.WorkflowVersionStatus;
+import com.conductor.workflow.domain.WorkflowDefinition;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 @Repository
 public interface WorkflowDefinitionRepository extends JpaRepository<WorkflowDefinition, UUID> {
 
-    List<WorkflowDefinition> findByTenantIdOrderByCreatedAtDesc(UUID tenantId, Pageable pageable);
+  List<WorkflowDefinition> findByTenantIdOrderByCreatedAtDesc(UUID tenantId, Pageable pageable);
 
-    List<WorkflowDefinition> findByTenantIdAndVersionStatusOrderByCreatedAtDesc(
-            UUID tenantId, WorkflowVersionStatus versionStatus, Pageable pageable);
+  List<WorkflowDefinition> findByTenantIdAndVersionStatusOrderByCreatedAtDesc(
+      UUID tenantId, WorkflowVersionStatus versionStatus, Pageable pageable);
 
-    Optional<WorkflowDefinition> findByIdAndTenantId(UUID id, UUID tenantId);
+  Optional<WorkflowDefinition> findByIdAndTenantId(UUID id, UUID tenantId);
 
-    long countByTenantId(UUID tenantId);
+  long countByTenantId(UUID tenantId);
 
-    long countByTenantIdAndVersionStatus(UUID tenantId, WorkflowVersionStatus versionStatus);
+  long countByTenantIdAndVersionStatus(UUID tenantId, WorkflowVersionStatus versionStatus);
+
+  List<WorkflowDefinition> findByTriggerTypeAndVersionStatus(
+      com.conductor.shared.workflow.TriggerType triggerType, WorkflowVersionStatus versionStatus);
 }

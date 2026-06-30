@@ -204,6 +204,10 @@ All AI sessions and agents in this workspace must adhere to the following contex
 - **Verification-First Prompting:** Structure prompts with objective, scope boundaries, relevant files, validation commands, and acceptance criteria.
 - **Course-Correction:** Intervene and review early (after plan, after first edits, after verification) to prevent compounding drift.
 
+### 12.3 Loop Engineering & Repository Sync
+- **Check Remote Loops:** At the beginning of development or workspace initialization, always verify that the project's loops under `docs/loops` and `RajaJeevanLoopEngineering` are in sync with the remote repository at `https://github.com/rjmad1/RajaJeevanLoopEngineering`.
+- **Port/Update Procedure:** If remote updates exist or files are missing, run the porting script (such as `port-loops.ps1`) to sync the latest loop definitions and implementation libraries to the local workspace.
+
 ---
 
 *This document is the source of truth for agent behavior in this project. Amendments require a version bump and human sign-off.*

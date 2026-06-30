@@ -1,14 +1,13 @@
 package com.conductor.workflow.repository;
 
 import com.conductor.workflow.domain.WorkflowHistory;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WorkflowHistoryRepository extends JpaRepository<WorkflowHistory, UUID> {
 
-    List<WorkflowHistory> findByExecutionIdOrderByTimestampAsc(UUID executionId);
+  List<WorkflowHistory> findByExecutionIdOrderByTimestampAsc(UUID executionId);
 }

@@ -435,13 +435,19 @@ The lifecycle governs every loop from conception to retirement. Each phase has d
 - Increment Version to `1.0`.
 - Set Status to `Active`.
 - Update the SPEC-010 catalog entry: change status from `Proposed` to `Active`, add version, add publication date, add Owner and Maintainer.
+- Diligently update **all required documentation and references** across the repository. This includes:
+  - `docs/loop-catalog.md`
+  - `shared/loops-manifest.json`
+  - `docs/aeos-loop-instructions-by-project-type.md`
+  - `docs/project-loops-ready-reckoner.md`
+  - `USER_GUIDE.md` (if applicable)
 - Update `docs/loops/README.md` to include the new loop in the loop index table.
 - If the loop is an Engineering Loop: verify the Engineering Loop Guide's sub-range table covers this loop's domain; update if a new sub-range was created.
 - Notify any loops declared as upstream or downstream dependencies that the new loop is now Active.
 
-**Artefacts:** Published specification at `1.0 Active`. Updated SPEC-010 entry. Updated README.
+**Artefacts:** Published specification at `1.0 Active`. Updated SPEC-010 entry, loops-manifest.json, and all related documentation pages across the Wiki/docs. Updated README.
 
-**Exit condition:** Specification is published and registered. The loop may now be invoked in engineering chains. Advance to Stable.
+**Exit condition:** Specification is published and registered. All references and catalogs are completely updated. The loop may now be invoked in engineering chains. Advance to Stable.
 
 ### Phase 7 — Stable (Maintenance)
 

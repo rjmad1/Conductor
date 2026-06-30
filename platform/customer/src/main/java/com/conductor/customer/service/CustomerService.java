@@ -6,6 +6,9 @@ import com.conductor.shared.customer.CustomerEvents;
 import com.conductor.shared.customer.CustomerStatus;
 import com.conductor.shared.middleware.tenant.AuditLogger;
 import com.conductor.shared.middleware.tenant.NatsEventPublisher;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,138 +16,176 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.Optional;
-import java.util.UUID;
-
 @Service
+@SuppressWarnings("null")
 public class CustomerService {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
+  private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
-    private final CustomerRepository            customerRepository;
-    private final CustomerIdentifierRepository  identifierRepository;
-    private final CustomerTimelineService       timelineService;
-    private final NatsEventPublisher            eventPublisher;
-    private final AuditLogger                   auditLogger;
+  private final CustomerRepository customerRepository;
+  private final CustomerTimelineService timelineService;
+  private final NatsEventPublisher eventPublisher;
+  private final AuditLogger auditLogger;
 
-    public CustomerService(
-            CustomerRepository customerRepository,
-            CustomerIdentifierRepository identifierRepository,
-            CustomerTimelineService timelineService,
-            NatsEventPublisher eventPublisher,
-            AuditLogger auditLogger) {
-        this.customerRepository   = customerRepository;
-        this.identifierRepository = identifierRepository;
-        this.timelineService      = timelineService;
-        this.eventPublisher       = eventPublisher;
-        this.auditLogger          = auditLogger;
+  public CustomerService(
+      CustomerRepository customerRepository,
+      CustomerTimelineService timelineService,
+      NatsEventPublisher eventPublisher,
+      AuditLogger auditLogger) {
+    this.customerRepository = customerRepository;
+    this.timelineService = timelineService;
+    this.eventPublisher = eventPublisher;
+    this.auditLogger = auditLogger;
+  }
+
+  @Transactional
+  public Customer createCustomer(
+      String firstName,
+      String lastName,
+      String displayName,
+      String externalId,
+      String sourceSystem) {
+    Customer customer = new Customer();
+    customer.setFirstName(firstName);
+    customer.setLastName(lastName);
+    customer.setDisplayName(displayName);
+    customer.setExternalId(externalId);
+    customer.setSourceSystem(sourceSystem);
+    customer.setStatus(CustomerStatus.ACTIVE);
+
+    Customer saved = customerRepository.save(customer);
+
+    timelineService.record(
+        saved.getId(),
+        com.conductor.shared.customer.TimelineEventType.CUSTOMER_CREATED,
+        "customer-service",
+        "Customer profile created",
+        String.format("{\"source\":\"%s\"}", sourceSystem != null ? sourceSystem : "MANUAL"));
+
+    eventPublisher.publishEvent(
+        CustomerEvents.DOMAIN,
+        CustomerEvents.ENTITY_PROFILE,
+        CustomerEvents.ACTION_CREATED,
+        String.format("{\"id\":\"%s\",\"displayName\":\"%s\"}", saved.getId(), displayName));
+
+    auditLogger.logEvent("CREATE", "CUSTOMER:" + saved.getId(), "SUCCESS", "Customer created");
+    log.info("Customer created id={} tenant-scoped", saved.getId());
+    return saved;
+  }
+
+  @Transactional(readOnly = true)
+  public Optional<Customer> findById(UUID id) {
+    UUID tenantId = com.conductor.shared.middleware.tenant.TenantContext.getCurrentTenantId();
+    if (tenantId != null) {
+      return customerRepository.findByIdAndTenantId(id, tenantId);
     }
+    return customerRepository.findById(id);
+  }
 
-    @Transactional
-    public Customer createCustomer(String firstName, String lastName, String displayName,
-                                   String externalId, String sourceSystem) {
-        Customer customer = new Customer();
-        customer.setFirstName(firstName);
-        customer.setLastName(lastName);
-        customer.setDisplayName(displayName);
-        customer.setExternalId(externalId);
-        customer.setSourceSystem(sourceSystem);
-        customer.setStatus(CustomerStatus.ACTIVE);
-
-        Customer saved = customerRepository.save(customer);
-
-        timelineService.record(saved.getId(), com.conductor.shared.customer.TimelineEventType.CUSTOMER_CREATED,
-                "customer-service", "Customer profile created",
-                String.format("{\"source\":\"%s\"}", sourceSystem != null ? sourceSystem : "MANUAL"));
-
-        eventPublisher.publishEvent(CustomerEvents.DOMAIN, CustomerEvents.ENTITY_PROFILE,
-                CustomerEvents.ACTION_CREATED,
-                String.format("{\"id\":\"%s\",\"displayName\":\"%s\"}", saved.getId(), displayName));
-
-        auditLogger.logEvent("CREATE", "CUSTOMER:" + saved.getId(), "SUCCESS", "Customer created");
-        log.info("Customer created id={} tenant-scoped", saved.getId());
-        return saved;
+  @Transactional(readOnly = true)
+  public Page<Customer> findAll(Pageable pageable) {
+    UUID tenantId = com.conductor.shared.middleware.tenant.TenantContext.getCurrentTenantId();
+    if (tenantId != null) {
+      return customerRepository.findAllActiveForTenant(tenantId, pageable);
     }
+    return customerRepository.findAllActive(pageable);
+  }
 
-    public Optional<Customer> findById(UUID id) {
-        return customerRepository.findById(id);
-    }
+  @Transactional
+  public Customer updateCustomer(UUID id, String firstName, String lastName, String displayName) {
+    Customer customer = requireCustomer(id);
 
-    public Page<Customer> findAll(Pageable pageable) {
-        return customerRepository.findAllActive(pageable);
-    }
+    customer.setFirstName(firstName);
+    customer.setLastName(lastName);
+    customer.setDisplayName(displayName);
+    customer.setUpdatedAt(Instant.now());
 
-    @Transactional
-    public Customer updateCustomer(UUID id, String firstName, String lastName, String displayName) {
-        Customer customer = requireCustomer(id);
+    Customer updated = customerRepository.save(customer);
 
-        customer.setFirstName(firstName);
-        customer.setLastName(lastName);
-        customer.setDisplayName(displayName);
-        customer.setUpdatedAt(Instant.now());
+    timelineService.record(
+        id,
+        com.conductor.shared.customer.TimelineEventType.PROFILE_UPDATED,
+        "customer-service",
+        "Customer profile updated",
+        null);
 
-        Customer updated = customerRepository.save(customer);
+    eventPublisher.publishEvent(
+        CustomerEvents.DOMAIN,
+        CustomerEvents.ENTITY_PROFILE,
+        CustomerEvents.ACTION_UPDATED,
+        String.format("{\"id\":\"%s\"}", id));
 
-        timelineService.record(id, com.conductor.shared.customer.TimelineEventType.PROFILE_UPDATED,
-                "customer-service", "Customer profile updated", null);
+    auditLogger.logEvent("UPDATE", "CUSTOMER:" + id, "SUCCESS", "Profile updated");
+    return updated;
+  }
 
-        eventPublisher.publishEvent(CustomerEvents.DOMAIN, CustomerEvents.ENTITY_PROFILE,
-                CustomerEvents.ACTION_UPDATED, String.format("{\"id\":\"%s\"}", id));
+  @Transactional
+  public void deactivateCustomer(UUID id) {
+    Customer customer = requireCustomer(id);
+    customer.setStatus(CustomerStatus.INACTIVE);
+    customer.setUpdatedAt(Instant.now());
+    customerRepository.save(customer);
 
-        auditLogger.logEvent("UPDATE", "CUSTOMER:" + id, "SUCCESS", "Profile updated");
-        return updated;
-    }
+    timelineService.record(
+        id,
+        com.conductor.shared.customer.TimelineEventType.CUSTOMER_UPDATED,
+        "customer-service",
+        "Customer deactivated",
+        null);
 
-    @Transactional
-    public void deactivateCustomer(UUID id) {
-        Customer customer = requireCustomer(id);
-        customer.setStatus(CustomerStatus.INACTIVE);
-        customer.setUpdatedAt(Instant.now());
-        customerRepository.save(customer);
+    eventPublisher.publishEvent(
+        CustomerEvents.DOMAIN,
+        CustomerEvents.ENTITY_PROFILE,
+        CustomerEvents.ACTION_UPDATED,
+        String.format("{\"id\":\"%s\",\"status\":\"INACTIVE\"}", id));
 
-        timelineService.record(id, com.conductor.shared.customer.TimelineEventType.CUSTOMER_UPDATED,
-                "customer-service", "Customer deactivated", null);
+    auditLogger.logEvent("DEACTIVATE", "CUSTOMER:" + id, "SUCCESS", "Customer deactivated");
+  }
 
-        eventPublisher.publishEvent(CustomerEvents.DOMAIN, CustomerEvents.ENTITY_PROFILE,
-                CustomerEvents.ACTION_UPDATED, String.format("{\"id\":\"%s\",\"status\":\"INACTIVE\"}", id));
+  @Transactional
+  public void softDeleteCustomer(UUID id) {
+    Customer customer = requireCustomer(id);
+    customer.setStatus(CustomerStatus.DELETED);
+    customer.setDeletedAt(Instant.now());
+    customer.setUpdatedAt(Instant.now());
+    customerRepository.save(customer);
 
-        auditLogger.logEvent("DEACTIVATE", "CUSTOMER:" + id, "SUCCESS", "Customer deactivated");
-    }
+    eventPublisher.publishEvent(
+        CustomerEvents.DOMAIN,
+        CustomerEvents.ENTITY_PROFILE,
+        CustomerEvents.ACTION_DELETED,
+        String.format("{\"id\":\"%s\"}", id));
 
-    @Transactional
-    public void softDeleteCustomer(UUID id) {
-        Customer customer = requireCustomer(id);
-        customer.setStatus(CustomerStatus.DELETED);
-        customer.setDeletedAt(Instant.now());
-        customer.setUpdatedAt(Instant.now());
-        customerRepository.save(customer);
+    auditLogger.logEvent("DELETE", "CUSTOMER:" + id, "SUCCESS", "Customer soft deleted");
+  }
 
-        eventPublisher.publishEvent(CustomerEvents.DOMAIN, CustomerEvents.ENTITY_PROFILE,
-                CustomerEvents.ACTION_DELETED, String.format("{\"id\":\"%s\"}", id));
+  @Transactional
+  public void archiveCustomer(UUID id) {
+    Customer customer = requireCustomer(id);
+    customer.setStatus(CustomerStatus.ARCHIVED);
+    customer.setUpdatedAt(Instant.now());
+    customerRepository.save(customer);
 
-        auditLogger.logEvent("DELETE", "CUSTOMER:" + id, "SUCCESS", "Customer soft deleted");
-    }
+    timelineService.record(
+        id,
+        com.conductor.shared.customer.TimelineEventType.CUSTOMER_ARCHIVED,
+        "customer-service",
+        "Customer archived",
+        null);
 
-    @Transactional
-    public void archiveCustomer(UUID id) {
-        Customer customer = requireCustomer(id);
-        customer.setStatus(CustomerStatus.ARCHIVED);
-        customer.setUpdatedAt(Instant.now());
-        customerRepository.save(customer);
+    eventPublisher.publishEvent(
+        CustomerEvents.DOMAIN,
+        CustomerEvents.ENTITY_PROFILE,
+        CustomerEvents.ACTION_ARCHIVED,
+        String.format("{\"id\":\"%s\"}", id));
 
-        timelineService.record(id, com.conductor.shared.customer.TimelineEventType.CUSTOMER_ARCHIVED,
-                "customer-service", "Customer archived", null);
+    auditLogger.logEvent("ARCHIVE", "CUSTOMER:" + id, "SUCCESS", "Customer archived");
+  }
 
-        eventPublisher.publishEvent(CustomerEvents.DOMAIN, CustomerEvents.ENTITY_PROFILE,
-                CustomerEvents.ACTION_ARCHIVED, String.format("{\"id\":\"%s\"}", id));
-
-        auditLogger.logEvent("ARCHIVE", "CUSTOMER:" + id, "SUCCESS", "Customer archived");
-    }
-
-    /** Guard: resolves customer or throws. Returns 404-semantic exception for cross-tenant safety. */
-    public Customer requireCustomer(UUID id) {
-        return customerRepository.findById(id)
-                .orElseThrow(() -> new com.conductor.customer.exception.CustomerNotFoundException(id));
-    }
+  /** Guard: resolves customer or throws. Returns 404-semantic exception for cross-tenant safety. */
+  public Customer requireCustomer(UUID id) {
+    return customerRepository
+        .findById(id)
+        .orElseThrow(() -> new com.conductor.customer.exception.CustomerNotFoundException(id));
+  }
 }

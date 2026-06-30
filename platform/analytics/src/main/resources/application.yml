@@ -1,0 +1,58 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: conductor-analytics
+  datasource:
+    url: jdbc:postgresql://localhost:5432/conductor_db
+    username: conductor
+    password: conductor_password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/conductor
+
+# ClickHouse OLAP configuration
+analytics:
+  clickhouse:
+    url: jdbc:ch://localhost:8123/default
+    user: default
+    password: ""
+    batch-size: 1000
+    flush-interval-ms: 5000
+  metabase:
+    url: http://localhost:3000
+    embedding-secret: ${METABASE_EMBEDDING_SECRET:change-me-in-production}
+  kpi:
+    evaluation-interval-ms: 300000
+  report:
+    scheduler-interval-ms: 60000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    tags:
+      application: conductor-analytics
+    export:
+      prometheus:
+        enabled: true
+
+logging:
+  level:
+    com.conductor.analytics: INFO
+    com.conductor.shared: INFO

@@ -7,13 +7,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@ComponentScan(basePackages = {
-    "com.conductor.customer",
-    "com.conductor.shared"
-})
+@ComponentScan(basePackages = {"com.conductor.customer", "com.conductor.shared"})
 public class CustomerApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CustomerApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(CustomerApplication.class, args);
+  }
 }

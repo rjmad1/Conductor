@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conductor Reference Application</title>
+  <!-- Outfit Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #161d30;
+      --border-color: #24304f;
+      --text-color: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 2rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 30px rgba(99, 102, 241, 0.15);
+    }
+
+    .card h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .card h2 span {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      background-color: rgba(11, 15, 25, 0.5);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+
+    button:disabled {
+      background-color: var(--border-color);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    button.btn-accent {
+      background-color: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    button.btn-accent:hover {
+      background-color: rgba(6, 182, 212, 0.1);
+    }
+
+    button.btn-danger {
+      background-color: var(--danger);
+    }
+
+    button.btn-danger:hover {
+      background-color: #dc2626;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-badge.pending { background-color: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .status-badge.running { background-color: rgba(6, 182, 212, 0.15); color: var(--accent); }
+    .status-badge.completed { background-color: rgba(16, 185, 129, 0.15); color: var(--success); }
+    .status-badge.failed { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+    pre {
+      background-color: rgba(11, 15, 25, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      max-height: 250px;
+      margin-top: 1rem;
+      color: #38bdf8;
+    }
+
+    .alert {
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      color: var(--text-color);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .alert-warning {
+      background-color: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--warning);
+      color: var(--text-color);
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .timeline-item {
+      border-left: 2px solid var(--border-color);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 4px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--primary);
+    }
+
+    .timeline-item.msg-sent::before { background-color: var(--success); }
+    .timeline-item.msg-recv::before { background-color: var(--accent); }
+
+    .timeline-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .timeline-summary {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .token-display {
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+
+    .tab-header {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      text-align: right;
+    }
+
+    .tab-header span {
+      background-color: var(--border-color);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Conductor Reference Application</h1>
+      <p>Developer Sandboxed Platform Validation Application</p>
+    </header>
+
+    <div class="alert alert-warning">
+      <strong>⚠️ Known Platform Defect:</strong> The welcome workflow activity `send-welcome-whatsapp` executes with an empty URL template in the platform by default. This causes workflow executions to transition to <strong>FAILED</strong> instead of <strong>COMPLETED</strong> in dynamic runtimes. This app visualizes the failure as part of the validation suite.
+    </div>
+
+    <div class="grid">
+      <!-- Left Column: Flow Execution -->
+      <div>
+        <!-- Step 1: Authenticate -->
+        <div class="card" id="card-auth">
+          <h2><span>Step 1</span> Authenticate</h2>
+          
+          <div class="form-group">
+            <label for="auth-type">Authentication Scope</label>
+            <select id="auth-type" onchange="toggleAuthFields()">
+              <option value="platform">Platform Admin (Master Realm)</option>
+              <option value="tenant">Tenant Admin (Custom Realm)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="auth-server">Keycloak Server URL</label>
+            <input type="text" id="auth-server" value="http://localhost:8080">
+          </div>
+
+          <div class="form-group" id="group-realm" style="display: none;">
+            <label for="auth-realm">Realm Name</label>
+            <input type="text" id="auth-realm" value="conductor-realm">
+          </div>
+
+          <div class="form-group">
+            <label for="auth-user">Username / Email</label>
+            <input type="text" id="auth-user" value="admin">
+          </div>
+
+          <div class="form-group">
+            <label for="auth-pass">Password</label>
+            <input type="password" id="auth-pass" value="admin_password">
+          </div>
+
+          <div class="btn-group">
+            <button id="btn-login" onclick="login()">Login</button>
+            <button id="btn-logout" class="btn-danger" onclick="logout()" disabled>Logout</button>
+          </div>
+
+          <pre id="auth-log">Not Authenticated</pre>
+        </div>
+
+        <!-- Step 2: Select/Create Tenant -->
+        <div class="card" id="card-tenant">
+          <h2><span>Step 2</span> Select or Create Tenant</h2>
+          <div class="tab-header">Auth Status: <span id="auth-status-badge">NONE</span></div>
+
+          <div class="form-group">
+            <label for="tenant-select-mode">Tenant Mode</label>
+            <select id="tenant-select-mode" onchange="toggleTenantFields()">
+              <option value="create">Create New Tenant (Requires Platform Admin)</option>
+              <option value="select">Use Existing Tenant ID</option>
+            </select>
+          </div>
+
+          <div id="group-tenant-create">
+            <div class="form-group">
+              <label for="tenant-key">Tenant Key (Alpha-Numeric/Hyphens)</label>
+              <input type="text" id="tenant-key" value="test-tenant">
+            </div>
+            <div class="form-group">
+              <label for="tenant-name">Display Name</label>
+              <input type="text" id="tenant-name" value="Test Enterprise">
+            </div>
+            <div class="form-group">
+              <label for="tenant-domain">Domain</label>
+              <input type="text" id="tenant-domain" value="test.conductor.app">
+            </div>
+          </div>
+
+          <div id="group-tenant-select" style="display: none;">
+            <div class="form-group">
+              <label for="tenant-id">Tenant ID (UUID)</label>
+              <input type="text" id="tenant-id" placeholder="00000000-0000-0000-0000-000000000000">
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button id="btn-tenant-action" onclick="handleTenantAction()">Submit Tenant</button>
+            <button id="btn-tenant-bootstrap" class="btn-accent" onclick="bootstrapTenantAdmin()" disabled>Bootstrap Tenant Admin User</button>
+          </div>
+
+          <pre id="tenant-log">No Tenant Selected</pre>
+        </div>
+
+        <!-- Step 3: Create Customer -->
+        <div class="card" id="card-customer">
+          <h2><span>Step 3</span> Create Customer Profile</h2>
+          
+          <div class="form-group">
+            <label for="cust-first">First Name</label>
+            <input type="text" id="cust-first" value="Alice">
+          </div>
+          <div class="form-group">
+            <label for="cust-last">Last Name</label>
+            <input type="text" id="cust-last" value="Smith">
+          </div>
+          <div class="form-group">
+            <label for="cust-display">Display Name</label>
+            <input type="text" id="cust-display" value="Alice Smith">
+          </div>
+          <div class="form-group">
+            <label for="cust-email">Email</label>
+            <input type="email" id="cust-email" value="alice@example.com">
+          </div>
+          <div class="form-group">
+            <label for="cust-phone">Phone Number (Meta Sandbox format)</label>
+            <input type="text" id="cust-phone" value="+15555551234">
+          </div>
+
+          <div class="btn-group">
+            <button id="btn-cust-create" onclick="createCustomer()" disabled>Create Customer</button>
+            <button id="btn-cust-view" class="btn-accent" onclick="viewCustomer()" disabled>Fetch Customer Details</button>
+          </div>
+
+          <pre id="cust-log">No Customer Created</pre>
+        </div>
+      </div>
+
+      <!-- Right Column: Monitoring & Observability -->
+      <div>
+        <!-- Step 4: Workflow Execution & Timeline -->
+        <div class="card" id="card-workflow">
+          <h2><span>Step 4</span> Welcome Workflow & Messages</h2>
+          
+          <div class="btn-group">
+            <button id="btn-wf-start" onclick="startWorkflow()" disabled>Start Welcome Workflow</button>
+            <button id="btn-wf-refresh" class="btn-accent" onclick="refreshExecutions()" disabled>Refresh Executions</button>
+          </div>
+
+          <pre id="wf-log">No Workflows Executed</pre>
+        </div>
+
+        <!-- Customer Timeline -->
+        <div class="card" id="card-timeline">
+          <h2><span>Step 5</span> Customer Timeline</h2>
+          
+          <div class="btn-group">
+            <button id="btn-timeline-refresh" onclick="refreshTimeline()" disabled>Fetch Customer Timeline</button>
+          </div>
+
+          <div class="timeline" id="timeline-container">
+            <p style="color: var(--text-muted); font-size: 0.9rem;">No events recorded on timeline yet.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configuration states
+    let activeToken = null;
+    let authScope = 'platform';
+    let selectedTenantId = null;
+    let createdCustomerId = null;
+    let workflowDefinitionId = null;
+
+    // Service endpoints configuration
+    const services = {
+      tenant: 'http://localhost:8081',
+      identity: 'http://localhost:8082',
+      customer: 'http://localhost:8084',
+      workflow: 'http://localhost:8090',
+      reference: 'http://localhost:8083'
+    };
+
+    function toggleAuthFields() {
+      authScope = document.getElementById('auth-type').value;
+      const groupRealm = document.getElementById('group-realm');
+      const userField = document.getElementById('auth-user');
+      const passField = document.getElementById('auth-pass');
+
+      if (authScope === 'platform') {
+        groupRealm.style.display = 'none';
+        userField.value = 'admin';
+        passField.value = 'admin_password';
+      } else {
+        groupRealm.style.display = 'block';
+        userField.value = 'tenant_admin@conductor.app';
+        passField.value = 'AdminPassword123!';
+      }
+    }
+
+    function toggleTenantFields() {
+      const mode = document.getElementById('tenant-select-mode').value;
+      document.getElementById('group-tenant-create').style.display = mode === 'create' ? 'block' : 'none';
+      document.getElementById('group-tenant-select').style.display = mode === 'select' ? 'block' : 'none';
+    }
+
+    async function login() {
+      const serverUrl = document.getElementById('auth-server').value;
+      const realm = authScope === 'platform' ? 'master' : document.getElementById('auth-realm').value;
+      const user = document.getElementById('auth-user').value;
+      const pass = document.getElementById('auth-pass').value;
+
+      const url = `${serverUrl}/realms/${realm}/protocol/openid-connect/token`;
+      
+      document.getElementById('auth-log').textContent = 'Authenticating...';
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            grant_type: 'password',
+            client_id: 'admin-cli',
+            username: user,
+            password: pass
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const data = await response.json();
+        activeToken = data.access_token;
+
+        document.getElementById('auth-log').innerHTML = `<span class="token-display">JWT Token Acquired:\n${activeToken.substring(0, 40)}...</span>`;
+        document.getElementById('auth-status-badge').textContent = authScope.toUpperCase() + '_ADMIN';
+        document.getElementById('auth-status-badge').style.backgroundColor = 'rgba(99, 102, 241, 0.2)';
+        document.getElementById('auth-status-badge').style.color = 'var(--primary)';
+
+        document.getElementById('btn-login').disabled = true;
+        document.getElementById('btn-logout').disabled = false;
+        
+        // Enable tenant submit
+        document.getElementById('btn-tenant-action').disabled = false;
+
+        // If we logged in as a Tenant Admin, enable customer creation
+        if (authScope === 'tenant') {
+          document.getElementById('btn-cust-create').disabled = false;
+        }
+
+      } catch (e) {
+        document.getElementById('auth-log').textContent = `Login failed: ${e.message}\nEnsure Keycloak is running at ${serverUrl}`;
+      }
+    }
+
+    function logout() {
+      activeToken = null;
+      document.getElementById('auth-log').textContent = 'Logged Out';
+      document.getElementById('auth-status-badge').textContent = 'NONE';
+      document.getElementById('auth-status-badge').style.backgroundColor = 'var(--border-color)';
+      document.getElementById('auth-status-badge').style.color = 'var(--text-muted)';
+      
+      document.getElementById('btn-login').disabled = false;
+      document.getElementById('btn-logout').disabled = true;
+      document.getElementById('btn-tenant-action').disabled = true;
+      document.getElementById('btn-tenant-bootstrap').disabled = true;
+      document.getElementById('btn-cust-create').disabled = true;
+      document.getElementById('btn-cust-view').disabled = true;
+      document.getElementById('btn-wf-start').disabled = true;
+      document.getElementById('btn-wf-refresh').disabled = true;
+      document.getElementById('btn-timeline-refresh').disabled = true;
+    }
+
+    async function handleTenantAction() {
+      const mode = document.getElementById('tenant-select-mode').value;
+      const logPre = document.getElementById('tenant-log');
+
+      if (mode === 'select') {
+        selectedTenantId = document.getElementById('tenant-id').value;
+        if (!selectedTenantId) {
+          logPre.textContent = 'Please enter a Tenant UUID';
+          return;
+        }
+        logPre.textContent = `Selected Tenant ID: ${selectedTenantId}`;
+        document.getElementById('auth-realm').value = `conductor-${selectedTenantId}`;
+        document.getElementById('btn-tenant-bootstrap').disabled = false;
+        return;
+      }
+
+      // Create new tenant
+      const key = document.getElementById('tenant-key').value;
+      const name = document.getElementById('tenant-name').value;
+      const domain = document.getElementById('tenant-domain').value;
+
+      logPre.textContent = 'Creating tenant...';
+
+      try {
+        const response = await fetch(`${services.tenant}/api/v1/tenants`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${activeToken}`
+          },
+          body: JSON.stringify({
+            tenantKey: key,
+            displayName: name,
+            legalName: name,
+            domain: domain,
+            timezone: 'UTC',
+            locale: 'en',
+            defaultCurrency: 'USD'
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP status ${response.status} (${response.statusText})`);
+        }
+
+        const tenant = await response.json();
+        selectedTenantId = tenant.id;
+        logPre.textContent = `Tenant Created Successfully!\nID: ${selectedTenantId}\nRealm: conductor-${selectedTenantId}`;
+        document.getElementById('auth-realm').value = `conductor-${selectedTenantId}`;
+        document.getElementById('btn-tenant-bootstrap').disabled = false;
+      } catch (e) {
+        logPre.textContent = `Tenant creation failed: ${e.message}`;
+      }
+    }
+
+    async function bootstrapTenantAdmin() {
+      const logPre = document.getElementById('tenant-log');
+      logPre.textContent += `\nBootstrapping Tenant Admin user...`;
+
+      try {
+        const response = await fetch(`${services.reference}/api/v1/reference/bootstrap-user`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            tenantId: selectedTenantId,
+            email: 'tenant_admin@conductor.app',
+            password: 'AdminPassword123!'
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const result = await response.json();
+        logPre.textContent += `\nBootstrapped user ID: ${result.userId}\nNow switch Auth Scope to "Tenant Admin" and log in to get the tenant admin token!`;
+      } catch (e) {
+        logPre.textContent += `\nBootstrap user failed: ${e.message}`;
+      }
+    }
+
+    async function createCustomer() {
+      const first = document.getElementById('cust-first').value;
+      const last = document.getElementById('cust-last').value;
+      const display = document.getElementById('cust-display').value;
+      const email = document.getElementById('cust-email').value;
+      const phone = document.getElementById('cust-phone').value;
+
+      const logPre = document.getElementById('cust-log');
+      logPre.textContent = 'Creating customer profile...';
+
+      try {
+        const response = await fetch(`${services.customer}/api/v1/customers`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${activeToken}`,
+            'X-Tenant-ID': selectedTenantId
+          },
+          body: JSON.stringify({
+            firstName: first,
+            lastName: last,
+            displayName: display,
+            externalId: `ext-${Date.now()}`,
+            sourceSystem: 'REFERENCE_APP'
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const customer = await response.json();
+        createdCustomerId = customer.id;
+        logPre.textContent = `Customer Created Successfully!\nID: ${createdCustomerId}\nStatus: ${customer.status}`;
+
+        // Enable view customer and workflow execution
+        document.getElementById('btn-cust-view').disabled = false;
+        document.getElementById('btn-wf-start').disabled = false;
+        document.getElementById('btn-wf-refresh').disabled = false;
+        document.getElementById('btn-timeline-refresh').disabled = false;
+
+      } catch (e) {
+        logPre.textContent = `Customer creation failed: ${e.message}`;
+      }
+    }
+
+    async function viewCustomer() {
+      const logPre = document.getElementById('cust-log');
+      logPre.textContent = `Fetching customer ${createdCustomerId}...`;
+
+      try {
+        const response = await fetch(`${services.customer}/api/v1/customers/${createdCustomerId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${activeToken}`,
+            'X-Tenant-ID': selectedTenantId
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const customer = await response.json();
+        logPre.textContent = JSON.stringify(customer, null, 2);
+      } catch (e) {
+        logPre.textContent = `Fetch customer failed: ${e.message}`;
+      }
+    }
+
+    async function startWorkflow() {
+      const logPre = document.getElementById('wf-log');
+      logPre.textContent = 'Triggering welcome workflow...';
+
+      try {
+        // Trigger via lead endpoint so that it resolves identity and publishes lead.created event
+        const response = await fetch(`${services.customer}/api/v1/leads`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${activeToken}`,
+            'X-Tenant-ID': selectedTenantId
+          },
+          body: JSON.stringify({
+            firstName: document.getElementById('cust-first').value,
+            lastName: document.getElementById('cust-last').value,
+            email: document.getElementById('cust-email').value,
+            phone: document.getElementById('cust-phone').value
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const res = await response.json();
+        logPre.textContent = `Lead and Welcome Workflow triggered!\nResponse: ${JSON.stringify(res)}\nQuerying executions next...`;
+        
+        setTimeout(refreshExecutions, 2000);
+      } catch (e) {
+        logPre.textContent = `Start welcome workflow failed: ${e.message}`;
+      }
+    }
+
+    async function refreshExecutions() {
+      const logPre = document.getElementById('wf-log');
+      logPre.textContent = 'Fetching workflow executions...';
+
+      try {
+        const response = await fetch(`${services.workflow}/api/v1/workflows/executions?limit=5`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${activeToken}`,
+            'X-Tenant-ID': selectedTenantId
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.data.length === 0) {
+          logPre.textContent = 'No executions found. Note: Ensure Temporal Server and Workflow workers are running.';
+          return;
+        }
+
+        let output = 'Workflow Executions:\n';
+        data.data.forEach(exec => {
+          const badgeClass = exec.status.toLowerCase();
+          output += `ID: ${exec.id} | DefVersion: ${exec.definitionVersion}\n`;
+          output += `Status: [${exec.status.toUpperCase()}]\n`;
+          if (exec.output) {
+            output += `Output: ${exec.output}\n`;
+          }
+          output += `-------------------------------------\n`;
+        });
+        logPre.innerHTML = output;
+
+        // Auto-refresh timeline too
+        refreshTimeline();
+
+      } catch (e) {
+        logPre.textContent = `Fetch executions failed: ${e.message}`;
+      }
+    }
+
+    async function refreshTimeline() {
+      const container = document.getElementById('timeline-container');
+      container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Fetching timeline...</p>';
+
+      try {
+        const response = await fetch(`${services.customer}/api/v1/customers/${createdCustomerId}/timeline`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${activeToken}`,
+            'X-Tenant-ID': selectedTenantId
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const page = await response.json();
+        const events = page.content;
+
+        if (events.length === 0) {
+          container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No timeline events recorded.</p>';
+          return;
+        }
+
+        let html = '';
+        events.forEach(ev => {
+          let itemClass = '';
+          if (ev.eventType === 'MESSAGE_SENT') itemClass = 'msg-sent';
+          if (ev.eventType === 'MESSAGE_RECEIVED') itemClass = 'msg-recv';
+
+          html += `
+            <div class="timeline-item ${itemClass}">
+              <div class="timeline-title">${ev.eventType.replace('_', ' ')}: ${ev.summary}</div>
+              <div class="timeline-time">${new Date(ev.occurredAt).toLocaleString()} | Source: ${ev.eventSource}</div>
+              <div class="timeline-summary">${ev.metadata ? `<code>${ev.metadata}</code>` : ''}</div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+
+      } catch (e) {
+        container.innerHTML = `<p style="color: var(--danger); font-size: 0.9rem;">Fetch timeline failed: ${e.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>

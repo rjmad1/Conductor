@@ -1,0 +1,56 @@
+{
+  "templateId": "lab-report-delivery",
+  "name": "Lab Report Delivery",
+  "description": "Securely delivers lab test results to patients as soon as they are ready, and provides an option to book a follow-up consultation.",
+  "category": "healthcare",
+  "version": "1.0.0",
+  "triggerType": "EVENT",
+  "triggerConfig": {
+    "eventName": "lab.report.ready",
+    "description": "Triggered when a laboratory system emits a report ready event"
+  },
+  "steps": [
+    {
+      "name": "send-report",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "lab_report_ready",
+        "recipient": "{{patient.phone}}",
+        "parameters": {
+          "name": "{{patient.name}}",
+          "testName": "{{report.testName}}",
+          "reportUrl": "{{report.url}}"
+        }
+      }
+    },
+    {
+      "name": "wait-for-review",
+      "type": "DELAY",
+      "config": {
+        "duration": "PT24H"
+      }
+    },
+    {
+      "name": "send-consultation-prompt",
+      "type": "GENERATE_NOTIFICATION",
+      "config": {
+        "channel": "whatsapp",
+        "templateName": "book_consultation_prompt",
+        "recipient": "{{patient.phone}}"
+      },
+      "condition": {
+        "field": "report.requiresConsultation",
+        "operator": "EQUALS",
+        "value": "true"
+      }
+    }
+  ],
+  "variables": {
+    "patient.name": "",
+    "patient.phone": "",
+    "report.testName": "",
+    "report.url": "",
+    "report.requiresConsultation": "false"
+  }
+}

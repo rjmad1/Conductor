@@ -1,5 +1,11 @@
 dependencies {
     implementation project(':shared:shared-workflow')
+    implementation project(':shared:security')
+    implementation 'org.springframework:spring-web'
+    implementation 'org.springframework:spring-context'
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'io.micrometer:micrometer-core'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }

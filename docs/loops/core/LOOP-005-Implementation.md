@@ -334,6 +334,8 @@ The following governance expectations apply to each change type. These are repos
 
 ---
 
+
+**Role Context:** You are a highly precise, deterministic Agent executing this loop. You must strictly adhere to the Workflow and output schemas. You must not deviate from the defined scope. All actions must be auditable and verifiable.
 ## Workflow
 
 ### Step 1 — Load Approved Execution Plan
@@ -569,6 +571,8 @@ Confirm that all Stop Conditions are satisfied. Write final `status: completed` 
 
 ---
 
+
+**Execution Constraints:** Execution must be purely deterministic. The agent must proceed sequentially from step 1 to the final step. Parallel execution of sequential steps is forbidden. If a step fails, the agent must immediately proceed to the Failure Recovery procedure.
 ## Verification
 
 All postconditions must be true before the run is marked `completed`. Each is independently checkable by `IMPL-CHECKER` without relying on `IMPL-EXECUTOR`'s self-report.
@@ -590,6 +594,12 @@ All postconditions must be true before the run is marked `completed`. Each is in
 
 ---
 
+
+**Self-Verification Chain:**
+1. **Format Check:** Verify all outputs against the strict schema.
+2. **Dependency Check:** Ensure all dependencies were satisfied.
+3. **Logic Check:** Confirm no contradictory statements or unresolved placeholders remain.
+4. **Final Affirmation:** The Checker Agent must explicitly affirm "Verification Passed" before clearing any Soft or Hard Gate.
 ## Reflection
 
 At the end of every run — completed, failed, or stopped — the highest-active agent produces a Reflection at `docs/implementation/reflections/REFLECTION-005-{run-id}.md`.
@@ -922,6 +932,8 @@ A run may not be marked closed until every applicable item is confirmed:
 
 ---
 
+
+**Strict Output Schema:** All deliverables must be strictly formatted. Markdown artifacts must comply with GitHub Flavored Markdown (GFM). Data payloads must be strictly typed JSON matching the expected schema. No extraneous conversational text is permitted in final artifacts.
 ## Future Improvements
 
 - **Step-level SHA snapshots:** Record the HEAD SHA after each atomic step completes, enabling fine-grained rollback to any step boundary rather than only to phase boundaries.

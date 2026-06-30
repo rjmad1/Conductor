@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ### Added
+- **Tenant-Scoped Security**: Implemented tenant isolation and action execution frameworks.
+- **Provider Health Probes**: Replaced placeholder health checks with real provider connection probes for connectors.
 - **DPDP Section 12 compliance**: `ScheduledAnonymizationTask` — daily scheduled PII erasure for customers with `DELETED` status (T-204).
 - **STOP keyword opt-out**: `StopUnsubscribeListener` — NATS JetStream listener that intercepts inbound "STOP" messages and revokes marketing consent within SLA (WA-C1).
 - Inbound message event schema (`config/schemas/messaging.message.inbound.v1.json`).
@@ -16,6 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Governance, security, verification, and loop documentation under `docs/`.
 
 ### Changed
+- Standardized all REST error responses to conform to RFC 7807 ProblemDetail format.
+- Resolved RC1 P1 release blockers (OAuth CSRF state validation, webhook encryption at rest).
 - Enabled `@EnableScheduling` on `CustomerApplication` to support scheduled background tasks.
 - Added `@MockBean` declarations for new services in `TenantIsolationTest` to maintain Spring context compatibility.
 
@@ -28,6 +32,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Root repository configurations: `.gitignore`, `.editorconfig`, `CODEOWNERS`, and `CONTRIBUTING.md`.
 - Candidate Governance Architectural Decision Records: `ADR-GOV-001` through `ADR-GOV-010`.
 - Canonical **Enterprise Architecture & Modernization Report** mapping TOGAF layers, GAP analysis, target blueprints, and execution roadmaps.
+- Greenfield implementation of the **Analytics Platform Module** (`:platform:analytics`) supporting near real-time OLAP dashboards with ClickHouse.
+- Secure Metabase dashboard integration via signed JWT embedding (ADR-008).
+- Flyway database migration schemas for reporting, dashboards, and KPI tracking.
 
 ### Changed
 - Reorganized documentation suite from `/Documentation Galore/` into structured subdirectories under `/docs/`.

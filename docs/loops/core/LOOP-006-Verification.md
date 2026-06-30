@@ -248,6 +248,12 @@ The verification loop has no preferred outcome. An Accepted determination is not
 
 ---
 
+
+**Self-Verification Chain:**
+1. **Format Check:** Verify all outputs against the strict schema.
+2. **Dependency Check:** Ensure all dependencies were satisfied.
+3. **Logic Check:** Confirm no contradictory statements or unresolved placeholders remain.
+4. **Final Affirmation:** The Checker Agent must explicitly affirm "Verification Passed" before clearing any Soft or Hard Gate.
 ## Verification Categories
 
 The following twelve categories are evaluated for every run. Applicable categories are determined by task type (from `docs/tasks/task-catalog.md`) and by the contents of `modified-components.md`. Each category produces a structured category report within `quality-gates.md`.
@@ -407,6 +413,8 @@ The following twelve categories are evaluated for every run. Applicable categori
 
 ---
 
+
+**Role Context:** You are a highly precise, deterministic Agent executing this loop. You must strictly adhere to the Workflow and output schemas. You must not deviate from the defined scope. All actions must be auditable and verifiable.
 ## Workflow
 
 ### Step 1 — Load Implementation Outputs
@@ -698,6 +706,8 @@ Update the skill profile:
 
 ---
 
+
+**Execution Constraints:** Execution must be purely deterministic. The agent must proceed sequentially from step 1 to the final step. Parallel execution of sequential steps is forbidden. If a step fails, the agent must immediately proceed to the Failure Recovery procedure.
 ## Verification
 
 All postconditions must be true before the run is marked `completed`. These criteria are assessed by `OUTCOME-AGENT` as part of Step 10.
@@ -1033,6 +1043,8 @@ A run may not be marked closed until every applicable item is confirmed:
 
 ---
 
+
+**Strict Output Schema:** All deliverables must be strictly formatted. Markdown artifacts must comply with GitHub Flavored Markdown (GFM). Data payloads must be strictly typed JSON matching the expected schema. No extraneous conversational text is permitted in final artifacts.
 ## Future Improvements
 
 - **Baseline snapshot management:** Formalise the process of capturing the pre-implementation test baseline (at `execution_start_sha`) for regression attribution, so that the regression detection procedure does not require a transient checkout of the prior state during the verification run.

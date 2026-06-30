@@ -14,8 +14,8 @@ Migration Notes: Direct copy of the general loop framework specification.
 
 **Loop ID:** LOOP-303
 **Name:** Compliance
-**Version:** 1.0
-**Status:** Active
+**Version:** 0.2
+**Status:** Draft
 **Category:** Governance
 **Depends On:** LOOP-006 — Verification, LOOP-207 — Security Validation
 **Human Gates:** Hard, Soft
@@ -174,6 +174,8 @@ Before beginning, the executing agent must have loaded:
 
 ---
 
+
+**Role Context:** You are a highly precise, deterministic Agent executing this loop. You must strictly adhere to the Workflow and output schemas. You must not deviate from the defined scope. All actions must be auditable and verifiable.
 ## Workflow
 
 **Step 1 — Input Load and Validation (COMPLIANCE-LOADER)**
@@ -228,6 +230,8 @@ Note: GATE-2 (Soft Gate) is declared in the Human Approval Gates section. It fir
 
 ---
 
+
+**Execution Constraints:** Execution must be purely deterministic. The agent must proceed sequentially from step 1 to the final step. Parallel execution of sequential steps is forbidden. If a step fails, the agent must immediately proceed to the Failure Recovery procedure.
 ## Verification
 
 | ID | Criterion | Check Method |
@@ -245,6 +249,12 @@ Note: GATE-2 (Soft Gate) is declared in the Human Approval Gates section. It fir
 
 ---
 
+
+**Self-Verification Chain:**
+1. **Format Check:** Verify all outputs against the strict schema.
+2. **Dependency Check:** Ensure all dependencies were satisfied.
+3. **Logic Check:** Confirm no contradictory statements or unresolved placeholders remain.
+4. **Final Affirmation:** The Checker Agent must explicitly affirm "Verification Passed" before clearing any Soft or Hard Gate.
 ## Reflection
 
 Every run must produce a Reflection artifact at `docs/governance/compliance/reflections/REFLECTION-303-{run-id}.md` before the run is marked closed. The Reflection must contain all ten required sections from LOOP-STANDARD.md §10. A run may not be marked `completed` without a Reflection. Because compliance findings have governance implications, the Reflection for any run that produced Non-Compliant findings must include a Risk Observations section that explicitly notes whether any finding represents a new risk compared to the prior run.
@@ -437,6 +447,8 @@ Every run must produce a Reflection artifact at `docs/governance/compliance/refl
 
 ---
 
+
+**Strict Output Schema:** All deliverables must be strictly formatted. Markdown artifacts must comply with GitHub Flavored Markdown (GFM). Data payloads must be strictly typed JSON matching the expected schema. No extraneous conversational text is permitted in final artifacts.
 ## Future Improvements
 
 - **Automated license resolution:** Integrate with a dependency license database (e.g., SPDX) to automatically resolve dependency licenses rather than requiring the allowlist to be manually maintained.
